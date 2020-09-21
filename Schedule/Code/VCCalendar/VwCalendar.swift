@@ -12,7 +12,7 @@ import UIKit
 class VwCalendar: UIView {
     
     let header = VwCalendarHeader()
-    let Body = VwCalendarBody()
+    let Body = VCCalendarMonthPage()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -27,12 +27,12 @@ class VwCalendar: UIView {
     
     func setUpUI() {
         header.translatesAutoresizingMaskIntoConstraints = false
-        Body.translatesAutoresizingMaskIntoConstraints = false
+        Body.view.translatesAutoresizingMaskIntoConstraints = false
     }
     
     func displayUI() {
         addSubview(header)
-        addSubview(Body)
+        addSubview(Body.view)
         
         NSLayoutConstraint.activate([
             header.topAnchor.constraint(equalTo: topAnchor),
@@ -40,10 +40,10 @@ class VwCalendar: UIView {
             header.trailingAnchor.constraint(equalTo: trailingAnchor),
             header.heightAnchor.constraint(equalToConstant: Global.headerHeight),
             
-            Body.topAnchor.constraint(equalTo: header.bottomAnchor),
-            Body.leadingAnchor.constraint(equalTo: leadingAnchor),
-            Body.trailingAnchor.constraint(equalTo: trailingAnchor),
-            Body.bottomAnchor.constraint(equalTo: bottomAnchor),
+            Body.view.topAnchor.constraint(equalTo: header.bottomAnchor, constant: -5),
+            Body.view.leadingAnchor.constraint(equalTo: leadingAnchor),
+            Body.view.trailingAnchor.constraint(equalTo: trailingAnchor),
+            Body.view.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])
     }
 }

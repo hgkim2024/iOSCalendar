@@ -1,5 +1,5 @@
 //
-//  VwCalendarBody.swift
+//  VCCalendarMonth.swift
 //  Schedule
 //
 //  Created by Asu on 2020/09/06.
@@ -8,26 +8,26 @@
 
 import UIKit
 
-class VwCalendarBody: UIView {
-    var dayViews: [VwCalendarDay] = []
+class VCCalendarMonth: UIViewController {
+    private var dayViews: [VwCalendarDay] = []
+    private var date = Date()
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    convenience init(date: Date) {
+        self.init(nibName:nil, bundle:nil)
+        self.date = date
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
         
         setUpUI()
         displayUI()
     }
     
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-    
     func setUpUI() {
-        // TODO: - 해당 달의 Date 를 넘기도록 수정할 것
-        let date = Date()
-        let weekday = CalCalendar.shared.calWeekday(date: date.startOfMonth())
-        let lastDay = CalCalendar.shared.calMonthLastDay(date: date)
-        let prevLastDay = CalCalendar.shared.calMonthLastDay(date: date.prevEndOfMonth())
+        let weekday = CalCalendar.shared.calWeekday(date: date.startOfMonth)
+        let lastDay = CalCalendar.shared.calMonthLastDay(date: date.startOfMonth)
+        let prevLastDay = CalCalendar.shared.calMonthLastDay(date: date.prevMonth)
         let dayCount = Global.dayCount
         
         for i in 0..<(Global.calendarRow * Global.calendarColumn) {
@@ -35,23 +35,24 @@ class VwCalendarBody: UIView {
             dayView.translatesAutoresizingMaskIntoConstraints = false
             dayViews.append(dayView)
             
+            let status = (i + 1) % dayCount
+            
             // 날짜 setText
             if i + 1 >= weekday {
                 // 다음달
                 if i+1-weekday >= lastDay {
                     dayView.setText(text: "\(i+2-weekday-lastDay)")
+                    dayView.setColor(weekday: status, alpha: 0.3)
                 } else {
                     // 현재달
                     dayView.setText(text: "\(i+2-weekday)")
+                    dayView.setColor(weekday: status)
                 }
             } else {
                 // 이전달
                 dayView.setText(text: "\(prevLastDay-weekday+i+2)")
+                dayView.setColor(weekday: status, alpha: 0.3)
             }
-            
-            // 날짜 setColor
-            let status = (i + 1) % dayCount
-            dayView.setColor(weekday: status)
         }
     }
     
@@ -61,23 +62,29 @@ class VwCalendarBody: UIView {
         for row in 0..<rowCount {
             for column in 0..<Global.calendarColumn {
                 let dayView = dayViews[(row * dayCount) + column]
-                addSubview(dayView)
+                view.addSubview(dayView)
                 
                 if row == 0 {
-                    dayView.topAnchor.constraint(equalTo: topAnchor).isActive = true
+                    dayView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
                 } else {
                     dayView.topAnchor.constraint(equalTo: dayViews[((row - 1) * dayCount) + column].bottomAnchor).isActive = true
                 }
                 
                 if column == 0 {
-                    dayView.leadingAnchor.constraint(equalTo: leadingAnchor).isActive = true
+                    dayView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
                 } else {
                     dayView.leadingAnchor.constraint(equalTo: dayViews[(row * dayCount) + column - 1].trailingAnchor).isActive = true
                 }
                 
-                dayView.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 1.0/CGFloat(dayCount)).isActive = true
-                dayView.heightAnchor.constraint(equalTo: heightAnchor, multiplier: 1.0/CGFloat(rowCount)).isActive = true
+                dayView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 1.0/CGFloat(dayCount)).isActive = true
+                dayView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 1.0/CGFloat(rowCount)).isActive = true
             }
         }
+    }
+    
+    // MARK: - Functions
+    
+    func getDate() -> Date {
+        return date
     }
 }

@@ -48,14 +48,14 @@ class VwCalendarDay: UIView {
     
     // MARK: - Functions
     
-    func setColor(weekday: Int) {
+    func setColor(weekday: Int, alpha: CGFloat = 1.0) {
         switch weekday {
         case 1:
-            label.textColor = Theme.sunday
+            label.textColor = Theme.sunday.withAlphaComponent(alpha)
         case 0, 7:
-            label.textColor = Theme.saturday
+            label.textColor = Theme.saturday.withAlphaComponent(alpha)
         default:
-            label.textColor = Theme.font
+            label.textColor = Theme.font.withAlphaComponent(alpha)
         }
     }
     

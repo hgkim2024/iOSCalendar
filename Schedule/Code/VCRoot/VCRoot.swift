@@ -10,11 +10,12 @@ import UIKit
 
 class VCRoot: UIViewController {
     
-    var calendar = VwCalendar()
+    var calendar: VwCalendar!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        addObserver()
         setUpUI()
         displayUI()
     }
@@ -22,6 +23,10 @@ class VCRoot: UIViewController {
     func setUpUI() {
         view.backgroundColor = Theme.rootBackground
         
+        let add = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addTapped))
+        navigationItem.rightBarButtonItems = [add]
+        
+        calendar = VwCalendar()
         calendar.translatesAutoresizingMaskIntoConstraints = false
     }
     
@@ -38,4 +43,32 @@ class VCRoot: UIViewController {
         ])
     }
     
+    func addObserver() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(didReceivedTitleNotification),
+            name: NSNotification.Name(rawValue: NamesOfNotification.setCalendarTitle),
+            object: nil
+        )
+    }
+    
+    // MARK: - Functions
+    @objc func didReceivedTitleNotification(_ notification: Notification) {
+        guard let title = notification.userInfo?["title"] as? String
+        else {
+                return
+        }
+        
+        self.title = title
+    }
+    
+    @objc func addTapped(_ sender: Any) {
+        let vc = VCAddItem()
+        let nvc = UINavigationController(rootViewController: vc)
+        nvc.isModalInPresentation = true
+        nvc.presentationController?.delegate = vc
+        present(nvc, animated: true, completion: nil)
+    }
 }
+
+

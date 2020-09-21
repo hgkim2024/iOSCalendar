@@ -9,23 +9,79 @@
 import Foundation
 
 extension Date {
-    func startOfMonth() -> Date {
+    var year: Int {
+        return Calendar.current.component(.year, from: self)
+    }
+    
+    var month: Int {
+         return Calendar.current.component(.month, from: self)
+    }
+    
+    var day: Int {
+         return Calendar.current.component(.day, from: self)
+    }
+    
+    var startOfDay: Date {
+        return Calendar.current.startOfDay(for: self)
+    }
+    
+    var endOfDay: Date {
+        var components = DateComponents()
+        components.day = 1
+        components.second = -1
+        return Calendar.current.date(byAdding: components, to: startOfDay)!
+    }
+    
+//    var startOfWeek: Date? {
+//        let gregorian = Calendar(identifier: .gregorian)
+//        guard let sunday = gregorian.date(
+//            from: gregorian.dateComponents(
+//                [.yearForWeekOfYear, .weekOfYear],
+//                from: self)
+//            ) else { return nil }
+//        return gregorian.date(byAdding: .day, value: 1, to: sunday)
+//    }
+//
+//    var endOfWeek: Date? {
+//        let gregorian = Calendar(identifier: .gregorian)
+//        guard let sunday = gregorian.date(
+//            from: gregorian.dateComponents(
+//                [.yearForWeekOfYear, .weekOfYear],
+//                from: self)
+//            ) else { return nil }
+//        return gregorian.date(byAdding: .day, value: 7, to: sunday)
+//    }
+    
+    var startOfMonth: Date {
         let from = Calendar.current.startOfDay(for: self)
         let dateComponents = Calendar.current.dateComponents([.year, .month], from: from)
         return Calendar.current.date(from: dateComponents)!
     }
 
-    func endOfMonth() -> Date {
+    var endOfMonth: Date {
         let dateComponents = DateComponents(month: 1, day: -1)
         return Calendar.current.date(
             byAdding: dateComponents,
-            to: self.startOfMonth())!
+            to: self.startOfMonth)!
     }
     
-    func prevEndOfMonth() -> Date {
-        let dateComponents = DateComponents(month: 0, day: -1)
+    var nextMonth: Date {
+        let dateComponents = DateComponents(month: 1, day: 0)
         return Calendar.current.date(
             byAdding: dateComponents,
-            to: self.startOfMonth())!
+            to: self.startOfMonth)!
+    }
+    
+    var prevMonth: Date {
+        let dateComponents = DateComponents(month: -1, day: 0)
+        return Calendar.current.date(
+            byAdding: dateComponents,
+            to: self.startOfMonth)!
+    }
+    
+    func dateToString() -> String {
+        let format = DateFormatter()
+        format.dateFormat = "yyyy.MM"
+        return format.string(from: self)
     }
 }

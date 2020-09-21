@@ -12,13 +12,13 @@ import UIKit
 class VwCalendarHeader: UIView {
     
     let dayString: [String] = [
-        "일",
-        "월",
-        "화",
-        "수",
-        "목",
-        "금",
-        "토"
+        "일".localized,
+        "월".localized,
+        "화".localized,
+        "수".localized,
+        "목".localized,
+        "금".localized,
+        "토".localized
     ]
     
     var collectionView: UICollectionView!
@@ -54,8 +54,8 @@ class VwCalendarHeader: UIView {
         addSubview(collectionView)
         
         NSLayoutConstraint.activate([
-            collectionView.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor),
-            collectionView.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor),
+            collectionView.topAnchor.constraint(equalTo: topAnchor),
+            collectionView.bottomAnchor.constraint(equalTo: bottomAnchor),
             collectionView.leadingAnchor.constraint(equalTo: safeAreaLayoutGuide.leadingAnchor),
             collectionView.trailingAnchor.constraint(equalTo: safeAreaLayoutGuide.trailingAnchor),
         ])

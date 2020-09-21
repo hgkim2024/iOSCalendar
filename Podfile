@@ -6,6 +6,10 @@ target 'Schedule' do
   use_frameworks!
 
   # Pods for Schedule
+  pod 'Realm', '~> 5'
+  pod 'RealmSwift', '~> 5'
+  pod 'RxSwift', '~> 5'
+  pod 'RxCocoa', '~> 5'
 
   target 'ScheduleTests' do
     inherit! :search_paths
