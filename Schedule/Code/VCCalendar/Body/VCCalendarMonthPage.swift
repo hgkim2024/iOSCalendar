@@ -30,6 +30,7 @@ class VCCalendarMonthPage: UIPageViewController {
         super.viewDidLoad()
         
         setUpUI()
+        addObserver()
     }
     
     func setUpUI() {
@@ -51,6 +52,19 @@ class VCCalendarMonthPage: UIPageViewController {
             object: nil,
             userInfo: ["title": title]
         )
+    }
+    
+    func addObserver() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(didReceivedAddNotification),
+            name: NSNotification.Name(rawValue: NamesOfNotification.refreshCalendar),
+            object: nil
+        )
+    }
+    
+    @objc func didReceivedAddNotification() {
+        viewControllers?[safe: 0]?.viewWillAppear(false)
     }
 }
 

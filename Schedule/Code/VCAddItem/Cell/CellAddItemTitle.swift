@@ -44,7 +44,7 @@ class CellAddItemTitle: UITableViewCell {
         
         tv.textColor = Theme.font
         tv.textAlignment = .left
-        tv.font = UIFont.systemFont(ofSize: Global.fontSize)
+        tv.font = UIFont.systemFont(ofSize: Global.fontSize - 1)
         tv.text = ""
         tv.delegate = self
         

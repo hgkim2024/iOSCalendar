@@ -7,10 +7,14 @@
 //
 
 import UIKit
+import RealmSwift
+import RxCocoa
+import RxSwift
 
 class VCAddItem: UIViewController {
     
     var tableView: UITableView!
+    
     var add: UIBarButtonItem!
     var eventTitle: String = "" {
         didSet {
@@ -71,6 +75,14 @@ class VCAddItem: UIViewController {
         tableView.register(CellAddItemTitle.self, forCellReuseIdentifier: CellAddItemTitle.identifier)
     }
     
+    func dismissNotification() {
+        NotificationCenter.default.post(
+            name: NSNotification.Name(rawValue: NamesOfNotification.refreshCalendar),
+            object: nil,
+            userInfo: nil
+        )
+    }
+    
     func dismissAlert() {
         let alert = UIAlertController(title: nil, message: "이 새로운 이벤트를 폐기하겠습니까?".localized, preferredStyle: UIAlertController.Style.actionSheet)
         alert.addAction(UIAlertAction(title: "변경 사항 폐기".localized, style: UIAlertAction.Style.cancel, handler: { action in
@@ -81,8 +93,22 @@ class VCAddItem: UIViewController {
     }
     
     @objc func addTapped(_ sender: Any) {
-        // TODO: - realm 에 저장하고 dismiss 할 것
-        dismiss(animated: true, completion: nil)
+        // TODO: - 여러 인자 추가 시, 추가 반영
+        let item = Item()
+        item.title = eventTitle
+        Item.add(item: item).subscribe(
+            onNext: { [weak self] item in
+                guard let `self` = self else { return }
+                self.dismiss(animated: true) {
+                    self.dismissNotification()
+                }
+            },
+            onError: { [weak self] error in
+                guard let `self` = self else { return }
+                let alert = UIAlertController(title: nil, message: "저장에 실패하였습니다.".localized, preferredStyle: .alert)
+                alert.addAction(UIAlertAction(title: "확인".localized, style: .cancel, handler: nil))
+                self.present(alert, animated: true, completion: nil)
+        }).dispose()
     }
     
     @objc func cancelTapped(_ sender: Any) {
@@ -98,9 +124,6 @@ class VCAddItem: UIViewController {
 extension VCAddItem: UIAdaptivePresentationControllerDelegate {
     
     func presentationControllerDidAttemptToDismiss(_ presentationController: UIPresentationController) {
-        // TODO: - 테스트 코드 지울 것
-        // presentationControllerShouldDismiss 값이
-        // true: 닫기, false: 삭제 여부 얼럿창 띄우기
         
         if eventTitle.isEmpty {
             dismiss(animated: true, completion: nil)

@@ -11,42 +11,81 @@ import UIKit
 class VwCalendarDay: UIView {
     let label = UILabel()
     // TODO: - 일과 등록 시 표현할 TableView
-//    var tableView: UITableView? = nil
+    var tableView: UITableView? = nil
+    var list: [Item]? = nil {
+        didSet {
+            setUpTableView()
+        }
+    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
         
-        setUpUI()
-        displayUI()
+        setUpLabel()
     }
     
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    func setUpUI() {
+    func setUpLabel() {
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.systemFont(ofSize: Global.headerFontSize)
+        label.font = UIFont.boldSystemFont(ofSize: Global.headerFontSize)
         label.textAlignment = .left
         label.adjustsFontSizeToFitWidth = true
         label.textColor = Theme.font
         
-        // TODO: - 일과 표기 뷰 추가
-    }
-    
-    func displayUI() {
         addSubview(label)
         
         NSLayoutConstraint.activate([
             label.topAnchor.constraint(equalTo: topAnchor, constant: Global.calendarleftMargin),
             label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Global.calendarleftMargin),
             label.trailingAnchor.constraint(equalTo: trailingAnchor),
-            
-            // TODO: - 일과 표기 뷰 추가
         ])
     }
     
+    func setUpTableView() {
+        removeTableView()
+        guard self.list != nil else { return }
+        
+        
+        tableView = UITableView(frame: .zero, style: .plain)
+        guard let tableView = tableView else { return }
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.sectionFooterHeight = CGFloat.leastNormalMagnitude
+        
+        tableView.rowHeight = 18
+        tableView.separatorStyle = .none
+        
+        tableView.delegate = self
+        tableView.dataSource = self
+        tableView.backgroundColor = .clear
+        tableView.isScrollEnabled = true
+        tableView.showsVerticalScrollIndicator = false
+        tableView.bounces = false
+        
+        addRegister()
+        
+        addSubview(tableView)
+        NSLayoutConstraint.activate([
+            tableView.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 2),
+            tableView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: bottomAnchor)
+        ])
+    }
+    
+    func removeTableView() {
+        guard let tableView = tableView else { return }
+        tableView.removeFromSuperview()
+        self.tableView = nil
+    }
+    
     // MARK: - Functions
+    
+    func addRegister() {
+        tableView?.register(CellCalendarDay.self, forCellReuseIdentifier: CellCalendarDay.identifier)
+    }
     
     func setColor(weekday: Int, alpha: CGFloat = 1.0) {
         switch weekday {

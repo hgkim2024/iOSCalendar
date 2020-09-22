@@ -36,6 +36,8 @@
 		12813B8325000091005C8383 /* ScheduleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12813B8225000091005C8383 /* ScheduleTests.swift */; };
 		12813B8E25000091005C8383 /* ScheduleUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12813B8D25000091005C8383 /* ScheduleUITests.swift */; };
 		129BECF3250008C90008905F /* VCRoot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 129BECF2250008C90008905F /* VCRoot.swift */; };
+		12A2E17F2519BCE30023B221 /* VwCalendarDay + UITableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12A2E17E2519BCE30023B221 /* VwCalendarDay + UITableView.swift */; };
+		12A2E1822519C29E0023B221 /* CellCalendarDay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12A2E1812519C29E0023B221 /* CellCalendarDay.swift */; };
 		9D907618252A30689C6ED675 /* Pods_ScheduleTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 441CC7DCBAB98C43383D024F /* Pods_ScheduleTests.framework */; };
 		BB14D5061DCD39BB6790E005 /* Pods_Schedule.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5865367DEDC46F13CAE91E8B /* Pods_Schedule.framework */; };
 /* End PBXBuildFile section */
@@ -95,6 +97,8 @@
 		12813B8D25000091005C8383 /* ScheduleUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleUITests.swift; sourceTree = "<group>"; };
 		12813B8F25000091005C8383 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		129BECF2250008C90008905F /* VCRoot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VCRoot.swift; sourceTree = "<group>"; };
+		12A2E17E2519BCE30023B221 /* VwCalendarDay + UITableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VwCalendarDay + UITableView.swift"; sourceTree = "<group>"; };
+		12A2E1812519C29E0023B221 /* CellCalendarDay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellCalendarDay.swift; sourceTree = "<group>"; };
 		19892357FDE08C623DE07D1E /* Pods-Schedule-ScheduleUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Schedule-ScheduleUITests.debug.xcconfig"; path = "Target Support Files/Pods-Schedule-ScheduleUITests/Pods-Schedule-ScheduleUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		441CC7DCBAB98C43383D024F /* Pods_ScheduleTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ScheduleTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5865367DEDC46F13CAE91E8B /* Pods_Schedule.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Schedule.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -236,7 +240,9 @@
 		127043462504CA940045375E /* Body */ = {
 			isa = PBXGroup;
 			children = (
+				12A2E1802519C28E0023B221 /* Cell */,
 				127043472504CAA50045375E /* VwCalendarDay.swift */,
+				12A2E17E2519BCE30023B221 /* VwCalendarDay + UITableView.swift */,
 				1270434B2504DB530045375E /* VCCalendarMonth.swift */,
 				126F007325060BFB00C9FA3A /* VCCalendarMonthPage.swift */,
 			);
@@ -327,6 +333,14 @@
 				126B0A232503502200355D00 /* Global */,
 			);
 			path = Code;
+			sourceTree = "<group>";
+		};
+		12A2E1802519C28E0023B221 /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				12A2E1812519C29E0023B221 /* CellCalendarDay.swift */,
+			);
+			path = Cell;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -575,6 +589,7 @@
 				126B0A2A250350AE00355D00 /* UIColor.swift in Sources */,
 				126B2DC3250BA2F600C69BC6 /* VCAddItem + UITableView.swift in Sources */,
 				12813B6C2500008F005C8383 /* AppDelegate.swift in Sources */,
+				12A2E1822519C29E0023B221 /* CellCalendarDay.swift in Sources */,
 				127110592506590600F797E8 /* NamesOfNotification.swift in Sources */,
 				126B0A272503506600355D00 /* Global.swift in Sources */,
 				126B0A252503502A00355D00 /* Theme.swift in Sources */,
@@ -585,6 +600,7 @@
 				126B2DBF250B9BD800C69BC6 /* Item.swift in Sources */,
 				1270434C2504DB530045375E /* VCCalendarMonth.swift in Sources */,
 				126B0A2E2503526400355D00 /* VwCalendar.swift in Sources */,
+				12A2E17F2519BCE30023B221 /* VwCalendarDay + UITableView.swift in Sources */,
 				126B2DC6250BA75800C69BC6 /* CellAddItemTitle.swift in Sources */,
 				126F007425060BFB00C9FA3A /* VCCalendarMonthPage.swift in Sources */,
 				126B2DC1250BA24800C69BC6 /* VCAddItem.swift in Sources */,

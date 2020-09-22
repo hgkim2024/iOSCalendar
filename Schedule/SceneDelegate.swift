@@ -28,7 +28,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 //            window.rootViewController = UIHostingController(rootView: contentView)
             window.rootViewController = UINavigationController.init(rootViewController: VCRoot())
             self.window = window
-            window.tintColor = .systemOrange
+            window.tintColor = Theme.item
             window.makeKeyAndVisible()
         }
     }

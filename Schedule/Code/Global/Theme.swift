@@ -43,4 +43,6 @@ class Theme {
     static var separator: UIColor = UIColor.lightGray.withAlphaComponent(0.2)
     static var sunday: UIColor = UIColor.init(hexString: "#ff3333")
     static var saturday: UIColor = UIColor.init(hexString: "#3333ff")
+    
+    static var item: UIColor = UIColor.init(hexString: "#1a53ff")
 }

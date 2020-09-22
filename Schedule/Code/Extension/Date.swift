@@ -79,6 +79,11 @@ extension Date {
             to: self.startOfMonth)!
     }
     
+    func getNextCountDay(count: Int) -> Date {
+        let dateComponents = DateComponents(day: count - 1)
+        return Calendar.current.date(byAdding: dateComponents, to: self)!
+    }
+    
     func dateToString() -> String {
         let format = DateFormatter()
         format.dateFormat = "yyyy.MM"

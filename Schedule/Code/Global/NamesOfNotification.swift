@@ -10,4 +10,5 @@ import Foundation
 
 class NamesOfNotification {
     static let setCalendarTitle = "setCalendarTitle"
+    static let refreshCalendar = "refreshCalendar"
 }
