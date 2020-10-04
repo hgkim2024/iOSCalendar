@@ -23,6 +23,10 @@ class Global {
     static let separatorSize: CGFloat = 0.7
     
     static let locale: Locale = Locale(identifier: Locale.current.languageCode ?? "EN")
+    
+    static func getKeyWindow() -> UIWindow? {
+        return UIApplication.shared.windows.filter {$0.isKeyWindow}.first
+    }
 }
 
 extension Collection {

@@ -39,7 +39,7 @@ class VCRoot: UIViewController {
             calendar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             calendar.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: margin),
             calendar.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -margin),
-            calendar.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            calendar.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
     }
     

@@ -30,7 +30,8 @@ class CellCalendarDay: UITableViewCell {
         backgroundColor = .clear
         vwRoot.translatesAutoresizingMaskIntoConstraints = false
         vwRoot.clipsToBounds = true
-        vwRoot.layer.cornerRadius = 2
+        vwRoot.layer.cornerRadius = 1
+        vwRoot.backgroundColor = Theme.item.withAlphaComponent(0.1)
         
         vwEdge.translatesAutoresizingMaskIntoConstraints = false
         vwEdge.backgroundColor = Theme.item
@@ -42,18 +43,19 @@ class CellCalendarDay: UITableViewCell {
     }
     
     func displayUI() {
-        let margin: CGFloat = 2
-        let edge: CGFloat = 3
+        let topMargin: CGFloat = 1
+        let leftMargin: CGFloat = 2
+        let edge: CGFloat = 2.2
         
         addSubview(vwRoot)
         vwRoot.addSubview(vwEdge)
         vwRoot.addSubview(title)
         
         NSLayoutConstraint.activate([
-            vwRoot.topAnchor.constraint(equalTo: topAnchor, constant: margin),
-            vwRoot.leadingAnchor.constraint(equalTo: leadingAnchor, constant: margin),
-            vwRoot.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -margin),
-            vwRoot.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -margin),
+            vwRoot.topAnchor.constraint(equalTo: topAnchor, constant: topMargin),
+            vwRoot.leadingAnchor.constraint(equalTo: leadingAnchor, constant: leftMargin),
+            vwRoot.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -leftMargin),
+            vwRoot.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -topMargin),
             
             vwEdge.topAnchor.constraint(equalTo: vwRoot.topAnchor),
             vwEdge.leadingAnchor.constraint(equalTo: vwRoot.leadingAnchor),
@@ -61,7 +63,7 @@ class CellCalendarDay: UITableViewCell {
             vwEdge.widthAnchor.constraint(equalToConstant: edge),
             
             title.topAnchor.constraint(equalTo: vwRoot.topAnchor),
-            title.leadingAnchor.constraint(equalTo: vwEdge.trailingAnchor, constant: margin),
+            title.leadingAnchor.constraint(equalTo: vwEdge.trailingAnchor, constant: leftMargin),
             title.bottomAnchor.constraint(equalTo: vwRoot.bottomAnchor),
         ])
     }
@@ -72,4 +74,17 @@ class CellCalendarDay: UITableViewCell {
         self.title.text = title
     }
     
+    func setColor(isUp: Bool) {
+        if isUp {
+            // go to min
+            title.isHidden = true
+            vwEdge.isHidden = true
+            vwRoot.backgroundColor = Theme.item
+        } else {
+            // go to max
+            title.isHidden = false
+            vwEdge.isHidden = false
+            vwRoot.backgroundColor = Theme.item.withAlphaComponent(0.1)
+        }
+    }
 }

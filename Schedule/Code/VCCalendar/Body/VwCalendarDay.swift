@@ -18,6 +18,10 @@ class VwCalendarDay: UIView {
         }
     }
     
+    let minHeight: CGFloat = 4
+    let maxHeight: CGFloat = 17
+    var isUp: Bool = false
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
@@ -54,15 +58,20 @@ class VwCalendarDay: UIView {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.sectionFooterHeight = CGFloat.leastNormalMagnitude
         
-        tableView.rowHeight = 18
         tableView.separatorStyle = .none
+        tableView.isScrollEnabled = false
+        tableView.showsVerticalScrollIndicator = false
+        tableView.bounces = false
         
         tableView.delegate = self
         tableView.dataSource = self
         tableView.backgroundColor = .clear
-        tableView.isScrollEnabled = true
-        tableView.showsVerticalScrollIndicator = false
-        tableView.bounces = false
+
+        if isUp {
+            tableView.rowHeight = minHeight
+        } else {
+            tableView.rowHeight = maxHeight
+        }
         
         addRegister()
         
@@ -73,6 +82,8 @@ class VwCalendarDay: UIView {
             tableView.trailingAnchor.constraint(equalTo: trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
+        
+        tableView.reloadData()
     }
     
     func removeTableView() {
@@ -100,5 +111,41 @@ class VwCalendarDay: UIView {
     
     func setText(text: String) {
         label.text = text
+    }
+    
+    func changeHeight(isUp: Bool) {
+        guard let tableView = tableView else { return }
+        if isUp {
+            tableView.rowHeight = minHeight
+            tableView.beginUpdates()
+            tableView.endUpdates()
+        } else {
+            tableView.rowHeight = maxHeight
+            tableView.beginUpdates()
+            tableView.endUpdates()
+        }
+    }
+    
+    func changeHeight(isUp: Bool, rate: CGFloat) {
+        guard let tableView = tableView else { return }
+        
+        if isUp {
+            tableView.rowHeight = minHeight + ((maxHeight - minHeight) * rate)
+        } else {
+            tableView.rowHeight = minHeight + ((maxHeight - minHeight) * rate)
+            if self.isUp != isUp {
+                self.isUp = isUp
+                tableView.reloadData()
+                tableView.layoutIfNeeded()
+            }
+        }
+        
+        tableView.beginUpdates()
+        tableView.endUpdates()
+    }
+    
+    func changeCellStatus(isUp: Bool) {
+        self.isUp = isUp
+        tableView?.reloadData()
     }
 }

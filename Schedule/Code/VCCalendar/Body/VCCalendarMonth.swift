@@ -11,10 +11,23 @@ import RealmSwift
 import RxCocoa
 import RxSwift
 
+protocol CalendarTouchEventDelegate: class {
+    func touchBegin()
+    func touchMove(diff: CGFloat)
+    func touchEnd(diff: CGFloat)
+}
+
 class VCCalendarMonth: UIViewController {
-    private var dayViews: [VwCalendarDay] = []
+    var dayViews: [VwCalendarDay] = []
     private var date = Date()
     private var row: Int = 0
+    
+    private var beginPoint: CGPoint? = nil
+    private var lastPoint: CGPoint? = nil
+    
+    weak var delegate: CalendarTouchEventDelegate? = nil
+    
+    var isUp: Bool = false
     
     convenience init(date: Date) {
         self.init(nibName:nil, bundle:nil)
@@ -30,7 +43,10 @@ class VCCalendarMonth: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
+        print("isUp: \(isUp)")
+        for view in dayViews {
+            view.isUp = self.isUp
+        }
         setUpData()
     }
     
@@ -134,5 +150,38 @@ class VCCalendarMonth: UIViewController {
             }
             dayViews[safe: i]?.list = list
         }
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        guard let touch = touches.first else { return }
+        self.beginPoint = touch.location(in: touch.view)
+        
+        delegate?.touchBegin()
+    }
+    
+    override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
+        guard let touch = touches.first,
+            let beginPoint = self.beginPoint
+            else { return }
+        
+        lastPoint = touch.location(in: touch.view)
+        let y = beginPoint.y - lastPoint!.y
+        delegate?.touchMove(diff: y)
+    }
+    
+    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
+        touchEnd()
+    }
+    
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        touchEnd()
+    }
+    
+    func touchEnd() {
+        guard let beginPoint = self.beginPoint else { return }
+        guard let lastPoint = self.lastPoint else { return }
+        let y = beginPoint.y - lastPoint.y
+        delegate?.touchEnd(diff: y)
+        self.beginPoint = nil
     }
 }

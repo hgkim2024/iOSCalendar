@@ -10,6 +10,19 @@ import UIKit
 
 class VCCalendarMonthPage: UIPageViewController {
     
+    weak var touchDelegate: CalendarTouchEventDelegate? = nil
+    
+    var isUp: Bool = false {
+        didSet {
+            guard let vcs = viewControllers else { return }
+            for vc in vcs {
+                if let vc = vc as? VCCalendarMonth {
+                    vc.isUp = self.isUp
+                }
+            }
+        }
+    }
+    
     override init(
         transitionStyle style: UIPageViewController.TransitionStyle,
         navigationOrientation: UIPageViewController.NavigationOrientation,
@@ -39,6 +52,8 @@ class VCCalendarMonthPage: UIPageViewController {
         
         let date = Date().startOfMonth
         let firstPage = VCCalendarMonth(date: date)
+        firstPage.delegate = self
+        
         setViewControllers([firstPage], direction: .forward, animated: false, completion: nil)
         
         postTitleNotification(date.dateToString())
@@ -81,6 +96,8 @@ extension VCCalendarMonthPage: UIPageViewControllerDelegate, UIPageViewControlle
         }
         let date = vc.getDate()
         let prevVC = VCCalendarMonth(date: date.prevMonth)
+        prevVC.isUp = self.isUp
+        prevVC.delegate = self
         return prevVC
     }
     
@@ -94,6 +111,8 @@ extension VCCalendarMonthPage: UIPageViewControllerDelegate, UIPageViewControlle
         }
         let date = vc.getDate()
         let nextVC = VCCalendarMonth(date: date.nextMonth)
+        nextVC.isUp = self.isUp
+        nextVC.delegate = self
         return nextVC
     }
     
@@ -108,5 +127,24 @@ extension VCCalendarMonthPage: UIPageViewControllerDelegate, UIPageViewControlle
                 return
         }
         postTitleNotification(vc.getDate().dateToString())
+    }
+}
+
+
+// MARK: - CalendarTouchEventDelegate
+extension VCCalendarMonthPage: CalendarTouchEventDelegate {
+    
+    func touchBegin() {
+        touchDelegate?.touchBegin()
+    }
+    
+    func touchMove(diff: CGFloat) {
+        touchDelegate?.touchMove(diff: diff)
+        dataSource = nil
+    }
+    
+    func touchEnd(diff: CGFloat) {
+        touchDelegate?.touchEnd(diff: diff)
+        dataSource = self
     }
 }
