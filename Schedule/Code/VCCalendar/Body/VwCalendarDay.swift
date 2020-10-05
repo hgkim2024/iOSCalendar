@@ -59,7 +59,6 @@ class VwCalendarDay: UIView {
         removeTableView()
         guard self.list != nil else { return }
         
-        
         tableView = UITableView(frame: .zero, style: .plain)
         guard let tableView = tableView else { return }
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -73,6 +72,7 @@ class VwCalendarDay: UIView {
         tableView.delegate = self
         tableView.dataSource = self
         tableView.backgroundColor = .clear
+        tableView.isUserInteractionEnabled = false
 
         if isUp {
             tableView.rowHeight = minHeight

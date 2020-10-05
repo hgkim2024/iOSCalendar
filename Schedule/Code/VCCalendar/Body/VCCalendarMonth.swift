@@ -172,8 +172,6 @@ class VCCalendarMonth: UIViewController {
     }
     
     func setUpData() {
-        let today = Date().startOfDay
-        
         let weekday = CalCalendar.shared.calWeekday(date: date.startOfMonth)
         let lastDay = CalCalendar.shared.calMonthLastDay(date: date.startOfMonth)
         let prevLastDay = CalCalendar.shared.calMonthLastDay(date: date.prevMonth)
