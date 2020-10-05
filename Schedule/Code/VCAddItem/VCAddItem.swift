@@ -16,10 +16,17 @@ class VCAddItem: UIViewController {
     var tableView: UITableView!
     
     var add: UIBarButtonItem!
+    
+    var date: Date = Date()
     var eventTitle: String = "" {
         didSet {
             print("didSet eventTitle: \(eventTitle)")
         }
+    }
+    
+    convenience init(date: Date) {
+        self.init(nibName:nil, bundle:nil)
+        self.date = date
     }
     
     override func viewDidLoad() {
@@ -96,7 +103,7 @@ class VCAddItem: UIViewController {
         // TODO: - 여러 인자 추가 시, 추가 반영
         let item = Item()
         item.title = eventTitle
-        Item.add(item: item).subscribe(
+        Item.add(item: item, date: self.date).subscribe(
             onNext: { [weak self] item in
                 guard let `self` = self else { return }
                 self.dismiss(animated: true) {

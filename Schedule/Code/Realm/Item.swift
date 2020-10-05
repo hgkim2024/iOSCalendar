@@ -35,7 +35,7 @@ import RxSwift
             do {
                 let realm = try Realm()
                 if item.key == -1 {
-                    item.key = Int64(date.timeIntervalSince1970 * 1000)
+                    item.key = Int64(Date().timeIntervalSince1970 * 1000)
                     item.date = date.startOfDay.timeIntervalSince1970
                 }
                 

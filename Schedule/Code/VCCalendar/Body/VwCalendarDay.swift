@@ -10,11 +10,19 @@ import UIKit
 
 class VwCalendarDay: UIView {
     let label = UILabel()
-    // TODO: - 일과 등록 시 표현할 TableView
     var tableView: UITableView? = nil
+    var todayView: UIView? = nil
+    var weekday: Int = 2
+    var todayFlag: Bool = false
+    var date: Date? = nil
+    
     var list: [Item]? = nil {
         didSet {
             setUpTableView()
+            
+            if !todayFlag &&  todayView != nil {
+                removeTodayView()
+            }
         }
     }
     
@@ -44,7 +52,6 @@ class VwCalendarDay: UIView {
         NSLayoutConstraint.activate([
             label.topAnchor.constraint(equalTo: topAnchor, constant: Global.calendarleftMargin),
             label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Global.calendarleftMargin),
-            label.trailingAnchor.constraint(equalTo: trailingAnchor),
         ])
     }
     
@@ -99,6 +106,8 @@ class VwCalendarDay: UIView {
     }
     
     func setColor(weekday: Int, alpha: CGFloat = 1.0) {
+        self.weekday = weekday
+        
         switch weekday {
         case 1:
             label.textColor = Theme.sunday.withAlphaComponent(alpha)
@@ -107,6 +116,44 @@ class VwCalendarDay: UIView {
         default:
             label.textColor = Theme.font.withAlphaComponent(alpha)
         }
+    }
+    
+    func selectedDay() {
+        layer.borderWidth = 1
+        layer.borderColor = UIColor.init(hexString: "#00cc00").withAlphaComponent(0.8).cgColor
+    }
+    
+    func deselectedDay() {
+        layer.borderWidth = 0
+        layer.borderColor = UIColor.clear.cgColor
+    }
+    
+    func setTodayView() {
+        todayFlag = true
+        label.textColor = .white
+        
+        let size: CGFloat = label.font.pointSize + 6
+        todayView = UIView()
+        guard let todayView = todayView else { return }
+        todayView.translatesAutoresizingMaskIntoConstraints = false
+        todayView.layer.cornerRadius = size / 2.0
+        todayView.backgroundColor = Theme.today
+        
+        addSubview(todayView)
+        NSLayoutConstraint.activate([
+            todayView.centerXAnchor.constraint(equalTo: label.centerXAnchor),
+            todayView.centerYAnchor.constraint(equalTo: label.centerYAnchor),
+            todayView.widthAnchor.constraint(equalToConstant: size),
+            todayView.heightAnchor.constraint(equalToConstant: size)
+        ])
+        sendSubviewToBack(todayView)
+    }
+    
+    func removeTodayView() {
+        todayFlag = false
+        setColor(weekday: weekday)
+        todayView?.removeFromSuperview()
+        todayView = nil
     }
     
     func setText(text: String) {

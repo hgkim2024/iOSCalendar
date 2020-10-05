@@ -11,6 +11,7 @@ import UIKit
 class VCRoot: UIViewController {
     
     var calendar: VwCalendar!
+    var selectedDate: Date?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -50,6 +51,13 @@ class VCRoot: UIViewController {
             name: NSNotification.Name(rawValue: NamesOfNotification.setCalendarTitle),
             object: nil
         )
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(didReceivedDayDateNotification),
+            name: NSNotification.Name(rawValue: NamesOfNotification.selectedDayToPostDate),
+            object: nil
+        )
     }
     
     // MARK: - Functions
@@ -62,8 +70,19 @@ class VCRoot: UIViewController {
         self.title = title
     }
     
+    @objc func didReceivedDayDateNotification(_ notification: Notification) {
+        guard let date = notification.userInfo?["date"] as? Date
+        else {
+                return
+        }
+        
+        selectedDate = date
+        print("selected Date: \(date)")
+    }
+    
     @objc func addTapped(_ sender: Any) {
-        let vc = VCAddItem()
+        guard let date = selectedDate else { return }
+        let vc = VCAddItem(date: date)
         let nvc = UINavigationController(rootViewController: vc)
         nvc.isModalInPresentation = true
         nvc.presentationController?.delegate = vc

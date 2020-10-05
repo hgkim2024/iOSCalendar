@@ -20,12 +20,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
 
         // Create the SwiftUI view that provides the window contents.
-//        let contentView = ContentView()
 
         // Use a UIHostingController as window root view controller.
         if let windowScene = scene as? UIWindowScene {
             let window = UIWindow(windowScene: windowScene)
-//            window.rootViewController = UIHostingController(rootView: contentView)
+
             window.rootViewController = UINavigationController.init(rootViewController: VCRoot())
             self.window = window
             window.tintColor = Theme.item
@@ -53,6 +52,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func sceneWillEnterForeground(_ scene: UIScene) {
         // Called as the scene transitions from the background to the foreground.
         // Use this method to undo the changes made on entering the background.
+        
+        NotificationCenter.default.post(
+            name: NSNotification.Name(rawValue: NamesOfNotification.setToday),
+            object: nil,
+            userInfo: nil
+        )
     }
 
     func sceneDidEnterBackground(_ scene: UIScene) {
