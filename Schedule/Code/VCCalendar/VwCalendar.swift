@@ -40,6 +40,15 @@ class VwCalendar: UIView {
         header.translatesAutoresizingMaskIntoConstraints = false
         body.view.translatesAutoresizingMaskIntoConstraints = false
         body.touchDelegate = self
+        
+        let swipeUp = UISwipeGestureRecognizer(target: self, action: #selector(swipeAction(sender:)))
+        swipeUp.direction = .up
+        
+        let swipeDown = UISwipeGestureRecognizer(target: self, action: #selector(swipeAction(sender:)))
+        swipeDown.direction = .down
+        
+        addGestureRecognizer(swipeUp)
+        addGestureRecognizer(swipeDown)
     }
     
     func displayUI() {
@@ -127,6 +136,14 @@ class VwCalendar: UIView {
                 self.changeDayCellStatus(isUp: isUp)
             }
         })
+    }
+    
+    @objc private func swipeAction(sender: UISwipeGestureRecognizer) {
+        if sender.direction == .up {
+            touchEndAnimated(isUp: true)
+        } else if sender.direction == .down {
+            touchEndAnimated(isUp: false)
+        }
     }
 }
 

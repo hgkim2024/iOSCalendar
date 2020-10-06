@@ -136,6 +136,7 @@ extension VCCalendarMonthPage: CalendarTouchEventDelegate {
     
     func touchBegin() {
         touchDelegate?.touchBegin()
+        dataSource = nil
     }
     
     func touchMove(diff: CGFloat) {
