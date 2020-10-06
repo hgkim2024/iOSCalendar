@@ -34,7 +34,7 @@ class CellCalendarDay: UITableViewCell {
         vwRoot.backgroundColor = Theme.item.withAlphaComponent(0.1)
         
         vwEdge.translatesAutoresizingMaskIntoConstraints = false
-        vwEdge.backgroundColor = Theme.item
+        vwEdge.backgroundColor = Theme.item.withAlphaComponent(0.8)
         
         title.translatesAutoresizingMaskIntoConstraints = false
         title.textColor = Theme.font
@@ -79,7 +79,7 @@ class CellCalendarDay: UITableViewCell {
             // go to min
             title.isHidden = true
             vwEdge.isHidden = true
-            vwRoot.backgroundColor = Theme.item
+            vwRoot.backgroundColor = Theme.item.withAlphaComponent(0.8)
         } else {
             // go to max
             title.isHidden = false

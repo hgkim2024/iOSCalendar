@@ -47,6 +47,7 @@ class CellAddItemTitle: UITableViewCell {
         tv.font = UIFont.systemFont(ofSize: Global.fontSize - 1)
         tv.text = ""
         tv.delegate = self
+        tv.isUserInteractionEnabled = true
         
         vwDummy = UIView()
         vwDummy.translatesAutoresizingMaskIntoConstraints = false
@@ -96,6 +97,10 @@ class CellAddItemTitle: UITableViewCell {
         } else {
             return minHeight
         }
+    }
+    
+    func tvBecomeFirstResponder() {
+        tv.becomeFirstResponder()
     }
 }
 

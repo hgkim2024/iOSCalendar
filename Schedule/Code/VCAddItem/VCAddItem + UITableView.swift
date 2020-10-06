@@ -19,6 +19,7 @@ extension VCAddItem: UITableViewDelegate, UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: CellAddItemTitle.identifier, for: indexPath) as! CellAddItemTitle
         cell.setTitle()
         cell.setTvPlaceHolder()
+        cell.selectionStyle = .none
         cell.delegate = self
         return cell
     }
@@ -29,6 +30,12 @@ extension VCAddItem: UITableViewDelegate, UITableViewDataSource {
             return CGFloat.leastNormalMagnitude
         default:
             return 30
+        }
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        if let cell = tableView.cellForRow(at: indexPath) as? CellAddItemTitle {
+            cell.tvBecomeFirstResponder()
         }
     }
 }

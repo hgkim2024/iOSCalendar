@@ -145,6 +145,8 @@ class VwCalendar: UIView {
         if sender.direction == .up {
             touchEndAnimated(isUp: true)
         } else if sender.direction == .down {
+            self.changeDayCellStatus(isUp: false)
+            self.layoutIfNeeded()
             touchEndAnimated(isUp: false)
         }
     }
@@ -182,8 +184,8 @@ extension VwCalendar: CalendarTouchEventDelegate {
             layoutIfNeeded()
         } else {
             if calendarHeight.constant - diff < maxHeight {
+                // down
                 calendarHeight.constant -= diff
-                // TODO: -
                 if let vc = (self.body.viewControllers?[safe: 0] as? VCCalendarMonth) {
                     let rate = ((calendarHeight.constant - minHeight) / (maxHeight - minHeight))
                     
@@ -191,7 +193,6 @@ extension VwCalendar: CalendarTouchEventDelegate {
                         view.changeHeight(isUp: false, rate: rate)
                     }
                 }
-                // TODO: -
             } else {
                 calendarHeight.constant = maxHeight
             }

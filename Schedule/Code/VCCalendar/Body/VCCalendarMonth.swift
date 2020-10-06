@@ -58,7 +58,6 @@ class VCCalendarMonth: UIViewController {
             for view in dayViews {
                 if view.label.text ?? "0" == "1" {
                     view.selectedDay()
-                    postDayDateNotification(view: view)
                     preSelecedDay = view
                     loadViewIfNeeded()
                     break
@@ -106,6 +105,8 @@ class VCCalendarMonth: UIViewController {
                     
                     if today == day &&
                         month == lastDayMonth {
+                        let date = self.date.getNextCountDay(count: day)
+                        dayView.date = date
                         dayView.selectedDay()
                         dayView.setTodayView()
                         preSelecedDay = dayView
@@ -154,21 +155,9 @@ class VCCalendarMonth: UIViewController {
     
     @objc func selecedDay(sender: UITapGestureRecognizer) {
         guard let view = sender.view as? VwCalendarDay else { return }
-        print("selecedDay")
         preSelecedDay?.deselectedDay()
         view.selectedDay()
-        postDayDateNotification(view: view)
         preSelecedDay = view
-    }
-    
-    func postDayDateNotification(view: VwCalendarDay) {
-        guard let date = view.date else { return }
-        
-        NotificationCenter.default.post(
-            name: NSNotification.Name(rawValue: NamesOfNotification.selectedDayToPostDate),
-            object: nil,
-            userInfo: ["date": date]
-        )
     }
     
     func setUpData() {
@@ -268,7 +257,6 @@ class VCCalendarMonth: UIViewController {
                 preSelecedDay?.deselectedDay()
                 view.setTodayView()
                 view.selectedDay()
-                postDayDateNotification(view: view)
                 preSelecedDay = view
                 loadViewIfNeeded()
                 break

@@ -121,6 +121,14 @@ class VwCalendarDay: UIView {
     func selectedDay() {
         layer.borderWidth = 1
         layer.borderColor = UIColor.init(hexString: "#00cc00").withAlphaComponent(0.8).cgColor
+        
+        guard let date = self.date else { return }
+        
+        NotificationCenter.default.post(
+            name: NSNotification.Name(rawValue: NamesOfNotification.selectedDayToPostDate),
+            object: nil,
+            userInfo: ["date": date]
+        )
     }
     
     func deselectedDay() {
