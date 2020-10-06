@@ -18,6 +18,9 @@ class VwCalendar: UIView {
     var maxHeight: CGFloat = 812.0
     let weight: CGFloat = 20.0
     
+    var swipeUp: UISwipeGestureRecognizer?
+    var swipeDown: UISwipeGestureRecognizer?
+    
     // true: up, false: down
     var upDownStatus: Bool = true
     
@@ -41,14 +44,14 @@ class VwCalendar: UIView {
         body.view.translatesAutoresizingMaskIntoConstraints = false
         body.touchDelegate = self
         
-        let swipeUp = UISwipeGestureRecognizer(target: self, action: #selector(swipeAction(sender:)))
-        swipeUp.direction = .up
+        swipeUp = UISwipeGestureRecognizer(target: self, action: #selector(swipeAction(sender:)))
+        swipeUp!.direction = .up
         
-        let swipeDown = UISwipeGestureRecognizer(target: self, action: #selector(swipeAction(sender:)))
-        swipeDown.direction = .down
+        swipeDown = UISwipeGestureRecognizer(target: self, action: #selector(swipeAction(sender:)))
+        swipeDown!.direction = .down
         
-        addGestureRecognizer(swipeUp)
-        addGestureRecognizer(swipeDown)
+        addGestureRecognizer(swipeUp!)
+        addGestureRecognizer(swipeDown!)
     }
     
     func displayUI() {
@@ -152,6 +155,9 @@ extension VwCalendar: CalendarTouchEventDelegate {
     
     func touchBegin() {
         upDownStatus = (calendarHeight.constant > minHeight) ? true : false
+        
+        removeGestureRecognizer(swipeUp!)
+        removeGestureRecognizer(swipeDown!)
     }
     
     func touchMove(diff: CGFloat) {
@@ -201,5 +207,7 @@ extension VwCalendar: CalendarTouchEventDelegate {
         }
         
         self.touchEndAnimated(isUp: isUp)
+        addGestureRecognizer(swipeUp!)
+        addGestureRecognizer(swipeDown!)
     }
 }
