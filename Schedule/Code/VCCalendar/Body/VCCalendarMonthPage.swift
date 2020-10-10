@@ -14,12 +14,11 @@ class VCCalendarMonthPage: UIPageViewController {
     
     var isUp: Bool = false {
         didSet {
-            guard let vcs = viewControllers else { return }
-            for vc in vcs {
-                if let vc = vc as? VCCalendarMonth {
-                    vc.isUp = self.isUp
-                }
-            }
+            NotificationCenter.default.post(
+                name: NSNotification.Name(rawValue: NamesOfNotification.calendarIsUp),
+                object: nil,
+                userInfo: ["isUp": self.isUp]
+            )
         }
     }
     
@@ -80,6 +79,14 @@ class VCCalendarMonthPage: UIPageViewController {
     
     @objc func didReceivedAddNotification() {
         viewControllers?[safe: 0]?.viewWillAppear(false)
+    }
+    
+    func setDataSource(isOn: Bool) {
+        if isOn {
+            dataSource = self
+        } else {
+            dataSource = nil
+        }
     }
 }
 

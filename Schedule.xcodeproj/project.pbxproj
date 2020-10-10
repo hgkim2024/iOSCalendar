@@ -17,9 +17,10 @@
 		126B2DC1250BA24800C69BC6 /* VCAddItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 126B2DC0250BA24800C69BC6 /* VCAddItem.swift */; };
 		126B2DC3250BA2F600C69BC6 /* VCAddItem + UITableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 126B2DC2250BA2F600C69BC6 /* VCAddItem + UITableView.swift */; };
 		126B2DC6250BA75800C69BC6 /* CellAddItemTitle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 126B2DC5250BA75800C69BC6 /* CellAddItemTitle.swift */; };
+		126D8260253172AF000BFC32 /* CellCalendarDayCount.swift in Sources */ = {isa = PBXBuildFile; fileRef = 126D825F253172AF000BFC32 /* CellCalendarDayCount.swift */; };
 		126F007425060BFB00C9FA3A /* VCCalendarMonthPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 126F007325060BFB00C9FA3A /* VCCalendarMonthPage.swift */; };
-		127043422504A8760045375E /* VwCalendarHeader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 127043412504A8760045375E /* VwCalendarHeader.swift */; };
-		127043452504AD560045375E /* VwCalendarHeaderCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 127043442504AD560045375E /* VwCalendarHeaderCell.swift */; };
+		127043422504A8760045375E /* VwCalendarWeekday.swift in Sources */ = {isa = PBXBuildFile; fileRef = 127043412504A8760045375E /* VwCalendarWeekday.swift */; };
+		127043452504AD560045375E /* VwCalendarWeekdayCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 127043442504AD560045375E /* VwCalendarWeekdayCell.swift */; };
 		127043482504CAA50045375E /* VwCalendarDay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 127043472504CAA50045375E /* VwCalendarDay.swift */; };
 		1270434A2504D0FE0045375E /* Date.swift in Sources */ = {isa = PBXBuildFile; fileRef = 127043492504D0FE0045375E /* Date.swift */; };
 		1270434C2504DB530045375E /* VCCalendarMonth.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1270434B2504DB530045375E /* VCCalendarMonth.swift */; };
@@ -69,9 +70,10 @@
 		126B2DC0250BA24800C69BC6 /* VCAddItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VCAddItem.swift; sourceTree = "<group>"; };
 		126B2DC2250BA2F600C69BC6 /* VCAddItem + UITableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VCAddItem + UITableView.swift"; sourceTree = "<group>"; };
 		126B2DC5250BA75800C69BC6 /* CellAddItemTitle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellAddItemTitle.swift; sourceTree = "<group>"; };
+		126D825F253172AF000BFC32 /* CellCalendarDayCount.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellCalendarDayCount.swift; sourceTree = "<group>"; };
 		126F007325060BFB00C9FA3A /* VCCalendarMonthPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VCCalendarMonthPage.swift; sourceTree = "<group>"; };
-		127043412504A8760045375E /* VwCalendarHeader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VwCalendarHeader.swift; sourceTree = "<group>"; };
-		127043442504AD560045375E /* VwCalendarHeaderCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VwCalendarHeaderCell.swift; sourceTree = "<group>"; };
+		127043412504A8760045375E /* VwCalendarWeekday.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VwCalendarWeekday.swift; sourceTree = "<group>"; };
+		127043442504AD560045375E /* VwCalendarWeekdayCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VwCalendarWeekdayCell.swift; sourceTree = "<group>"; };
 		127043472504CAA50045375E /* VwCalendarDay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VwCalendarDay.swift; sourceTree = "<group>"; };
 		127043492504D0FE0045375E /* Date.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Date.swift; sourceTree = "<group>"; };
 		1270434B2504DB530045375E /* VCCalendarMonth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VCCalendarMonth.swift; sourceTree = "<group>"; };
@@ -231,8 +233,8 @@
 		127043432504AD400045375E /* Header */ = {
 			isa = PBXGroup;
 			children = (
-				127043412504A8760045375E /* VwCalendarHeader.swift */,
-				127043442504AD560045375E /* VwCalendarHeaderCell.swift */,
+				127043412504A8760045375E /* VwCalendarWeekday.swift */,
+				127043442504AD560045375E /* VwCalendarWeekdayCell.swift */,
 			);
 			path = Header;
 			sourceTree = "<group>";
@@ -339,6 +341,7 @@
 			isa = PBXGroup;
 			children = (
 				12A2E1812519C29E0023B221 /* CellCalendarDay.swift */,
+				126D825F253172AF000BFC32 /* CellCalendarDayCount.swift */,
 			);
 			path = Cell;
 			sourceTree = "<group>";
@@ -584,16 +587,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				127043452504AD560045375E /* VwCalendarHeaderCell.swift in Sources */,
+				127043452504AD560045375E /* VwCalendarWeekdayCell.swift in Sources */,
 				129BECF3250008C90008905F /* VCRoot.swift in Sources */,
 				126B0A2A250350AE00355D00 /* UIColor.swift in Sources */,
 				126B2DC3250BA2F600C69BC6 /* VCAddItem + UITableView.swift in Sources */,
 				12813B6C2500008F005C8383 /* AppDelegate.swift in Sources */,
 				12A2E1822519C29E0023B221 /* CellCalendarDay.swift in Sources */,
+				126D8260253172AF000BFC32 /* CellCalendarDayCount.swift in Sources */,
 				127110592506590600F797E8 /* NamesOfNotification.swift in Sources */,
 				126B0A272503506600355D00 /* Global.swift in Sources */,
 				126B0A252503502A00355D00 /* Theme.swift in Sources */,
-				127043422504A8760045375E /* VwCalendarHeader.swift in Sources */,
+				127043422504A8760045375E /* VwCalendarWeekday.swift in Sources */,
 				127043482504CAA50045375E /* VwCalendarDay.swift in Sources */,
 				12813B6E2500008F005C8383 /* SceneDelegate.swift in Sources */,
 				126B0A302503530400355D00 /* CalCalendar.swift in Sources */,

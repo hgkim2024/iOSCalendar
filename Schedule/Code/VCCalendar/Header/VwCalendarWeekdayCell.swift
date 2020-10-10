@@ -1,5 +1,5 @@
 //
-//  VwCalendarHeaderCell.swift
+//  VwCalendarWeekdayCell.swift
 //  Schedule
 //
 //  Created by Asu on 2020/09/06.
@@ -8,8 +8,8 @@
 
 import UIKit
 
-class VwCalendarHeaderCell: UICollectionViewCell {
-    static let identifier: String = "VwCalendarHeaderCell"
+class VwCalendarWeekdayCell: UICollectionViewCell {
+    static let identifier: String = "VwCalendarWeekdayCell"
     var label: UILabel!
     
     override init(frame: CGRect) {
@@ -26,7 +26,7 @@ class VwCalendarHeaderCell: UICollectionViewCell {
     func setUpUI() {
         label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
-        label.font = UIFont.systemFont(ofSize: Global.headerFontSize)
+        label.font = UIFont.systemFont(ofSize: Global.weekdayFontSize)
         label.textAlignment = .left
         label.adjustsFontSizeToFitWidth = true
         label.textColor = Theme.font

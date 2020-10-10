@@ -29,7 +29,6 @@ class VCCalendarMonth: UIViewController {
     
     var isUp: Bool = false
     private var preSelecedDay: VwCalendarDay? = nil
-    var today: Int = 0
     
     convenience init(date: Date) {
         self.init(nibName:nil, bundle:nil)
@@ -46,11 +45,6 @@ class VCCalendarMonth: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        
-        for view in dayViews {
-            view.isUp = self.isUp
-        }
-        
         setUpData()
         setToday()
         
@@ -63,10 +57,12 @@ class VCCalendarMonth: UIViewController {
                     break
                 }
             }
+        } else {
+            preSelecedDay?.selectedDay()
         }
-    }
+    }  
     
-    func setUpUI() {
+    private func setUpUI() {
         let today = Date().startOfDay.day
         let month = Date().month
         let lastDayMonth = date.startOfMonth.month
@@ -84,7 +80,7 @@ class VCCalendarMonth: UIViewController {
         }
         
         for i in 0..<(row * Global.calendarColumn) {
-            let dayView = VwCalendarDay()
+            let dayView = VwCalendarDay(row: row)
             dayView.translatesAutoresizingMaskIntoConstraints = false
             dayViews.append(dayView)
             
@@ -103,14 +99,13 @@ class VCCalendarMonth: UIViewController {
                     dayView.setText(text: "\(day)")
                     dayView.setColor(weekday: status)
                     
-                    if today == day &&
-                        month == lastDayMonth {
+                    if today == day
+                        && month == lastDayMonth {
                         let date = self.date.getNextCountDay(count: day)
                         dayView.date = date
                         dayView.selectedDay()
                         dayView.setTodayView()
                         preSelecedDay = dayView
-                        self.today = day
                     }
                 }
             } else {
@@ -122,7 +117,7 @@ class VCCalendarMonth: UIViewController {
         }
     }
     
-    func displayUI() {
+    private func displayUI() {
         let dayCount = Global.dayCount
         for row in 0..<row {
             for column in 0..<Global.calendarColumn {
@@ -161,6 +156,10 @@ class VCCalendarMonth: UIViewController {
     }
     
     func setUpData() {
+        for view in dayViews {
+            view.isUp = self.isUp
+        }
+        
         let weekday = CalCalendar.shared.calWeekday(date: date.startOfMonth)
         let lastDay = CalCalendar.shared.calMonthLastDay(date: date.startOfMonth)
         let prevLastDay = CalCalendar.shared.calMonthLastDay(date: date.prevMonth)
@@ -196,6 +195,7 @@ class VCCalendarMonth: UIViewController {
         }
     }
     
+    // MARK: - Touch Event
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first else { return }
         self.beginPoint = touch.location(in: touch.view)
@@ -225,15 +225,25 @@ class VCCalendarMonth: UIViewController {
         guard let beginPoint = self.beginPoint else { return }
         guard let lastPoint = self.lastPoint else { return }
         let y = beginPoint.y - lastPoint.y
-        delegate?.touchEnd(diff: y)
+        if beginPoint.y != lastPoint.y {
+            delegate?.touchEnd(diff: y)
+        }
         self.beginPoint = nil
     }
     
+    // MARK: - Observer
     func addObserver() {
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(setTodayNotification),
             name: NSNotification.Name(rawValue: NamesOfNotification.setToday),
+            object: nil
+        )
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(setIsUp),
+            name: NSNotification.Name(rawValue: NamesOfNotification.calendarIsUp),
             object: nil
         )
     }
@@ -247,13 +257,11 @@ class VCCalendarMonth: UIViewController {
         let todayFlag = (today.startOfMonth == self.date.startOfMonth)
         let todayCount = today.day
         
-        guard
-            self.today != todayCount,
-            todayFlag
-        else { return }
+        guard todayFlag else { return }
         
         for view in dayViews {
             if todayCount == Int(view.label.text ?? "0") {
+                preSelecedDay?.removeTodayView()
                 preSelecedDay?.deselectedDay()
                 view.setTodayView()
                 view.selectedDay()
@@ -264,5 +272,14 @@ class VCCalendarMonth: UIViewController {
                 view.todayFlag = false
             }
         }
+    }
+    
+    @objc func setIsUp(_ notification: Notification) {
+        guard let isUp = notification.userInfo?["isUp"] as? Bool
+        else {
+                return
+        }
+        
+        self.isUp = isUp
     }
 }

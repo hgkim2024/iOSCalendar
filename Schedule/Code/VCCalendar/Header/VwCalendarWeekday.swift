@@ -1,5 +1,5 @@
 //
-//  VwCalendarHeader.swift
+//  VwCalendarWeekday.swift
 //  Schedule
 //
 //  Created by Asu on 2020/09/06.
@@ -9,7 +9,7 @@
 import UIKit
 
 
-class VwCalendarHeader: UIView {
+class VwCalendarWeekday: UIView {
     
     let dayString: [String] = [
         "일".localized,
@@ -47,7 +47,7 @@ class VwCalendarHeader: UIView {
         collectionView.dataSource = self
         collectionView.backgroundColor = .clear
         
-        collectionView.register(VwCalendarHeaderCell.self, forCellWithReuseIdentifier: VwCalendarHeaderCell.identifier)
+        collectionView.register(VwCalendarWeekdayCell.self, forCellWithReuseIdentifier: VwCalendarWeekdayCell.identifier)
     }
     
     func displayUI() {
@@ -63,7 +63,7 @@ class VwCalendarHeader: UIView {
 }
 
 // MARK: - UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout
-extension VwCalendarHeader: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
+extension VwCalendarWeekday: UICollectionViewDelegate, UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     func collectionView(
         _ collectionView: UICollectionView,
@@ -76,7 +76,7 @@ extension VwCalendarHeader: UICollectionViewDelegate, UICollectionViewDataSource
         _ collectionView: UICollectionView,
         cellForItemAt indexPath: IndexPath
     ) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: VwCalendarHeaderCell.identifier, for: indexPath) as! VwCalendarHeaderCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: VwCalendarWeekdayCell.identifier, for: indexPath) as! VwCalendarWeekdayCell
         
         cell.setText(text: dayString[indexPath.row])
         cell.setColor(weekday: indexPath.row + 1)
@@ -91,6 +91,6 @@ extension VwCalendarHeader: UICollectionViewDelegate, UICollectionViewDataSource
     ) -> CGSize {
         let size = collectionView.bounds.size
         let width = size.width / CGFloat(Global.dayCount)
-        return CGSize(width: width, height: Global.headerHeight)
+        return CGSize(width: width, height: Global.weekdayHeight)
     }
 }
