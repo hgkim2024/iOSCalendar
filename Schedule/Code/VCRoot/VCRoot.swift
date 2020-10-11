@@ -23,6 +23,8 @@ class VCRoot: UIViewController {
     
     func setUpUI() {
         view.backgroundColor = Theme.rootBackground
+        navigationController?.navigationBar.barTintColor = Theme.rootBackground
+        navigationController?.navigationBar.shadowImage = UIImage()
         
         let add = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addTapped))
         navigationItem.rightBarButtonItems = [add]
@@ -32,14 +34,12 @@ class VCRoot: UIViewController {
     }
     
     func displayUI() {
-        let margin: CGFloat = Global.calendarMargin
-        
         view.addSubview(calendar)
         
         NSLayoutConstraint.activate([
             calendar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            calendar.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: margin),
-            calendar.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -margin),
+            calendar.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            calendar.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             calendar.bottomAnchor.constraint(equalTo: view.bottomAnchor),
         ])
     }

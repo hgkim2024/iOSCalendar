@@ -14,4 +14,5 @@ class NamesOfNotification {
     static let setToday = "setToday"
     static let selectedDayToPostDate = "selectedDayToPostDate"
     static let calendarIsUp = "calendarIsUp"
+    static let selectedDayDetailNotification = "selectedDayDetailNotification"
 }

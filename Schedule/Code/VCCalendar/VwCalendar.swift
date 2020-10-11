@@ -13,10 +13,11 @@ class VwCalendar: UIView {
     
     let VCWeekday = VwCalendarWeekday()
     let VCpage = VCCalendarMonthPage()
+    let vwDay = VwCalendarDayDetail()
     
-    var minHeight: CGFloat = VwCalendar.getMaxCalendarHeight() / 2.0
+    var minHeight: CGFloat = VwCalendar.getMaxCalendarHeight() * (45.0 / 100.0)
     var maxHeight: CGFloat = VwCalendar.getMaxCalendarHeight()
-    let weight: CGFloat = 20.0
+    let weight: CGFloat = 5.0
     
     var swipeUp: UISwipeGestureRecognizer?
     var swipeDown: UISwipeGestureRecognizer?
@@ -42,6 +43,9 @@ class VwCalendar: UIView {
         VCWeekday.translatesAutoresizingMaskIntoConstraints = false
         VCpage.view.translatesAutoresizingMaskIntoConstraints = false
         VCpage.touchDelegate = self
+        vwDay.translatesAutoresizingMaskIntoConstraints = false
+        vwDay.delegate = self
+        vwDay.isHidden = true
         
         swipeUp = UISwipeGestureRecognizer(target: self, action: #selector(swipeAction(sender:)))
         swipeUp!.direction = .up
@@ -54,21 +58,29 @@ class VwCalendar: UIView {
     }
     
     private func displayUI() {
+        let margin: CGFloat = Global.calendarMargin
+        
         addSubview(VCWeekday)
         addSubview(VCpage.view)
+        addSubview(vwDay)
         
         calendarHeight = VCpage.view.heightAnchor.constraint(equalToConstant: maxHeight)
         
         NSLayoutConstraint.activate([
             VCWeekday.topAnchor.constraint(equalTo: topAnchor),
-            VCWeekday.leadingAnchor.constraint(equalTo: leadingAnchor),
-            VCWeekday.trailingAnchor.constraint(equalTo: trailingAnchor),
+            VCWeekday.leadingAnchor.constraint(equalTo: leadingAnchor, constant: margin),
+            VCWeekday.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -margin),
             VCWeekday.heightAnchor.constraint(equalToConstant: Global.weekdayHeight),
             
             VCpage.view.topAnchor.constraint(equalTo: VCWeekday.bottomAnchor, constant: -5),
-            VCpage.view.leadingAnchor.constraint(equalTo: leadingAnchor),
-            VCpage.view.trailingAnchor.constraint(equalTo: trailingAnchor),
+            VCpage.view.leadingAnchor.constraint(equalTo: leadingAnchor, constant: margin),
+            VCpage.view.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -margin),
             calendarHeight,
+            
+            vwDay.topAnchor.constraint(equalTo: VCpage.view.bottomAnchor),
+            vwDay.leadingAnchor.constraint(equalTo: leadingAnchor),
+            vwDay.trailingAnchor.constraint(equalTo: trailingAnchor),
+            vwDay.bottomAnchor.constraint(equalTo: bottomAnchor),
         ])
     }
     
@@ -113,7 +125,7 @@ class VwCalendar: UIView {
             }
         } else {
             if diff < -weight
-                || ((self.calendarHeight.constant - self.minHeight) > (self.maxHeight - self.minHeight) / 3.0) {
+                || ((self.calendarHeight.constant - self.minHeight) > (self.maxHeight - self.minHeight) * (1.0/3.0)) {
                 return false
             } else {
                 return true
@@ -139,6 +151,7 @@ class VwCalendar: UIView {
             }
             self.addGestureRecognizer(self.swipeUp!)
             self.addGestureRecognizer(self.swipeDown!)
+            self.vwDay.isHidden = !isUp
         })
     }
     
@@ -163,6 +176,7 @@ class VwCalendar: UIView {
             VCpage.setDataSource(isOn: true)
             self.addGestureRecognizer(self.swipeUp!)
             self.addGestureRecognizer(self.swipeDown!)
+            vwDay.isHidden = !isUp
             return
         } else {
             DispatchQueue.main.asyncAfter(deadline: .now() + (0.015 / TimeInterval(totalCount))) {
@@ -212,6 +226,7 @@ extension VwCalendar: CalendarTouchEventDelegate {
     
     func touchBegin() {
         upDownStatus = (calendarHeight.constant > minHeight) ? true : false
+        vwDay.isHidden = false
         
         removeGestureRecognizer(swipeUp!)
         removeGestureRecognizer(swipeDown!)
@@ -256,17 +271,12 @@ extension VwCalendar: CalendarTouchEventDelegate {
     
     func touchEnd(diff: CGFloat) {
         let isUp: Bool = self.getUpDownStatus(diff: diff)
+        print("touchEnd diif: \(diff), isUp: \(isUp)")
         
         if !isUp {
             self.changeDayCellStatus(isUp: isUp)
             self.layoutIfNeeded()
         }
-        
-//        if isUp {
-//            self.touchEndAnimated(isUp: isUp)
-//        } else {
-//            self.swipeAnimated(isUp: isUp)
-//        }
         
 //        self.touchEndAnimated(isUp: isUp)
         self.swipeAnimated(isUp: isUp)

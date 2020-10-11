@@ -29,6 +29,7 @@ class VCCalendarMonth: UIViewController {
     
     var isUp: Bool = false
     private var preSelecedDay: VwCalendarDay? = nil
+    private var preToday: VwCalendarDay? = nil
     
     convenience init(date: Date) {
         self.init(nibName:nil, bundle:nil)
@@ -47,6 +48,10 @@ class VCCalendarMonth: UIViewController {
         super.viewWillAppear(animated)
         setUpData()
         setToday()
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
         
         if preSelecedDay == nil {
             for view in dayViews {
@@ -60,7 +65,9 @@ class VCCalendarMonth: UIViewController {
         } else {
             preSelecedDay?.selectedDay()
         }
-    }  
+        
+        preSelecedDay?.selectedDayDetailNotification()
+    }
     
     private func setUpUI() {
         let today = Date().startOfDay.day
@@ -105,6 +112,7 @@ class VCCalendarMonth: UIViewController {
                         dayView.date = date
                         dayView.selectedDay()
                         dayView.setTodayView()
+                        preToday = dayView
                         preSelecedDay = dayView
                     }
                 }
@@ -152,7 +160,11 @@ class VCCalendarMonth: UIViewController {
         guard let view = sender.view as? VwCalendarDay else { return }
         preSelecedDay?.deselectedDay()
         view.selectedDay()
+        view.selectedDayDetailNotification()
         preSelecedDay = view
+        
+        delegate?.touchBegin()
+        delegate?.touchEnd(diff: 30.0)
     }
     
     func setUpData() {
@@ -261,11 +273,9 @@ class VCCalendarMonth: UIViewController {
         
         for view in dayViews {
             if todayCount == Int(view.label.text ?? "0") {
-                preSelecedDay?.removeTodayView()
-                preSelecedDay?.deselectedDay()
+                preToday?.removeTodayView()
                 view.setTodayView()
-                view.selectedDay()
-                preSelecedDay = view
+                preToday = view
                 loadViewIfNeeded()
                 break
             } else {

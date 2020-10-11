@@ -11,26 +11,41 @@ import RealmSwift
 import RxCocoa
 import RxSwift
 
+enum AddItemList {
+    case title
+    case trash
+}
+
 class VCAddItem: UIViewController {
+    
+    var itemList: [AddItemList] = [.title]
     
     var tableView: UITableView!
     
     var add: UIBarButtonItem!
     
     var date: Date = Date()
+    var item: Item? = nil
+    
     var eventTitle: String = "" {
         didSet {
             print("didSet eventTitle: \(eventTitle)")
         }
     }
     
-    convenience init(date: Date) {
+    convenience init(date: Date, item: Item? = nil) {
         self.init(nibName:nil, bundle:nil)
         self.date = date
+        // TODO: - item 존재 시 - 휴지통 아이콘 추가 및 기존 데이터 입력 된 상태로 보여주기
+        self.item = item
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        if self.item != nil {
+            itemList.append(.trash)
+        }
         
         setUpUI()
         displayUI()

@@ -12,6 +12,7 @@ class Global {
     static let calendarMargin: CGFloat = 10
     static let calendarleftMargin: CGFloat = 10
     
+    static let weekdayBigFontSize: CGFloat = 20
     static let weekdayFontSize: CGFloat = 12
     static let weekdayHeight: CGFloat = 35
     static let dayCount: Int = 7

@@ -12,6 +12,7 @@ class VwCalendarDay: UIView {
     let label = UILabel()
     var tableView: UITableView? = nil
     var todayView: UIView? = nil
+    
     var weekday: Int = 2
     var todayFlag: Bool = false
     var date: Date? = nil
@@ -121,15 +122,7 @@ class VwCalendarDay: UIView {
     
     func setColor(weekday: Int, alpha: CGFloat = 1.0) {
         self.weekday = weekday
-        
-        switch weekday {
-        case 1:
-            label.textColor = Theme.sunday.withAlphaComponent(alpha)
-        case 0, 7:
-            label.textColor = Theme.saturday.withAlphaComponent(alpha)
-        default:
-            label.textColor = Theme.font.withAlphaComponent(alpha)
-        }
+        label.setCalendarDayColor(weekday: weekday, alpha: alpha)
     }
     
     func selectedDay() {
@@ -142,6 +135,20 @@ class VwCalendarDay: UIView {
             name: NSNotification.Name(rawValue: NamesOfNotification.selectedDayToPostDate),
             object: nil,
             userInfo: ["date": date]
+        )
+    }
+    
+    func selectedDayDetailNotification() {
+        guard let date = self.date else { return }
+        
+        NotificationCenter.default.post(
+            name: NSNotification.Name(rawValue: NamesOfNotification.selectedDayDetailNotification),
+            object: nil,
+            userInfo:
+                [
+                    "date": date,
+                    "weekday": weekday
+                ]
         )
     }
     
