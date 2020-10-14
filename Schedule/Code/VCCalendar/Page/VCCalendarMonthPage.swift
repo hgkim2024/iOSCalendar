@@ -77,6 +77,7 @@ class VCCalendarMonthPage: UIPageViewController {
         let date = Date().startOfMonth
         let firstPage = VCCalendarMonth(date: date)
         firstPage.delegate = self
+        firstPage.isUp = self.isUp
         
         postTitleNotification(date.dateToString())
         

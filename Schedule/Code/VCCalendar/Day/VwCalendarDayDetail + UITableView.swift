@@ -27,7 +27,11 @@ extension VwCalendarDayDetail: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         guard let item = list?[safe: indexPath.row] else { return }
         
-        
+        NotificationCenter.default.post(
+            name: NSNotification.Name(rawValue: NamesOfNotification.dayCalendarDidSelectCell),
+            object: nil,
+            userInfo: ["item": item]
+        )
     }
     
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {

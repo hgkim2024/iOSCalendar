@@ -9,19 +9,30 @@
 import UIKit
 
 extension VCAddItem: UITableViewDelegate, UITableViewDataSource {
+    
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return itemList.count
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        return itemList[section].count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        // TODO: - 셀 분할 열거체 만들어서 구분 할 것
-        let cell = tableView.dequeueReusableCell(withIdentifier: CellAddItemTitle.identifier, for: indexPath) as! CellAddItemTitle
-        cell.setTitle()
-        cell.setTvPlaceHolder()
-        cell.selectionStyle = .none
-        cell.delegate = self
-        return cell
+        switch itemList[indexPath.section][indexPath.row] {
+        case .title:
+            let cell = tableView.dequeueReusableCell(withIdentifier: CellAddItemTitle.identifier, for: indexPath) as! CellAddItemTitle
+            cell.setTitle(title: self.item?.title ?? "")
+            cell.setTvPlaceHolder()
+            cell.selectionStyle = .none
+            cell.delegate = self
+            return cell
+        case .delete:
+            let cell = tableView.dequeueReusableCell(withIdentifier: CellAddItemDelete.identifier, for: indexPath) as! CellAddItemDelete
+            cell.selectionStyle = .none
+            return cell
+        }
     }
     
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
@@ -34,8 +45,15 @@ extension VCAddItem: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if let cell = tableView.cellForRow(at: indexPath) as? CellAddItemTitle {
-            cell.tvBecomeFirstResponder()
+        switch itemList[indexPath.section][indexPath.row] {
+        case .title:
+            if let cell = tableView.cellForRow(at: indexPath) as? CellAddItemTitle {
+                cell.tvBecomeFirstResponder()
+            }
+        case .delete:
+            if let _ = tableView.cellForRow(at: indexPath) as? CellAddItemDelete {
+                self.deleteAlert()
+            }
         }
     }
 }
@@ -55,11 +73,7 @@ extension VCAddItem: CellAddItemTitleDelegate {
             eventTitle = title
         }
         
-        if eventTitle.count > 0 {
-            add.isEnabled = true
-        } else {
-            add.isEnabled = false
-        }
+        add.isEnabled = isEdit()
     }
 }
 

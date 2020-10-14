@@ -28,6 +28,7 @@ import RxSwift
     // MARK: - funcsion
     static func add(
         item: Item,
+        title: String,
         date: Date = Date()
     ) -> Observable<Item> {
         // TODO: - 여러 인자 추가 시, 추가 반영
@@ -40,6 +41,7 @@ import RxSwift
                 }
                 
                 try realm.write {
+                    item.title = title
                     realm.add(item, update: .all)
                     try realm.commitWrite()
                     observer.on(.next(item))
@@ -76,6 +78,25 @@ import RxSwift
             return itemList
         } catch {
             return nil
+        }
+    }
+    
+    func remove() -> Observable<Bool> {
+        return Observable.create { observer in
+            do {
+                let realm = try Realm()
+                
+                try realm.write {
+                    realm.delete(self)
+                    observer.on(.next(true))
+                    observer.on(.completed)
+                }
+                
+            } catch {
+                observer.on(.error(error))
+            }
+            
+            return Disposables.create()
         }
     }
     

@@ -58,6 +58,13 @@ class VCRoot: UIViewController {
             name: NSNotification.Name(rawValue: NamesOfNotification.selectedDayToPostDate),
             object: nil
         )
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(didReceivedDayCalendarDidSelectCellNotification),
+            name: NSNotification.Name(rawValue: NamesOfNotification.dayCalendarDidSelectCell),
+            object: nil
+        )
     }
     
     // MARK: - Functions
@@ -79,9 +86,22 @@ class VCRoot: UIViewController {
         selectedDate = date
     }
     
+    @objc func didReceivedDayCalendarDidSelectCellNotification(_ notification: Notification) {
+        guard let item = notification.userInfo?["item"] as? Item
+        else {
+                return
+        }
+        
+        presentVCAddItem(date: Date(), item: item)
+    }
+    
     @objc func addTapped(_ sender: Any) {
         guard let date = selectedDate else { return }
-        let vc = VCAddItem(date: date)
+        presentVCAddItem(date: date)
+    }
+    
+    func presentVCAddItem(date: Date, item: Item? = nil) {
+        let vc = VCAddItem(date: date, item: item)
         let nvc = UINavigationController(rootViewController: vc)
         nvc.isModalInPresentation = true
         nvc.presentationController?.delegate = vc

@@ -42,6 +42,7 @@ class CellCalendarDayDetail: UITableViewCell {
         title.font = UIFont.systemFont(ofSize: Global.fontSize)
         title.textColor = Theme.font
         title.textAlignment = .left
+        title.numberOfLines = 0
     }
     
     func displayUI() {
@@ -59,7 +60,8 @@ class CellCalendarDayDetail: UITableViewCell {
             
             title.topAnchor.constraint(equalTo: topAnchor, constant: topMargin),
             title.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -topMargin),
-            title.leadingAnchor.constraint(equalTo: vwDot.centerXAnchor, constant: leftMargin - 10.0)
+            title.leadingAnchor.constraint(equalTo: vwDot.centerXAnchor, constant: leftMargin - 10.0),
+            title.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -leftMargin)
         ])
     }
     

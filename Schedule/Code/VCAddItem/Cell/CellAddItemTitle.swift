@@ -19,8 +19,9 @@ class CellAddItemTitle: UITableViewCell {
     
     var delegate: CellAddItemTitleDelegate?
     
-    private var tv: UITextView!
-    private var vwDummy: UIView!
+    private let tv = UITextView()
+    private let vwDummy = UIView()
+    
     private var tvConstraint: NSLayoutConstraint!
     private var previousRect: CGRect?
     
@@ -31,6 +32,8 @@ class CellAddItemTitle: UITableViewCell {
         
         setUpUI()
         displayUI()
+        contentView.addTopSeparator()
+        contentView.addBottomSeparator()
     }
     
     required init?(coder: NSCoder) {
@@ -38,7 +41,6 @@ class CellAddItemTitle: UITableViewCell {
     }
     
     private func setUpUI() {
-        tv = UITextView()
         tv.translatesAutoresizingMaskIntoConstraints = false
         tv.showsVerticalScrollIndicator = false
         
@@ -49,7 +51,6 @@ class CellAddItemTitle: UITableViewCell {
         tv.delegate = self
         tv.isUserInteractionEnabled = true
         
-        vwDummy = UIView()
         vwDummy.translatesAutoresizingMaskIntoConstraints = false
         vwDummy.backgroundColor = .clear
     }
@@ -61,6 +62,7 @@ class CellAddItemTitle: UITableViewCell {
         
         addSubview(tv)
         addSubview(vwDummy)
+        
         tvConstraint = tv.heightAnchor.constraint(equalToConstant: height)
         NSLayoutConstraint.activate([
             tv.topAnchor.constraint(equalTo: topAnchor, constant: topMargin),
@@ -72,6 +74,7 @@ class CellAddItemTitle: UITableViewCell {
             vwDummy.leadingAnchor.constraint(equalTo: tv.leadingAnchor),
             vwDummy.trailingAnchor.constraint(equalTo: tv.trailingAnchor),
             vwDummy.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -topMargin),
+            
         ])
     }
     

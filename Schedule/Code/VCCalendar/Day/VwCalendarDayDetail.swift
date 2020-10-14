@@ -147,6 +147,7 @@ class VwCalendarDayDetail: UIView {
         tableView.reloadData()
     }
     
+    // MARK: - Functions
     private func removeTableView() {
         guard let tableView = tableView else { return }
         tableView.removeFromSuperview()
@@ -207,6 +208,18 @@ class VwCalendarDayDetail: UIView {
             name: NSNotification.Name(rawValue: NamesOfNotification.selectedDayDetailNotification),
             object: nil
         )
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(didReceivedAddNotification),
+            name: NSNotification.Name(rawValue: NamesOfNotification.refreshCalendar),
+            object: nil
+        )
+    }
+    
+    @objc func didReceivedAddNotification(_ notification: Notification) {
+        guard let date = self.date else { return }
+        list = Item.getDayList(date: date)
     }
     
     @objc func setUpUI(_ notification: Notification) {
