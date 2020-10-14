@@ -27,6 +27,7 @@ class VwCalendarDayDetail: UIView {
     let emptyLabel = UILabel()
     let separator = UIView()
     let downArrow = UIImageView()
+    let vwdownArrowDummy = UIView()
     var tableView: UITableView? = nil
     var date: Date? = nil
     
@@ -83,13 +84,18 @@ class VwCalendarDayDetail: UIView {
         downArrow.tintColor = Theme.separator
         downArrow.isUserInteractionEnabled = true
         
+        vwdownArrowDummy.translatesAutoresizingMaskIntoConstraints = false
+        vwdownArrowDummy.backgroundColor = .clear
+        vwdownArrowDummy.isUserInteractionEnabled = true
+        
         let tap = UITapGestureRecognizer(target: self, action: #selector(touchDownArrow))
-        downArrow.addGestureRecognizer(tap)
+        vwdownArrowDummy.addGestureRecognizer(tap)
         
         addSubview(weekdayLabel)
         addSubview(emptyLabel)
         addSubview(separator)
         addSubview(downArrow)
+        addSubview(vwdownArrowDummy)
         
         let margin: CGFloat = Global.calendarleftMargin + 5
         
@@ -108,7 +114,12 @@ class VwCalendarDayDetail: UIView {
             downArrow.topAnchor.constraint(equalTo: topAnchor),
             downArrow.centerXAnchor.constraint(equalTo: centerXAnchor),
             downArrow.widthAnchor.constraint(equalToConstant: 40.0),
-            downArrow.heightAnchor.constraint(equalToConstant: 30.0)
+            downArrow.heightAnchor.constraint(equalToConstant: 30.0),
+            
+            vwdownArrowDummy.centerXAnchor.constraint(equalTo: downArrow.centerXAnchor),
+            vwdownArrowDummy.centerYAnchor.constraint(equalTo: downArrow.centerYAnchor),
+            vwdownArrowDummy.widthAnchor.constraint(equalToConstant: 60.0),
+            vwdownArrowDummy.heightAnchor.constraint(equalToConstant: 45.0),
         ])
     }
     
