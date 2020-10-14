@@ -14,6 +14,7 @@ class VwCalendar: UIView {
     let VCWeekday = VwCalendarWeekday()
     let VCpage = VCCalendarMonthPage()
     let vwDay = VwCalendarDayDetail()
+    let vwToday = vwMoveToday()
     
     var minHeight: CGFloat = VwCalendar.getMaxCalendarHeight() * (45.0 / 100.0)
     var maxHeight: CGFloat = VwCalendar.getMaxCalendarHeight()
@@ -31,6 +32,7 @@ class VwCalendar: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
+        addObserver()
         setUpUI()
         displayUI()
     }
@@ -43,9 +45,14 @@ class VwCalendar: UIView {
         VCWeekday.translatesAutoresizingMaskIntoConstraints = false
         VCpage.view.translatesAutoresizingMaskIntoConstraints = false
         VCpage.touchDelegate = self
+        
         vwDay.translatesAutoresizingMaskIntoConstraints = false
         vwDay.delegate = self
         vwDay.isHidden = true
+        
+        vwToday.translatesAutoresizingMaskIntoConstraints = false
+        let tap = UITapGestureRecognizer(target: self, action: #selector(clickToday))
+        vwToday.addGestureRecognizer(tap)
         
         swipeUp = UISwipeGestureRecognizer(target: self, action: #selector(swipeAction(sender:)))
         swipeUp!.direction = .up
@@ -63,6 +70,7 @@ class VwCalendar: UIView {
         addSubview(VCWeekday)
         addSubview(VCpage.view)
         addSubview(vwDay)
+        addSubview(vwToday)
         
         calendarHeight = VCpage.view.heightAnchor.constraint(equalToConstant: maxHeight)
         
@@ -81,6 +89,11 @@ class VwCalendar: UIView {
             vwDay.leadingAnchor.constraint(equalTo: leadingAnchor),
             vwDay.trailingAnchor.constraint(equalTo: trailingAnchor),
             vwDay.bottomAnchor.constraint(equalTo: bottomAnchor),
+            
+            vwToday.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -50.0),
+            vwToday.centerXAnchor.constraint(equalTo: centerXAnchor),
+            vwToday.widthAnchor.constraint(equalToConstant: 55.0),
+            vwToday.heightAnchor.constraint(equalToConstant: 35.0),
         ])
     }
     
@@ -219,6 +232,53 @@ class VwCalendar: UIView {
             swipeAnimated(isUp: false)
         }
     }
+    
+    // MARK: - Observer
+    func addObserver() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(didReceivedDayDateNotification),
+            name: NSNotification.Name(rawValue: NamesOfNotification.selectedDayToPostDate),
+            object: nil
+        )
+    }
+    
+    @objc func didReceivedDayDateNotification(_ notification: Notification) {
+        guard let date = notification.userInfo?["date"] as? Date
+        else {
+                return
+        }
+        
+        if date.startOfDay != Date().startOfDay {
+            vwToday.isHidden = false
+        } else {
+            vwToday.isHidden = true
+        }
+    }
+    
+    @objc func clickToday(_ sender: UITapGestureRecognizer) {
+        guard let vc = (self.VCpage.viewControllers?[safe: 0] as? VCCalendarMonth) else { return }
+        
+        let vcDate = vc.getDate().startOfDay
+        let curDate = Date().startOfDay
+        
+        guard vcDate != curDate else { return }
+        
+        if vcDate.year == curDate.year
+            && vcDate.month == curDate.month {
+            for view in vc.dayViews {
+                if view.date?.day == curDate.day {
+                    vc.preSelecedDay?.deselectedDay()
+                    view.selectedDay()
+                    vc.preSelecedDay = view
+                    view.selectedDayDetailNotification()
+                    break
+                }
+            }
+        } else {
+            self.VCpage.moveToday(date: vcDate)
+        }
+    }
 }
 
 
@@ -271,7 +331,6 @@ extension VwCalendar: CalendarTouchEventDelegate {
     
     func touchEnd(diff: CGFloat) {
         let isUp: Bool = self.getUpDownStatus(diff: diff)
-        print("touchEnd diif: \(diff), isUp: \(isUp)")
         
         if !isUp {
             self.changeDayCellStatus(isUp: isUp)

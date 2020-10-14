@@ -77,7 +77,6 @@ class VCRoot: UIViewController {
         }
         
         selectedDate = date
-        print("selected Date: \(date)")
     }
     
     @objc func addTapped(_ sender: Any) {

@@ -28,7 +28,7 @@ class VCCalendarMonth: UIViewController {
     weak var delegate: CalendarTouchEventDelegate? = nil
     
     var isUp: Bool = false
-    private var preSelecedDay: VwCalendarDay? = nil
+    var preSelecedDay: VwCalendarDay? = nil
     private var preToday: VwCalendarDay? = nil
     
     convenience init(date: Date) {

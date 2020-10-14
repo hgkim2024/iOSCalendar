@@ -68,6 +68,25 @@ class VCCalendarMonthPage: UIPageViewController {
         )
     }
     
+    func moveToday(date: Date) {
+        let curDate = Date().startOfMonth
+        let vcDate = date.startOfMonth
+        
+        guard curDate != vcDate else { return }
+        
+        let date = Date().startOfMonth
+        let firstPage = VCCalendarMonth(date: date)
+        firstPage.delegate = self
+        
+        postTitleNotification(date.dateToString())
+        
+        if curDate > vcDate {
+            setViewControllers([firstPage], direction: .forward, animated: true, completion: nil)
+        } else {
+            setViewControllers([firstPage], direction: .reverse, animated: true, completion: nil)
+        }
+    }
+    
     func addObserver() {
         NotificationCenter.default.addObserver(
             self,
