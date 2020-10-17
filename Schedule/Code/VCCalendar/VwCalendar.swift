@@ -196,16 +196,18 @@ class VwCalendar: UIView {
                 let rate = 1.0 / CGFloat(totalCount)
                 
                 if isUp {
-                    if self.calendarHeight.constant <= self.minHeight {
+                    let diff = (((self.maxHeight - self.minHeight) - (self.maxHeight - height)) * rate)
+                    if self.calendarHeight.constant - diff <= self.minHeight {
                         self.calendarHeight.constant = self.minHeight
                     } else {
-                        self.calendarHeight.constant -= (((self.maxHeight - self.minHeight) - (self.maxHeight - height)) * rate)
+                        self.calendarHeight.constant -= diff
                     }
                 } else {
-                    if self.calendarHeight.constant >= self.maxHeight {
+                    let diff = (((self.maxHeight - self.minHeight) - (height - self.minHeight)) * rate)
+                    if self.calendarHeight.constant + diff >= self.maxHeight {
                         self.calendarHeight.constant = self.maxHeight
                     } else {
-                        self.calendarHeight.constant += (((self.maxHeight - self.minHeight) - (height - self.minHeight)) * rate)
+                        self.calendarHeight.constant += diff
                     }
                 }
                 
