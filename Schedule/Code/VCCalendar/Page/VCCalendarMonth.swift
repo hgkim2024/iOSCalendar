@@ -57,6 +57,7 @@ class VCCalendarMonth: UIViewController {
             
             for view in dayViews {
                 if view.date == initSelectedDate {
+                    preSelecedDay?.deselectedDay()
                     view.selectedDay()
                     preSelecedDay = view
                     loadViewIfNeeded()
@@ -79,8 +80,6 @@ class VCCalendarMonth: UIViewController {
         } else {
             preSelecedDay?.selectedDay()
         }
-        
-        preSelecedDay?.selectedDayDetailNotification()
     }
     
     private func setUpUI() {
@@ -91,7 +90,6 @@ class VCCalendarMonth: UIViewController {
         let weekday = date.startOfMonth.weekday
         let lastDay = date.startOfMonth.endOfMonth.day
         let prevLastDay = date.prevMonth.endOfMonth.day
-        let dayCount = Global.dayCount
         
         let remainder = (weekday + lastDay - 1) % 7
         row = ((weekday + lastDay - 1) / 7) + 1
@@ -105,7 +103,6 @@ class VCCalendarMonth: UIViewController {
             dayView.translatesAutoresizingMaskIntoConstraints = false
             dayViews.append(dayView)
             
-            let status = (i + 1) % dayCount
             let alpha: CGFloat = 0.4
             // 날짜 setText
             if i + 1 >= weekday {
@@ -113,12 +110,11 @@ class VCCalendarMonth: UIViewController {
                 if i+1-weekday >= lastDay {
                     let day = i + 2 - weekday - lastDay
                     dayView.setText(text: "\(day)")
-                    dayView.setColor(weekday: status, alpha: alpha)
+                    dayView.setAlpha(alpha: alpha)
                 } else {
                     // 현재달
                     let day = i + 2 - weekday
                     dayView.setText(text: "\(day)")
-                    dayView.setColor(weekday: status)
                     
                     if today == day
                         && month == lastDayMonth {
@@ -134,7 +130,7 @@ class VCCalendarMonth: UIViewController {
                 // 이전달
                 let day = prevLastDay - weekday + i + 2
                 dayView.setText(text: "\(day)")
-                dayView.setColor(weekday: status, alpha: alpha)
+                dayView.setAlpha(alpha: alpha)
             }
         }
     }
@@ -170,9 +166,22 @@ class VCCalendarMonth: UIViewController {
         return date
     }
     
-    @objc func selecedDay(sender: UITapGestureRecognizer) {
+    @objc func tapDay2(sender: UITapGestureRecognizer) {
         guard let view = sender.view as? VwCalendarDay else { return }
+        guard let date = view.date else { return }
         
+        NotificationCenter.default.post(
+            name: NSNotification.Name(rawValue: NamesOfNotification.moveCalendarMonth),
+            object: nil,
+            userInfo: ["date": date]
+        )
+        
+        delegate?.touchBegin()
+        delegate?.touchEnd(diff: 30.0)
+    }
+    
+    @objc func tapDay(sender: UITapGestureRecognizer) {
+        guard let view = sender.view as? VwCalendarDay else { return }
         if let selectMonth = view.date?.month,
            date.month != selectMonth {
             guard let date = view.date else { return }
@@ -186,11 +195,24 @@ class VCCalendarMonth: UIViewController {
         
         preSelecedDay?.deselectedDay()
         view.selectedDay()
-        view.selectedDayDetailNotification()
         preSelecedDay = view
-        
+
         delegate?.touchBegin()
         delegate?.touchEnd(diff: 30.0)
+    }
+    
+    func moveDay(moveDate: Date) {
+        DispatchQueue.main.async {
+            self.preSelecedDay?.deselectedDay()
+            
+            for view in self.dayViews {
+                if view.date?.startOfDay == moveDate.startOfDay {
+                    view.selectedDay()
+                    self.preSelecedDay = view
+                    break
+                }
+            }
+        }
     }
     
     func setUpData() {
@@ -225,7 +247,7 @@ class VCCalendarMonth: UIViewController {
                 list = Item.getDayList(date: preDate)
                 dayViews[safe: i]?.date = preDate
             }
-            let tap = UITapGestureRecognizer(target: self, action: #selector(selecedDay(sender:)))
+            let tap = UITapGestureRecognizer(target: self, action: #selector(tapDay(sender:)))
             dayViews[safe: i]?.addGestureRecognizer(tap)
             dayViews[safe: i]?.list = list
         }

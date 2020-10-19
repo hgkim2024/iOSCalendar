@@ -13,7 +13,7 @@ class VwCalendar: UIView {
     
     let VCWeekday = VwCalendarWeekday()
     let VCpage = VCCalendarMonthPage()
-    let vwDay = VwCalendarDayDetail()
+    let VCDayPage = VCCalendarDayDetailPage()
     let vwToday = vwMoveToday()
     
     var minHeight: CGFloat = VwCalendar.getMaxCalendarHeight() * (45.0 / 100.0)
@@ -46,9 +46,9 @@ class VwCalendar: UIView {
         VCpage.view.translatesAutoresizingMaskIntoConstraints = false
         VCpage.touchDelegate = self
         
-        vwDay.translatesAutoresizingMaskIntoConstraints = false
-        vwDay.delegate = self
-        vwDay.isHidden = true
+        VCDayPage.view.translatesAutoresizingMaskIntoConstraints = false
+        VCDayPage.touchDelegate = self
+        VCDayPage.view.isHidden = true
         
         vwToday.translatesAutoresizingMaskIntoConstraints = false
         let tap = UITapGestureRecognizer(target: self, action: #selector(clickToday))
@@ -69,7 +69,7 @@ class VwCalendar: UIView {
         
         addSubview(VCWeekday)
         addSubview(VCpage.view)
-        addSubview(vwDay)
+        addSubview(VCDayPage.view)
         addSubview(vwToday)
         
         calendarHeight = VCpage.view.heightAnchor.constraint(equalToConstant: maxHeight)
@@ -85,10 +85,10 @@ class VwCalendar: UIView {
             VCpage.view.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -margin),
             calendarHeight,
             
-            vwDay.topAnchor.constraint(equalTo: VCpage.view.bottomAnchor),
-            vwDay.leadingAnchor.constraint(equalTo: leadingAnchor),
-            vwDay.trailingAnchor.constraint(equalTo: trailingAnchor),
-            vwDay.bottomAnchor.constraint(equalTo: bottomAnchor),
+            VCDayPage.view.topAnchor.constraint(equalTo: VCpage.view.bottomAnchor),
+            VCDayPage.view.leadingAnchor.constraint(equalTo: leadingAnchor),
+            VCDayPage.view.trailingAnchor.constraint(equalTo: trailingAnchor),
+            VCDayPage.view.bottomAnchor.constraint(equalTo: bottomAnchor),
             
             vwToday.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -50.0),
             vwToday.centerXAnchor.constraint(equalTo: centerXAnchor),
@@ -164,7 +164,7 @@ class VwCalendar: UIView {
             }
             self.addGestureRecognizer(self.swipeUp!)
             self.addGestureRecognizer(self.swipeDown!)
-            self.vwDay.isHidden = !isUp
+            self.VCDayPage.view.isHidden = !isUp
         })
     }
     
@@ -189,10 +189,10 @@ class VwCalendar: UIView {
             VCpage.setDataSource(isOn: true)
             self.addGestureRecognizer(self.swipeUp!)
             self.addGestureRecognizer(self.swipeDown!)
-            vwDay.isHidden = !isUp
+            VCDayPage.view.isHidden = !isUp
             return
         } else {
-            DispatchQueue.main.asyncAfter(deadline: .now() + (0.015 / TimeInterval(totalCount))) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.003) {
                 let rate = 1.0 / CGFloat(totalCount)
                 
                 if isUp {
@@ -273,12 +273,11 @@ class VwCalendar: UIView {
                     vc.preSelecedDay?.deselectedDay()
                     view.selectedDay()
                     vc.preSelecedDay = view
-                    view.selectedDayDetailNotification()
                     break
                 }
             }
         } else {
-            self.VCpage.moveDay(moveDate: Date())
+            self.VCpage.moveDay(moveDate: Date(), isToday: true)
         }
     }
 }
@@ -288,17 +287,13 @@ extension VwCalendar: CalendarTouchEventDelegate {
     
     func touchBegin() {
         upDownStatus = (calendarHeight.constant > minHeight) ? true : false
-        vwDay.isHidden = false
+        VCDayPage.view.isHidden = false
         
         removeGestureRecognizer(swipeUp!)
         removeGestureRecognizer(swipeDown!)
     }
     
     func touchMove(diff: CGFloat) {
-        guard abs(Int(diff)) > 1 else {
-            return
-        }
-        
         if diff > 0.0 {
             if calendarHeight.constant - diff > minHeight {
                 // up

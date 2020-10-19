@@ -13,9 +13,13 @@ class VwCalendarDay: UIView {
     var tableView: UITableView? = nil
     var todayView: UIView? = nil
     
-    var weekday: Int = 2
     var todayFlag: Bool = false
-    var date: Date? = nil
+    var date: Date? = nil {
+        didSet {
+            guard let date = self.date else { return }
+            label.setCalendarDayColor(weekday: date.weekday % 7)
+        }
+    }
     
     var tableViewAlpha: CGFloat = 1.0
     
@@ -123,10 +127,8 @@ class VwCalendarDay: UIView {
         tableView?.register(CellCalendarDayCount.self, forCellReuseIdentifier: CellCalendarDayCount.identifier)
     }
     
-    func setColor(weekday: Int, alpha: CGFloat = 1.0) {
-        self.weekday = weekday
-        label.setCalendarDayColor(weekday: weekday, alpha: alpha)
-        tableViewAlpha = alpha
+    func setAlpha(alpha: CGFloat = 1.0) {
+        self.alpha = alpha
     }
     
     func selectedDay() {
@@ -140,19 +142,11 @@ class VwCalendarDay: UIView {
             object: nil,
             userInfo: ["date": date]
         )
-    }
-    
-    func selectedDayDetailNotification() {
-        guard let date = self.date else { return }
         
         NotificationCenter.default.post(
             name: NSNotification.Name(rawValue: NamesOfNotification.selectedDayDetailNotification),
             object: nil,
-            userInfo:
-                [
-                    "date": date,
-                    "weekday": weekday
-                ]
+            userInfo: ["date": date]
         )
     }
     
@@ -184,7 +178,6 @@ class VwCalendarDay: UIView {
     
     func removeTodayView() {
         todayFlag = false
-        setColor(weekday: weekday)
         todayView?.removeFromSuperview()
         todayView = nil
     }

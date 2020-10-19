@@ -68,33 +68,38 @@ class VCCalendarMonthPage: UIPageViewController {
         )
     }
     
-    func moveDay(moveDate: Date) {
-        guard let curDate = (viewControllers?[safe: 0] as? VCCalendarMonth)?.getDate() else { return }
-        
-        guard curDate.month != moveDate.month else { return }
-        
-        let date = moveDate.startOfMonth
-        let firstPage = VCCalendarMonth(date: date)
-        firstPage.delegate = self
-        firstPage.isUp = self.isUp
-        firstPage.initSelectedDate = moveDate.startOfDay
-        
-        postTitleNotification(date.dateToString())
-        var direction: NavigationDirection
-        var animated: Bool = true
-        if view.bounds.size.height >= VwCalendar.getMaxCalendarHeight() {
-            animated = false
-            touchDelegate?.touchBegin()
-            touchDelegate?.touchEnd(diff: 30)
+    func moveDay(moveDate: Date, isToday: Bool = false) {
+        DispatchQueue.main.async {
+            guard let vc = (self.viewControllers?[safe: 0] as? VCCalendarMonth) else { return }
+            let curDate = vc.getDate()
+            guard
+                curDate.month != moveDate.month
+                || curDate.year != moveDate.year
+            else { return }
+            
+            let date = moveDate.startOfMonth
+            let firstPage = VCCalendarMonth(date: date)
+            firstPage.delegate = self
+            firstPage.isUp = self.isUp
+            firstPage.initSelectedDate = moveDate.startOfDay
+            
+            self.postTitleNotification(date.dateToString())
+            var direction: NavigationDirection
+            var animated: Bool = true
+            if self.view.bounds.size.height >= VwCalendar.getMaxCalendarHeight() && !isToday {
+                animated = false
+                self.touchDelegate?.touchBegin()
+                self.touchDelegate?.touchEnd(diff: 30.0)
+            }
+            
+            if curDate < moveDate {
+                direction = .forward
+            } else {
+                direction = .reverse
+            }
+            
+            self.setViewControllers([firstPage], direction: direction, animated: animated, completion: nil)
         }
-        
-        if curDate < moveDate {
-            direction = .forward
-        } else {
-            direction = .reverse
-        }
-        
-        setViewControllers([firstPage], direction: direction, animated: animated, completion: nil)
     }
     
     func addObserver() {
@@ -122,8 +127,13 @@ class VCCalendarMonthPage: UIPageViewController {
         else {
                 return
         }
-        
-        moveDay(moveDate: date)
+        guard let vc = viewControllers?[safe: 0] as? VCCalendarMonth else { return }
+        if vc.getDate().month != date.month
+            {
+            moveDay(moveDate: date)
+        } else {
+            vc.moveDay(moveDate: date)
+        }
     }
     
     func setDataSource(isOn: Bool) {

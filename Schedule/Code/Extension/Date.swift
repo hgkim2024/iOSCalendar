@@ -21,6 +21,14 @@ extension Date {
          return Calendar.current.component(.day, from: self)
     }
     
+    var prevDay: Date {
+        return Calendar.current.date(byAdding: .day, value: -1, to: self.startOfDay)!
+    }
+    
+    var nextDay: Date {
+        return Calendar.current.date(byAdding: .day, value: 1, to: self.startOfDay)!
+    }
+    
     var startOfDay: Date {
         return Calendar.current.startOfDay(for: self)
     }

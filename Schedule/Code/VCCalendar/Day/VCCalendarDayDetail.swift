@@ -11,7 +11,7 @@ import RealmSwift
 import RxCocoa
 import RxSwift
 
-class VwCalendarDayDetail: UIView {
+class VCCalendarDayDetail: UIViewController {
     
     let dayString: [String] = [
         "토".localized,
@@ -29,9 +29,10 @@ class VwCalendarDayDetail: UIView {
     let downArrow = UIImageView()
     let vwdownArrowDummy = UIView()
     var tableView: UITableView? = nil
-    var date: Date? = nil
+    var date: Date = Date()
     
     weak var delegate: CalendarTouchEventDelegate? = nil
+    weak var touchDelegate: CalendarTouchEventDelegate? = nil
     
     private var beginPoint: CGPoint? = nil
     private var lastPoint: CGPoint? = nil
@@ -45,22 +46,30 @@ class VwCalendarDayDetail: UIView {
         }
     }
     
-    convenience init() {
-        self.init(frame: .zero)
+    convenience init(date: Date) {
+        self.init(nibName:nil, bundle:nil)
+        self.date = date
     }
     
-    override init(frame: CGRect) {
-        super.init(frame: frame)
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
         addObserver()
         setUpLabel()
     }
     
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        weekdayLabel.setCalendarDayColor(weekday: date.weekday)
+        weekdayLabel.text = "\(date.day).\(dayString[date.weekday % 7])"
+        
+        list = Item.getDayList(date: date)
     }
     
     private func setUpLabel() {
-        backgroundColor = UIColor.lightGray.withAlphaComponent(0.05)
+        view.isUserInteractionEnabled = true
+        view.backgroundColor = UIColor.lightGray.withAlphaComponent(0.05)
         
         weekdayLabel.translatesAutoresizingMaskIntoConstraints = false
         weekdayLabel.font = UIFont.boldSystemFont(ofSize: Global.weekdayBigFontSize)
@@ -91,28 +100,28 @@ class VwCalendarDayDetail: UIView {
         let tap = UITapGestureRecognizer(target: self, action: #selector(touchDownArrow))
         vwdownArrowDummy.addGestureRecognizer(tap)
         
-        addSubview(weekdayLabel)
-        addSubview(emptyLabel)
-        addSubview(separator)
-        addSubview(downArrow)
-        addSubview(vwdownArrowDummy)
+        view.addSubview(weekdayLabel)
+        view.addSubview(emptyLabel)
+        view.addSubview(separator)
+        view.addSubview(downArrow)
+        view.addSubview(vwdownArrowDummy)
         
         let margin: CGFloat = Global.calendarleftMargin + 5
         
         NSLayoutConstraint.activate([
-            weekdayLabel.topAnchor.constraint(equalTo: topAnchor, constant: margin),
-            weekdayLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: margin),
+            weekdayLabel.topAnchor.constraint(equalTo: view.topAnchor, constant: margin),
+            weekdayLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: margin),
             
-            emptyLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
-            emptyLabel.centerYAnchor.constraint(equalTo: centerYAnchor),
+            emptyLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            emptyLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor),
             
-            separator.topAnchor.constraint(equalTo: topAnchor),
-            separator.leadingAnchor.constraint(equalTo: leadingAnchor),
-            separator.trailingAnchor.constraint(equalTo: trailingAnchor),
+            separator.topAnchor.constraint(equalTo: view.topAnchor),
+            separator.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            separator.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             separator.heightAnchor.constraint(equalToConstant: Global.separatorSize),
             
-            downArrow.topAnchor.constraint(equalTo: topAnchor),
-            downArrow.centerXAnchor.constraint(equalTo: centerXAnchor),
+            downArrow.topAnchor.constraint(equalTo: view.topAnchor),
+            downArrow.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             downArrow.widthAnchor.constraint(equalToConstant: 40.0),
             downArrow.heightAnchor.constraint(equalToConstant: 30.0),
             
@@ -138,21 +147,23 @@ class VwCalendarDayDetail: UIView {
         
         tableView.separatorStyle = .none
         tableView.showsVerticalScrollIndicator = false
+        tableView.bounces = true
         
         tableView.delegate = self
         tableView.dataSource = self
         tableView.backgroundColor = .clear
         tableView.isUserInteractionEnabled = true
         tableView.rowHeight = UITableView.automaticDimension
+        tableView.delaysContentTouches = false
         
         addRegister()
         
-        addSubview(tableView)
+        view.addSubview(tableView)
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: weekdayLabel.bottomAnchor, constant: 10.0),
-            tableView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: bottomAnchor)
+            tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
         
         tableView.reloadData()
@@ -172,6 +183,14 @@ class VwCalendarDayDetail: UIView {
     @objc private func touchDownArrow(_ sender: UITapGestureRecognizer) {
         delegate?.touchBegin()
         delegate?.touchEnd(diff: -30.0)
+    }
+    
+    func setDate(date: Date) {
+        self.date = date
+        weekdayLabel.setCalendarDayColor(weekday: date.weekday)
+        weekdayLabel.text = "\(date.day).\(dayString[date.weekday % 7])"
+        
+        list = Item.getDayList(date: date)
     }
     
     // MARK: - Touch Event
@@ -215,13 +234,6 @@ class VwCalendarDayDetail: UIView {
     func addObserver() {
         NotificationCenter.default.addObserver(
             self,
-            selector: #selector(setUpUI),
-            name: NSNotification.Name(rawValue: NamesOfNotification.selectedDayDetailNotification),
-            object: nil
-        )
-        
-        NotificationCenter.default.addObserver(
-            self,
             selector: #selector(didReceivedAddNotification),
             name: NSNotification.Name(rawValue: NamesOfNotification.refreshCalendar),
             object: nil
@@ -229,23 +241,6 @@ class VwCalendarDayDetail: UIView {
     }
     
     @objc func didReceivedAddNotification(_ notification: Notification) {
-        guard let date = self.date else { return }
-        list = Item.getDayList(date: date)
-    }
-    
-    @objc func setUpUI(_ notification: Notification) {
-        guard
-            let date = notification.userInfo?["date"] as? Date,
-            let weekday = notification.userInfo?["weekday"] as? Int
-        else {
-                return
-        }
-        
-        self.date = date
-        weekdayLabel.setCalendarDayColor(weekday: weekday)
-        weekdayLabel.text = "\(date.day).\(dayString[weekday])"
-        print("weekday: \(weekday)")
-        
         list = Item.getDayList(date: date)
     }
 }

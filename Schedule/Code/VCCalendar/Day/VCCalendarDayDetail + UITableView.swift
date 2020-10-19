@@ -8,7 +8,7 @@
 
 import UIKit
 
-extension VwCalendarDayDetail: UITableViewDelegate, UITableViewDataSource {
+extension VCCalendarDayDetail: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return list?.count ?? 0
     }
@@ -35,7 +35,7 @@ extension VwCalendarDayDetail: UITableViewDelegate, UITableViewDataSource {
     }
     
     func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
-        delegate?.touchBegin()
+        touchDelegate?.touchBegin()
         isScroll = true
     }
     
@@ -43,12 +43,12 @@ extension VwCalendarDayDetail: UITableViewDelegate, UITableViewDataSource {
         guard isScroll else { return }
         let y = scrollView.contentOffset.y
         preScrollY = y
-        delegate?.touchMove(diff: y)
+        touchDelegate?.touchMove(diff: y)
     }
-    
+
     func scrollViewWillEndDragging(_ scrollView: UIScrollView, withVelocity velocity: CGPoint, targetContentOffset: UnsafeMutablePointer<CGPoint>) {
         isScroll = false
         let y = scrollView.contentOffset.y
-        delegate?.touchEnd(diff: y)
+        touchDelegate?.touchEnd(diff: y)
     }
 }
