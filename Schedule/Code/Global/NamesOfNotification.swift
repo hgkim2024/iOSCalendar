@@ -16,4 +16,5 @@ class NamesOfNotification {
     static let calendarIsUp = "calendarIsUp"
     static let selectedDayDetailNotification = "selectedDayDetailNotification"
     static let dayCalendarDidSelectCell = "dayCalendarDidSelectCell"
+    static let moveCalendarMonth = "moveCalendarMonth"
 }

@@ -68,24 +68,33 @@ class VCCalendarMonthPage: UIPageViewController {
         )
     }
     
-    func moveToday(date: Date) {
-        let curDate = Date().startOfMonth
-        let vcDate = date.startOfMonth
+    func moveDay(moveDate: Date) {
+        guard let curDate = (viewControllers?[safe: 0] as? VCCalendarMonth)?.getDate() else { return }
         
-        guard curDate != vcDate else { return }
+        guard curDate.month != moveDate.month else { return }
         
-        let date = Date().startOfMonth
+        let date = moveDate.startOfMonth
         let firstPage = VCCalendarMonth(date: date)
         firstPage.delegate = self
         firstPage.isUp = self.isUp
+        firstPage.initSelectedDate = moveDate.startOfDay
         
         postTitleNotification(date.dateToString())
-        
-        if curDate > vcDate {
-            setViewControllers([firstPage], direction: .forward, animated: true, completion: nil)
-        } else {
-            setViewControllers([firstPage], direction: .reverse, animated: true, completion: nil)
+        var direction: NavigationDirection
+        var animated: Bool = true
+        if view.bounds.size.height >= VwCalendar.getMaxCalendarHeight() {
+            animated = false
+            touchDelegate?.touchBegin()
+            touchDelegate?.touchEnd(diff: 30)
         }
+        
+        if curDate < moveDate {
+            direction = .forward
+        } else {
+            direction = .reverse
+        }
+        
+        setViewControllers([firstPage], direction: direction, animated: animated, completion: nil)
     }
     
     func addObserver() {
@@ -95,10 +104,26 @@ class VCCalendarMonthPage: UIPageViewController {
             name: NSNotification.Name(rawValue: NamesOfNotification.refreshCalendar),
             object: nil
         )
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(didReceivedMoveCalendarMonth),
+            name: NSNotification.Name(rawValue: NamesOfNotification.moveCalendarMonth),
+            object: nil
+        )
     }
     
     @objc func didReceivedAddNotification() {
         viewControllers?[safe: 0]?.viewWillAppear(false)
+    }
+    
+    @objc func didReceivedMoveCalendarMonth(_ notification: Notification) {
+        guard let date = notification.userInfo?["date"] as? Date
+        else {
+                return
+        }
+        
+        moveDay(moveDate: date)
     }
     
     func setDataSource(isOn: Bool) {

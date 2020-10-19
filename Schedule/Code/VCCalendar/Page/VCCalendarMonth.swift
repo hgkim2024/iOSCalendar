@@ -26,7 +26,7 @@ class VCCalendarMonth: UIViewController {
     private var lastPoint: CGPoint? = nil
     
     weak var delegate: CalendarTouchEventDelegate? = nil
-    
+    var initSelectedDate: Date? = nil
     var isUp: Bool = false
     var preSelecedDay: VwCalendarDay? = nil
     private var preToday: VwCalendarDay? = nil
@@ -52,6 +52,20 @@ class VCCalendarMonth: UIViewController {
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        
+        if initSelectedDate != nil {
+            
+            for view in dayViews {
+                if view.date == initSelectedDate {
+                    view.selectedDay()
+                    preSelecedDay = view
+                    loadViewIfNeeded()
+                    break
+                }
+            }
+            
+            initSelectedDate = nil
+        }
         
         if preSelecedDay == nil {
             for view in dayViews {
@@ -158,6 +172,18 @@ class VCCalendarMonth: UIViewController {
     
     @objc func selecedDay(sender: UITapGestureRecognizer) {
         guard let view = sender.view as? VwCalendarDay else { return }
+        
+        if let selectMonth = view.date?.month,
+           date.month != selectMonth {
+            guard let date = view.date else { return }
+            NotificationCenter.default.post(
+                name: NSNotification.Name(rawValue: NamesOfNotification.moveCalendarMonth),
+                object: nil,
+                userInfo: ["date": date]
+            )
+            return
+        }
+        
         preSelecedDay?.deselectedDay()
         view.selectedDay()
         view.selectedDayDetailNotification()
@@ -189,10 +215,6 @@ class VCCalendarMonth: UIViewController {
                     let day = i + 2 - weekday
                     let date = self.date.getNextCountDay(count: day)
                     list = Item.getDayList(date: date)
-                    
-                    let tap = UITapGestureRecognizer(target: self, action: #selector(selecedDay(sender:)))
-                    
-                    dayViews[safe: i]?.addGestureRecognizer(tap)
                     dayViews[safe: i]?.date = date
                 }
             } else {
@@ -203,6 +225,8 @@ class VCCalendarMonth: UIViewController {
                 list = Item.getDayList(date: preDate)
                 dayViews[safe: i]?.date = preDate
             }
+            let tap = UITapGestureRecognizer(target: self, action: #selector(selecedDay(sender:)))
+            dayViews[safe: i]?.addGestureRecognizer(tap)
             dayViews[safe: i]?.list = list
         }
     }

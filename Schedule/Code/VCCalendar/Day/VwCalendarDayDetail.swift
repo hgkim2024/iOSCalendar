@@ -14,13 +14,13 @@ import RxSwift
 class VwCalendarDayDetail: UIView {
     
     let dayString: [String] = [
+        "토".localized,
         "일".localized,
         "월".localized,
         "화".localized,
         "수".localized,
         "목".localized,
         "금".localized,
-        "토".localized
     ]
     
     let weekdayLabel = UILabel()
@@ -244,6 +244,7 @@ class VwCalendarDayDetail: UIView {
         self.date = date
         weekdayLabel.setCalendarDayColor(weekday: weekday)
         weekdayLabel.text = "\(date.day).\(dayString[weekday])"
+        print("weekday: \(weekday)")
         
         list = Item.getDayList(date: date)
     }

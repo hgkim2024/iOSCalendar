@@ -278,7 +278,7 @@ class VwCalendar: UIView {
                 }
             }
         } else {
-            self.VCpage.moveToday(date: vcDate)
+            self.VCpage.moveDay(moveDate: Date())
         }
     }
 }
