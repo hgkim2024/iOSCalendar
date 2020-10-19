@@ -17,6 +17,8 @@ class VwCalendarDay: UIView {
     var todayFlag: Bool = false
     var date: Date? = nil
     
+    var tableViewAlpha: CGFloat = 1.0
+    
     var list: [Item]? = nil {
         didSet {
             setUpTableView()
@@ -74,6 +76,7 @@ class VwCalendarDay: UIView {
         guard self.list != nil else { return }
         
         tableView = UITableView(frame: .zero, style: .plain)
+        tableView?.alpha = tableViewAlpha
         guard let tableView = tableView else { return }
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.sectionFooterHeight = CGFloat.leastNormalMagnitude
@@ -123,6 +126,7 @@ class VwCalendarDay: UIView {
     func setColor(weekday: Int, alpha: CGFloat = 1.0) {
         self.weekday = weekday
         label.setCalendarDayColor(weekday: weekday, alpha: alpha)
+        tableViewAlpha = alpha
     }
     
     func selectedDay() {

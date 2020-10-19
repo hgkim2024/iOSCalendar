@@ -14,7 +14,6 @@
 		126B0A272503506600355D00 /* Global.swift in Sources */ = {isa = PBXBuildFile; fileRef = 126B0A262503506600355D00 /* Global.swift */; };
 		126B0A2A250350AE00355D00 /* UIColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 126B0A29250350AE00355D00 /* UIColor.swift */; };
 		126B0A2E2503526400355D00 /* VwCalendar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 126B0A2D2503526400355D00 /* VwCalendar.swift */; };
-		126B0A302503530400355D00 /* CalCalendar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 126B0A2F2503530400355D00 /* CalCalendar.swift */; };
 		126B2DBF250B9BD800C69BC6 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 126B2DBE250B9BD800C69BC6 /* Item.swift */; };
 		126B2DC1250BA24800C69BC6 /* VCAddItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 126B2DC0250BA24800C69BC6 /* VCAddItem.swift */; };
 		126B2DC3250BA2F600C69BC6 /* VCAddItem + UITableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 126B2DC2250BA2F600C69BC6 /* VCAddItem + UITableView.swift */; };
@@ -74,7 +73,6 @@
 		126B0A262503506600355D00 /* Global.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Global.swift; sourceTree = "<group>"; };
 		126B0A29250350AE00355D00 /* UIColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIColor.swift; sourceTree = "<group>"; };
 		126B0A2D2503526400355D00 /* VwCalendar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VwCalendar.swift; sourceTree = "<group>"; };
-		126B0A2F2503530400355D00 /* CalCalendar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalCalendar.swift; sourceTree = "<group>"; };
 		126B2DBE250B9BD800C69BC6 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		126B2DC0250BA24800C69BC6 /* VCAddItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VCAddItem.swift; sourceTree = "<group>"; };
 		126B2DC2250BA2F600C69BC6 /* VCAddItem + UITableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VCAddItem + UITableView.swift"; sourceTree = "<group>"; };
@@ -217,7 +215,6 @@
 				127043462504CA940045375E /* Page */,
 				127043432504AD400045375E /* Weekday */,
 				126B0A2D2503526400355D00 /* VwCalendar.swift */,
-				126B0A2F2503530400355D00 /* CalCalendar.swift */,
 			);
 			path = VCCalendar;
 			sourceTree = "<group>";
@@ -648,7 +645,6 @@
 				12806B6B25329BF0000C0F8A /* CellCalendarDayDetail.swift in Sources */,
 				12813B6E2500008F005C8383 /* SceneDelegate.swift in Sources */,
 				12806B5A253295B5000C0F8A /* VwCalendarDayDetail.swift in Sources */,
-				126B0A302503530400355D00 /* CalCalendar.swift in Sources */,
 				126B05FC2536F9C0002A1DC0 /* UIView.swift in Sources */,
 				126B2DBF250B9BD800C69BC6 /* Item.swift in Sources */,
 				1270434C2504DB530045375E /* VCCalendarMonth.swift in Sources */,

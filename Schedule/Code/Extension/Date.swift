@@ -32,6 +32,17 @@ extension Date {
         return Calendar.current.date(byAdding: components, to: startOfDay)!
     }
     
+    var weekday: Int {
+        let cal = Calendar(identifier: .gregorian)
+        let comps = cal.dateComponents([.weekday], from: self)
+
+        if let weekday = comps.weekday {
+            return weekday
+        } else {
+            return -1
+        }
+    }
+    
 //    var startOfWeek: Date? {
 //        let gregorian = Calendar(identifier: .gregorian)
 //        guard let sunday = gregorian.date(

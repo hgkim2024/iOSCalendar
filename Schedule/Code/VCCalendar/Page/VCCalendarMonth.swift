@@ -73,10 +73,10 @@ class VCCalendarMonth: UIViewController {
         let today = Date().startOfDay.day
         let month = Date().month
         let lastDayMonth = date.startOfMonth.month
-
-        let weekday = CalCalendar.shared.calWeekday(date: date.startOfMonth)
-        let lastDay = CalCalendar.shared.calMonthLastDay(date: date.startOfMonth)
-        let prevLastDay = CalCalendar.shared.calMonthLastDay(date: date.prevMonth)
+        
+        let weekday = date.startOfMonth.weekday
+        let lastDay = date.startOfMonth.endOfMonth.day
+        let prevLastDay = date.prevMonth.endOfMonth.day
         let dayCount = Global.dayCount
         
         let remainder = (weekday + lastDay - 1) % 7
@@ -172,9 +172,9 @@ class VCCalendarMonth: UIViewController {
             view.isUp = self.isUp
         }
         
-        let weekday = CalCalendar.shared.calWeekday(date: date.startOfMonth)
-        let lastDay = CalCalendar.shared.calMonthLastDay(date: date.startOfMonth)
-        let prevLastDay = CalCalendar.shared.calMonthLastDay(date: date.prevMonth)
+        let weekday = date.startOfMonth.weekday
+        let lastDay = date.startOfMonth.endOfMonth.day
+        let prevLastDay = date.prevMonth.endOfMonth.day
         var list: [Item]? = nil
         for i in 0..<(Global.calendarRow * Global.calendarColumn) {
             if i + 1 >= weekday {

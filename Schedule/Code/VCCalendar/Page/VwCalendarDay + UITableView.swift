@@ -37,7 +37,6 @@ extension VwCalendarDay: UITableViewDelegate, UITableViewDataSource {
             cell.selectionStyle = .none
             
             cell.setColor(isUp: self.isUp)
-            
             return cell
         }
     }
