@@ -138,7 +138,10 @@ class VCCalendarDayDetail: UIViewController {
     
     private func setUpTableView() {
         removeTableView()
-        guard self.list != nil else {
+        guard
+            self.list != nil
+                || holidayList.count > 0
+        else {
             emptyLabel.isHidden = false
             return
         }
