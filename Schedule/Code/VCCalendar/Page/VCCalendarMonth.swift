@@ -84,8 +84,9 @@ class VCCalendarMonth: UIViewController {
     }
     
     private func setUpUI() {
-        let today = Date().startOfDay.day
-        let month = Date().month
+        let curDate = Date()
+        let today = curDate.startOfDay.day
+        let month = curDate.month
         let lastDayMonth = date.startOfMonth.month
         
         let weekday = date.startOfMonth.weekday
@@ -118,7 +119,8 @@ class VCCalendarMonth: UIViewController {
                     dayView.setText(text: "\(day)")
                     
                     if today == day
-                        && month == lastDayMonth {
+                        && month == lastDayMonth
+                        && curDate.year == self.date.year {
                         let date = self.date.getNextCountDay(count: day)
                         dayView.date = date
                         dayView.selectedDay()
@@ -282,13 +284,16 @@ class VCCalendarMonth: UIViewController {
         }
         
         guard lunarDictionary.count > 0 else { return }
-        for view in dayViews {
+        for (idx, view) in dayViews.enumerated() {
             var holidayList: [String] = []
             if let date = view.date {
                 let dayString = date.dateToLunarString()
                 if let value = lunarDictionary[dayString] {
                     holidayList.append(value)
                     view.holidayList = holidayList
+                    if value == "설날" {
+                        dayViews[safe: idx - 1]?.holidayList = ["설날 연휴"]
+                    }
                 }
             }
         }

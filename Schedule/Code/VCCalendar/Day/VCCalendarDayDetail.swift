@@ -194,6 +194,12 @@ class VCCalendarDayDetail: UIViewController {
             holidayList.append(lunarHoliday)
         }
         
+        if let lunarHoliday = Holiday.lunarDictionary[date.nextDay.dateToLunarString()] {
+            if lunarHoliday == "설날" {
+                holidayList = ["설날 연휴"]
+            }
+        }
+        
         if holidayList.count > 0 {
             weekdayLabel.textColor = Theme.sunday
         }

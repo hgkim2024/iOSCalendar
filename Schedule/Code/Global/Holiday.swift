@@ -23,7 +23,6 @@ class Holiday {
     
     static let lunarDictionary: [String : String] = [
         // 설날
-        "1230":"설날 연휴",
         "0101":"설날",
         "0102":"설날 연휴",
         
