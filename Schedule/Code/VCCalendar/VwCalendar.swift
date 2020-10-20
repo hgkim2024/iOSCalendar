@@ -11,15 +11,28 @@ import UIKit
 // 캘린더 Root VC
 class VwCalendar: UIView {
     
+    // 캘린더 상단 요일 표기하는 뷰
     let VCWeekday = VwCalendarWeekday()
+    
+    // 월간 캘린더
     let VCpage = VCCalendarMonthPage()
+    
+    // 일간 캘린더
     let VCDayPage = VCCalendarDayDetailPage()
+    
+    // 하단에 오늘로 이동하는 버튼
     let vwToday = vwMoveToday()
     
+    // 캘린더 접혔을 때 높이
     var minHeight: CGFloat = VwCalendar.getMaxCalendarHeight() * (45.0 / 100.0)
+    
+    // 캘린더 펼쳤을 때 높이
     var maxHeight: CGFloat = VwCalendar.getMaxCalendarHeight()
+    
+    // 캘린더 터치 후 스와이프 시 가중치
     let weight: CGFloat = 5.0
     
+    // 스와이프 제스쳐
     var swipeUp: UISwipeGestureRecognizer?
     var swipeDown: UISwipeGestureRecognizer?
     
@@ -146,6 +159,7 @@ class VwCalendar: UIView {
         }
     }
     
+    // TODO: - 아이폰 X 이전 폰에서 현재 swipeAnimated 함수 사용 시 버벅거린다면 아래 함수 사용 할 것
     private func touchEndAnimated(isUp: Bool) {
         VCpage.isUp = isUp
         
@@ -328,7 +342,6 @@ extension VwCalendar: CalendarTouchEventDelegate {
     
     func touchEnd(diff: CGFloat) {
         let isUp: Bool = self.getUpDownStatus(diff: diff)
-        
         if !isUp {
             self.changeDayCellStatus(isUp: isUp)
             self.layoutIfNeeded()

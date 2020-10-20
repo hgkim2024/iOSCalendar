@@ -116,6 +116,7 @@ class VCCalendarMonthPage: UIPageViewController {
             name: NSNotification.Name(rawValue: NamesOfNotification.moveCalendarMonth),
             object: nil
         )
+        
     }
     
     @objc func didReceivedAddNotification() {

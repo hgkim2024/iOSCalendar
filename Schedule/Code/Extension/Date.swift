@@ -108,4 +108,18 @@ extension Date {
         format.dateFormat = "yyyy.MM"
         return format.string(from: self)
     }
+    
+    func dateToMonthDayString() -> String {
+        let format = DateFormatter()
+        format.dateFormat = "MMdd"
+        return format.string(from: self)
+    }
+    
+    func dateToLunarString() -> String {
+        let dateFormatter = DateFormatter()
+
+        dateFormatter.calendar = Calendar(identifier: .chinese)
+        dateFormatter.dateFormat = "MMdd"
+        return dateFormatter.string(from: self)
+    }
 }

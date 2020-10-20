@@ -46,6 +46,8 @@ class VCCalendarDayDetail: UIViewController {
         }
     }
     
+    var holidayList: [String] = []
+    
     convenience init(date: Date) {
         self.init(nibName:nil, bundle:nil)
         self.date = date
@@ -56,6 +58,7 @@ class VCCalendarDayDetail: UIViewController {
         
         addObserver()
         setUpLabel()
+        setHoliday()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -64,6 +67,7 @@ class VCCalendarDayDetail: UIViewController {
         weekdayLabel.setCalendarDayColor(weekday: date.weekday)
         weekdayLabel.text = "\(date.day).\(dayString[date.weekday % 7])"
         
+        setHoliday()
         list = Item.getDayList(date: date)
     }
     
@@ -180,17 +184,24 @@ class VCCalendarDayDetail: UIViewController {
         tableView?.register(CellCalendarDayDetail.self, forCellReuseIdentifier: CellCalendarDayDetail.identifier)
     }
     
+    private func setHoliday() {
+        holidayList.removeAll()
+        if let solarHoliday = Holiday.solarDictionary[date.dateToMonthDayString()] {
+            holidayList.append(solarHoliday)
+        }
+        
+        if let lunarHoliday = Holiday.lunarDictionary[date.dateToLunarString()] {
+            holidayList.append(lunarHoliday)
+        }
+        
+        if holidayList.count > 0 {
+            weekdayLabel.textColor = Theme.sunday
+        }
+    }
+    
     @objc private func touchDownArrow(_ sender: UITapGestureRecognizer) {
         delegate?.touchBegin()
         delegate?.touchEnd(diff: -30.0)
-    }
-    
-    func setDate(date: Date) {
-        self.date = date
-        weekdayLabel.setCalendarDayColor(weekday: date.weekday)
-        weekdayLabel.text = "\(date.day).\(dayString[date.weekday % 7])"
-        
-        list = Item.getDayList(date: date)
     }
     
     // MARK: - Touch Event
@@ -223,9 +234,7 @@ class VCCalendarDayDetail: UIViewController {
         guard let beginPoint = self.beginPoint else { return }
         guard let lastPoint = self.lastPoint else { return }
         let y = beginPoint.y - lastPoint.y
-        if beginPoint.y != lastPoint.y {
-            delegate?.touchEnd(diff: y)
-        }
+        delegate?.touchEnd(diff: y)
         self.beginPoint = nil
     }
     
@@ -241,6 +250,7 @@ class VCCalendarDayDetail: UIViewController {
     }
     
     @objc func didReceivedAddNotification(_ notification: Notification) {
+        setHoliday()
         list = Item.getDayList(date: date)
     }
 }

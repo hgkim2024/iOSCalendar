@@ -14,6 +14,10 @@ class CellCalendarDay: UITableViewCell {
     let vwRoot = UIView()
     let vwEdge = UIView()
     let title = UILabel()
+    var isHoliday: Bool = false
+    
+    var titleLeadingAnchor: NSLayoutConstraint?
+    var titleHolidayLeadingAnchor: NSLayoutConstraint?
     
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -51,6 +55,10 @@ class CellCalendarDay: UITableViewCell {
         vwRoot.addSubview(vwEdge)
         vwRoot.addSubview(title)
         
+        titleLeadingAnchor = title.leadingAnchor.constraint(equalTo: vwEdge.trailingAnchor, constant: leftMargin)
+        
+        titleHolidayLeadingAnchor = title.leadingAnchor.constraint(equalTo: vwRoot.leadingAnchor, constant: leftMargin)
+        
         NSLayoutConstraint.activate([
             vwRoot.topAnchor.constraint(equalTo: topAnchor, constant: topMargin),
             vwRoot.leadingAnchor.constraint(equalTo: leadingAnchor, constant: leftMargin),
@@ -62,7 +70,7 @@ class CellCalendarDay: UITableViewCell {
             vwEdge.bottomAnchor.constraint(equalTo: vwRoot.bottomAnchor),
             vwEdge.widthAnchor.constraint(equalToConstant: edge),
             
-            title.leadingAnchor.constraint(equalTo: vwEdge.trailingAnchor, constant: leftMargin),
+            titleLeadingAnchor!,
             title.centerYAnchor.constraint(equalTo: vwRoot.centerYAnchor),
         ])
     }
@@ -78,12 +86,31 @@ class CellCalendarDay: UITableViewCell {
             // go to min
             title.isHidden = true
             vwEdge.isHidden = true
-            vwRoot.backgroundColor = Theme.item.withAlphaComponent(0.8)
+            if isHoliday {
+                vwRoot.backgroundColor = Theme.sunday.withAlphaComponent(0.8)
+            } else {
+                vwRoot.backgroundColor = Theme.item.withAlphaComponent(0.8)
+            }
         } else {
             // go to max
             title.isHidden = false
-            vwEdge.isHidden = false
-            vwRoot.backgroundColor = Theme.item.withAlphaComponent(0.1)
+            if isHoliday {
+                vwEdge.isHidden = true
+                title.textColor = Theme.sunday
+                titleLeadingAnchor?.isActive = false
+                titleHolidayLeadingAnchor?.isActive = true
+                vwRoot.backgroundColor = Theme.sunday.withAlphaComponent(0.1)
+            } else {
+                vwEdge.isHidden = false
+                title.textColor = Theme.font
+                titleLeadingAnchor?.isActive = true
+                titleHolidayLeadingAnchor?.isActive = false
+                vwRoot.backgroundColor = Theme.item.withAlphaComponent(0.1)
+            }
         }
+    }
+    
+    func setHoliday(isHoliday: Bool) {
+        self.isHoliday = isHoliday
     }
 }

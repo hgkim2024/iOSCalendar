@@ -70,4 +70,12 @@ class CellCalendarDayDetail: UITableViewCell {
     func setTitle(title: String) {
         self.title.text = title
     }
+    
+    func setHoliday(isHoliday: Bool) {
+        if isHoliday {
+            vwDot.backgroundColor = Theme.sunday.withAlphaComponent(0.8)
+        } else {
+            vwDot.backgroundColor = Theme.item.withAlphaComponent(0.8)
+        }
+    }
 }

@@ -23,12 +23,18 @@ class VwCalendarDay: UIView {
     
     var tableViewAlpha: CGFloat = 1.0
     
-    var list: [Item]? = nil {
+    var list: [Item]? = nil
+    
+    var holidayList: [String] = [] {
         didSet {
             setUpTableView()
             
             if !todayFlag &&  todayView != nil {
                 removeTodayView()
+            }
+            
+            if holidayList.count > 0 {
+                label.setCalendarDayColor(weekday: 1)
             }
         }
     }
@@ -77,10 +83,12 @@ class VwCalendarDay: UIView {
     
     private func setUpTableView() {
         removeTableView()
-        guard self.list != nil else { return }
+        guard
+            self.list != nil
+                || holidayList.count > 0
+        else { return }
         
         tableView = UITableView(frame: .zero, style: .plain)
-        tableView?.alpha = tableViewAlpha
         guard let tableView = tableView else { return }
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.sectionFooterHeight = CGFloat.leastNormalMagnitude

@@ -42,6 +42,7 @@
 		12813B7825000091005C8383 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 12813B7625000091005C8383 /* LaunchScreen.storyboard */; };
 		12813B8325000091005C8383 /* ScheduleTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12813B8225000091005C8383 /* ScheduleTests.swift */; };
 		12813B8E25000091005C8383 /* ScheduleUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12813B8D25000091005C8383 /* ScheduleUITests.swift */; };
+		128D2173253E79CE000C3124 /* Holiday.swift in Sources */ = {isa = PBXBuildFile; fileRef = 128D2172253E79CE000C3124 /* Holiday.swift */; };
 		129BECF3250008C90008905F /* VCRoot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 129BECF2250008C90008905F /* VCRoot.swift */; };
 		12A2E17F2519BCE30023B221 /* VwCalendarDay + UITableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12A2E17E2519BCE30023B221 /* VwCalendarDay + UITableView.swift */; };
 		12A2E1822519C29E0023B221 /* CellCalendarDay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12A2E1812519C29E0023B221 /* CellCalendarDay.swift */; };
@@ -111,6 +112,7 @@
 		12813B8925000091005C8383 /* ScheduleUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = ScheduleUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		12813B8D25000091005C8383 /* ScheduleUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleUITests.swift; sourceTree = "<group>"; };
 		12813B8F25000091005C8383 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		128D2172253E79CE000C3124 /* Holiday.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Holiday.swift; sourceTree = "<group>"; };
 		129BECF2250008C90008905F /* VCRoot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VCRoot.swift; sourceTree = "<group>"; };
 		12A2E17E2519BCE30023B221 /* VwCalendarDay + UITableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VwCalendarDay + UITableView.swift"; sourceTree = "<group>"; };
 		12A2E1812519C29E0023B221 /* CellCalendarDay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellCalendarDay.swift; sourceTree = "<group>"; };
@@ -185,6 +187,7 @@
 				126B0A242503502A00355D00 /* Theme.swift */,
 				126B0A262503506600355D00 /* Global.swift */,
 				127110582506590600F797E8 /* NamesOfNotification.swift */,
+				128D2172253E79CE000C3124 /* Holiday.swift */,
 			);
 			path = Global;
 			sourceTree = "<group>";
@@ -651,6 +654,7 @@
 				12806B5A253295B5000C0F8A /* VCCalendarDayDetail.swift in Sources */,
 				126B05FC2536F9C0002A1DC0 /* UIView.swift in Sources */,
 				126B2DBF250B9BD800C69BC6 /* Item.swift in Sources */,
+				128D2173253E79CE000C3124 /* Holiday.swift in Sources */,
 				1270434C2504DB530045375E /* VCCalendarMonth.swift in Sources */,
 				126B0A2E2503526400355D00 /* VwCalendar.swift in Sources */,
 				12A2E17F2519BCE30023B221 /* VwCalendarDay + UITableView.swift in Sources */,

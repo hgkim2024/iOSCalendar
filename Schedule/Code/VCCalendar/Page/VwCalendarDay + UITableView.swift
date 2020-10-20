@@ -13,7 +13,7 @@ extension VwCalendarDay: UITableViewDelegate, UITableViewDataSource {
         _ tableView: UITableView,
         numberOfRowsInSection section: Int
     ) -> Int {
-            return list?.count ?? 0
+        return ((list?.count ?? 0) + holidayList.count)
     }
     
     func tableView(
@@ -32,8 +32,14 @@ extension VwCalendarDay: UITableViewDelegate, UITableViewDataSource {
             return cell
         } else {
             let cell = tableView.dequeueReusableCell(withIdentifier: CellCalendarDay.identifier, for: indexPath) as! CellCalendarDay
-            
-            cell.setTitle(title: list?[safe: indexPath.row]?.title ?? "")
+            if holidayList.count > indexPath.row
+                && holidayList.count != 0 {
+                cell.setTitle(title: holidayList[safe: indexPath.row] ?? "")
+                cell.setHoliday(isHoliday: true)
+            } else {
+                cell.setTitle(title: list?[safe: indexPath.row - holidayList.count]?.title ?? "")
+                cell.setHoliday(isHoliday: false)
+            }
             cell.selectionStyle = .none
             
             cell.setColor(isUp: self.isUp)

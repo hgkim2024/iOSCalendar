@@ -48,6 +48,7 @@ class VCCalendarMonth: UIViewController {
         super.viewWillAppear(animated)
         setUpData()
         setToday()
+        setHoliday()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -224,7 +225,7 @@ class VCCalendarMonth: UIViewController {
         let lastDay = date.startOfMonth.endOfMonth.day
         let prevLastDay = date.prevMonth.endOfMonth.day
         var list: [Item]? = nil
-        for i in 0..<(Global.calendarRow * Global.calendarColumn) {
+        for i in 0..<(row * Global.calendarColumn) {
             if i + 1 >= weekday {
                 // 다음달
                 if i+1-weekday >= lastDay {
@@ -253,11 +254,50 @@ class VCCalendarMonth: UIViewController {
         }
     }
     
+    func setHoliday() {
+        guard
+            let minDate = dayViews[safe: 0]?.date,
+            let maxDate = dayViews[safe: dayViews.count - 1]?.date
+        else { return }
+        
+        let minDay = minDate.dateToMonthDayString()
+        let maxDay = maxDate.dateToMonthDayString()
+        let holidayKeyList = Holiday.isHoliday(minDay: minDay, maxDay: maxDay)
+        let dictionary = Holiday.getHolidayList(stringArray: holidayKeyList)
+        
+        let lunarMinDay = minDate.dateToLunarString()
+        let lunarMaxDay = maxDate.dateToLunarString()
+        let lunarHolidayKeyList = Holiday.isHoliday(minDay: lunarMinDay, maxDay: lunarMaxDay, isLunar: true)
+        let lunarDictionary = Holiday.getHolidayList(stringArray: lunarHolidayKeyList, isLunar: true)
+        
+        for view in dayViews {
+            var holidayList: [String] = []
+            if let date = view.date {
+                let dayString = "\(String(format: "%02d", date.month))\(String(format: "%02d", date.day))"
+                if let value = dictionary[dayString] {
+                    holidayList.append(value)
+                }
+            }
+            view.holidayList = holidayList
+        }
+        
+        guard lunarDictionary.count > 0 else { return }
+        for view in dayViews {
+            var holidayList: [String] = []
+            if let date = view.date {
+                let dayString = date.dateToLunarString()
+                if let value = lunarDictionary[dayString] {
+                    holidayList.append(value)
+                    view.holidayList = holidayList
+                }
+            }
+        }
+    }
+    
     // MARK: - Touch Event
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first else { return }
         self.beginPoint = touch.location(in: touch.view)
-        
         delegate?.touchBegin()
     }
     
@@ -283,9 +323,7 @@ class VCCalendarMonth: UIViewController {
         guard let beginPoint = self.beginPoint else { return }
         guard let lastPoint = self.lastPoint else { return }
         let y = beginPoint.y - lastPoint.y
-        if beginPoint.y != lastPoint.y {
-            delegate?.touchEnd(diff: y)
-        }
+        delegate?.touchEnd(diff: y)
         self.beginPoint = nil
     }
     

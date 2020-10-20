@@ -10,14 +10,19 @@ import UIKit
 
 extension VCCalendarDayDetail: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return list?.count ?? 0
+        return (list?.count ?? 0) + holidayList.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: CellCalendarDayDetail.identifier, for: indexPath) as! CellCalendarDayDetail
         
-        if let title = list?[safe: indexPath.row]?.title {
-            cell.setTitle(title: title)
+        if holidayList.count > indexPath.row
+            && holidayList.count != 0 {
+            cell.setTitle(title: holidayList[safe: indexPath.row] ?? "")
+            cell.setHoliday(isHoliday: true)
+        } else {
+            cell.setTitle(title: list?[safe: indexPath.row - holidayList.count]?.title ?? "")
+            cell.setHoliday(isHoliday: false)
         }
         
         cell.selectionStyle = .none
