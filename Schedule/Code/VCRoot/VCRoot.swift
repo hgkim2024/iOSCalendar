@@ -23,14 +23,15 @@ class VCRoot: UIViewController {
     
     func setUpUI() {
         view.backgroundColor = Theme.rootBackground
-        navigationController?.navigationBar.barTintColor = Theme.rootBackground
-        navigationController?.navigationBar.shadowImage = UIImage()
-        
-        let add = UIBarButtonItem(barButtonSystemItem: .add, target: self, action: #selector(addTapped))
-        navigationItem.rightBarButtonItems = [add]
         
         calendar = VwCalendar()
         calendar.translatesAutoresizingMaskIntoConstraints = false
+        calendar.addEventButton.button.addTarget(self, action: #selector(addTapped), for: .touchUpInside)
+        
+        guard let bar = navigationController?.navigationBar else { return }
+        bar.isTranslucent = true
+        bar.setBackgroundImage(UIImage(), for: .default)
+        bar.shadowImage = UIImage()
     }
     
     func displayUI() {

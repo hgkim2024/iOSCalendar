@@ -21,7 +21,11 @@ class VwCalendar: UIView {
     let VCDayPage = VCCalendarDayDetailPage()
     
     // 하단에 오늘로 이동하는 버튼
-    let vwToday = vwMoveToday()
+    let vwToday = VwMoveToday()
+    
+    // 이벤트 추가 버튼
+    let addEventButton = VwAddEventButton()
+    let addButtonSize: CGFloat = 50.0
     
     // 캘린더 접혔을 때 높이
     var minHeight: CGFloat = VwCalendar.getMaxCalendarHeight() * (45.0 / 100.0)
@@ -67,6 +71,9 @@ class VwCalendar: UIView {
         let tap = UITapGestureRecognizer(target: self, action: #selector(clickToday))
         vwToday.addGestureRecognizer(tap)
         
+        addEventButton.translatesAutoresizingMaskIntoConstraints = false
+        addEventButton.button.layer.cornerRadius = addButtonSize / 2.0
+        
         swipeUp = UISwipeGestureRecognizer(target: self, action: #selector(swipeAction(sender:)))
         swipeUp!.direction = .up
         
@@ -84,6 +91,7 @@ class VwCalendar: UIView {
         addSubview(VCpage.view)
         addSubview(VCDayPage.view)
         addSubview(vwToday)
+        addSubview(addEventButton)
         
         calendarHeight = VCpage.view.heightAnchor.constraint(equalToConstant: maxHeight)
         
@@ -107,6 +115,11 @@ class VwCalendar: UIView {
             vwToday.centerXAnchor.constraint(equalTo: centerXAnchor),
             vwToday.widthAnchor.constraint(equalToConstant: 55.0),
             vwToday.heightAnchor.constraint(equalToConstant: 35.0),
+            
+            addEventButton.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -20.0),
+            addEventButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20.0),
+            addEventButton.widthAnchor.constraint(equalToConstant: addButtonSize),
+            addEventButton.heightAnchor.constraint(equalToConstant: addButtonSize)
         ])
     }
     

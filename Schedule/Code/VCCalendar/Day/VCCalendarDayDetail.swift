@@ -94,7 +94,7 @@ class VCCalendarDayDetail: UIViewController {
         
         downArrow.translatesAutoresizingMaskIntoConstraints = false
         downArrow.image = UIImage(systemName: "chevron.compact.down")?.withRenderingMode(.alwaysTemplate)
-        downArrow.tintColor = Theme.separator
+        downArrow.tintColor = UIColor.lightGray.withAlphaComponent(0.4)
         downArrow.isUserInteractionEnabled = true
         
         vwdownArrowDummy.translatesAutoresizingMaskIntoConstraints = false

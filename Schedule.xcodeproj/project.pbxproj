@@ -30,6 +30,7 @@
 		12760B88250BCBC700CF0A6B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 12760B8A250BCBC700CF0A6B /* Localizable.strings */; };
 		12760B8D250BCD2500CF0A6B /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12760B8C250BCD2500CF0A6B /* String.swift */; };
 		1276ADA7253D816600F8D559 /* VCCalendarDayDetailPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1276ADA6253D816600F8D559 /* VCCalendarDayDetailPage.swift */; };
+		127BD39925416F8100C678A3 /* VwAddEventButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 127BD39825416F8100C678A3 /* VwAddEventButton.swift */; };
 		12806B51253294AF000C0F8A /* UILabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12806B50253294AF000C0F8A /* UILabel.swift */; };
 		12806B5A253295B5000C0F8A /* VCCalendarDayDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12806B59253295B5000C0F8A /* VCCalendarDayDetail.swift */; };
 		12806B6525329B5C000C0F8A /* VCCalendarDayDetail + UITableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12806B6425329B5C000C0F8A /* VCCalendarDayDetail + UITableView.swift */; };
@@ -46,7 +47,7 @@
 		129BECF3250008C90008905F /* VCRoot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 129BECF2250008C90008905F /* VCRoot.swift */; };
 		12A2E17F2519BCE30023B221 /* VwCalendarDay + UITableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12A2E17E2519BCE30023B221 /* VwCalendarDay + UITableView.swift */; };
 		12A2E1822519C29E0023B221 /* CellCalendarDay.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12A2E1812519C29E0023B221 /* CellCalendarDay.swift */; };
-		12C98F0E2536C4F3008545C5 /* vwMoveToday.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12C98F0D2536C4F3008545C5 /* vwMoveToday.swift */; };
+		12C98F0E2536C4F3008545C5 /* VwMoveToday.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12C98F0D2536C4F3008545C5 /* VwMoveToday.swift */; };
 		9D907618252A30689C6ED675 /* Pods_ScheduleTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 441CC7DCBAB98C43383D024F /* Pods_ScheduleTests.framework */; };
 		BB14D5061DCD39BB6790E005 /* Pods_Schedule.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5865367DEDC46F13CAE91E8B /* Pods_Schedule.framework */; };
 /* End PBXBuildFile section */
@@ -94,6 +95,7 @@
 		12760B8B250BCBC900CF0A6B /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
 		12760B8C250BCD2500CF0A6B /* String.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = String.swift; sourceTree = "<group>"; };
 		1276ADA6253D816600F8D559 /* VCCalendarDayDetailPage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VCCalendarDayDetailPage.swift; sourceTree = "<group>"; };
+		127BD39825416F8100C678A3 /* VwAddEventButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VwAddEventButton.swift; sourceTree = "<group>"; };
 		12806B50253294AF000C0F8A /* UILabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UILabel.swift; sourceTree = "<group>"; };
 		12806B59253295B5000C0F8A /* VCCalendarDayDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VCCalendarDayDetail.swift; sourceTree = "<group>"; };
 		12806B6425329B5C000C0F8A /* VCCalendarDayDetail + UITableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VCCalendarDayDetail + UITableView.swift"; sourceTree = "<group>"; };
@@ -116,7 +118,7 @@
 		129BECF2250008C90008905F /* VCRoot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VCRoot.swift; sourceTree = "<group>"; };
 		12A2E17E2519BCE30023B221 /* VwCalendarDay + UITableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "VwCalendarDay + UITableView.swift"; sourceTree = "<group>"; };
 		12A2E1812519C29E0023B221 /* CellCalendarDay.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellCalendarDay.swift; sourceTree = "<group>"; };
-		12C98F0D2536C4F3008545C5 /* vwMoveToday.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = vwMoveToday.swift; sourceTree = "<group>"; };
+		12C98F0D2536C4F3008545C5 /* VwMoveToday.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VwMoveToday.swift; sourceTree = "<group>"; };
 		19892357FDE08C623DE07D1E /* Pods-Schedule-ScheduleUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Schedule-ScheduleUITests.debug.xcconfig"; path = "Target Support Files/Pods-Schedule-ScheduleUITests/Pods-Schedule-ScheduleUITests.debug.xcconfig"; sourceTree = "<group>"; };
 		441CC7DCBAB98C43383D024F /* Pods_ScheduleTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_ScheduleTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5865367DEDC46F13CAE91E8B /* Pods_Schedule.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Schedule.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -215,7 +217,7 @@
 		126B0A2C2503524600355D00 /* VCCalendar */ = {
 			isa = PBXGroup;
 			children = (
-				12C98F0C2536C4DD008545C5 /* moveToday */,
+				12C98F0C2536C4DD008545C5 /* subview */,
 				12806B582532957C000C0F8A /* Day */,
 				127043462504CA940045375E /* Page */,
 				127043432504AD400045375E /* Weekday */,
@@ -386,12 +388,13 @@
 			path = Cell;
 			sourceTree = "<group>";
 		};
-		12C98F0C2536C4DD008545C5 /* moveToday */ = {
+		12C98F0C2536C4DD008545C5 /* subview */ = {
 			isa = PBXGroup;
 			children = (
-				12C98F0D2536C4F3008545C5 /* vwMoveToday.swift */,
+				12C98F0D2536C4F3008545C5 /* VwMoveToday.swift */,
+				127BD39825416F8100C678A3 /* VwAddEventButton.swift */,
 			);
-			path = moveToday;
+			path = subview;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -662,7 +665,8 @@
 				126F007425060BFB00C9FA3A /* VCCalendarMonthPage.swift in Sources */,
 				126B2DC1250BA24800C69BC6 /* VCAddItem.swift in Sources */,
 				12806B6525329B5C000C0F8A /* VCCalendarDayDetail + UITableView.swift in Sources */,
-				12C98F0E2536C4F3008545C5 /* vwMoveToday.swift in Sources */,
+				12C98F0E2536C4F3008545C5 /* VwMoveToday.swift in Sources */,
+				127BD39925416F8100C678A3 /* VwAddEventButton.swift in Sources */,
 				12760B8D250BCD2500CF0A6B /* String.swift in Sources */,
 				126B05F72536F29C002A1DC0 /* CellAddItemDelete.swift in Sources */,
 				1270434A2504D0FE0045375E /* Date.swift in Sources */,

@@ -28,7 +28,7 @@ class Theme {
     }()
     
     static var rootBackground: UIColor = {
-        isDarkMode ? .black : UIColor(hexString: "#FAFAFA")
+        isDarkMode ? UIColor(hexString: "#202020") : UIColor(hexString: "#FAFAFA")
     }()
     
     static var background: UIColor = {
@@ -41,9 +41,9 @@ class Theme {
 //        UIColor(red: 0, green: 0.48, blue: 1, alpha: 1)
     
     static var separator: UIColor = UIColor.lightGray.withAlphaComponent(0.2)
-    static var sunday: UIColor = UIColor.init(hexString: "#ff3333")
-    static var saturday: UIColor = UIColor.init(hexString: "#3333ff")
+    static var sunday: UIColor = UIColor.init(hexString: "#ff4d4d")
+    static var saturday: UIColor = UIColor.init(hexString: "#4d4dff")
     
-    static var item: UIColor = UIColor.init(hexString: "#1a53ff")
-    static var today: UIColor = UIColor.init(hexString: "#00cc00")
+    static var item: UIColor = UIColor.init(hexString: "#4d4dff")
+    static var today: UIColor = UIColor.init(hexString: "#00b300")
 }

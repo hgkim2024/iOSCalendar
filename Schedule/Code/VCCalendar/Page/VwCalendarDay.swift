@@ -193,7 +193,7 @@ class VwCalendarDay: UIView {
     
     func setTodayView() {
         todayFlag = true
-        label.textColor = .white
+        label.textColor = Theme.rootBackground
         
         let size: CGFloat = label.font.pointSize + 6
         todayView = UIView()

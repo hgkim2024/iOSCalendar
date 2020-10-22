@@ -8,7 +8,7 @@
 
 import UIKit
 
-class vwMoveToday: UIView {
+class VwMoveToday: UIView {
     let vwRoot = UIView()
     let title = UILabel()
     
