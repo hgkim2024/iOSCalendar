@@ -33,8 +33,6 @@ class CellCalendarDay: UITableViewCell {
     func setUpUI() {
         backgroundColor = .clear
         vwRoot.translatesAutoresizingMaskIntoConstraints = false
-        vwRoot.clipsToBounds = true
-        vwRoot.layer.cornerRadius = 1
         vwRoot.backgroundColor = Theme.item.withAlphaComponent(0.1)
         
         vwEdge.translatesAutoresizingMaskIntoConstraints = false
@@ -105,7 +103,7 @@ class CellCalendarDay: UITableViewCell {
                 title.textColor = Theme.font
                 titleLeadingAnchor?.isActive = true
                 titleHolidayLeadingAnchor?.isActive = false
-                vwRoot.backgroundColor = Theme.item.withAlphaComponent(0.1)
+                vwRoot.backgroundColor = .clear
             }
         }
     }

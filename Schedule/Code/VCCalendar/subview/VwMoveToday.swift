@@ -31,7 +31,7 @@ class VwMoveToday: UIView {
     
     func setUpUI() {
         vwRoot.translatesAutoresizingMaskIntoConstraints = false
-        vwRoot.backgroundColor = Theme.rootBackground
+        vwRoot.backgroundColor = Theme.background
         vwRoot.layer.cornerRadius = height / 2.0
         
         vwRoot.layer.shadowColor = UIColor.black.cgColor

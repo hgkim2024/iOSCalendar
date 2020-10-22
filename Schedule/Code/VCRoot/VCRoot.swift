@@ -22,7 +22,7 @@ class VCRoot: UIViewController {
     }
     
     func setUpUI() {
-        view.backgroundColor = Theme.rootBackground
+        view.backgroundColor = Theme.background
         
         calendar = VwCalendar()
         calendar.translatesAutoresizingMaskIntoConstraints = false

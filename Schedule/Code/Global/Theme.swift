@@ -27,10 +27,6 @@ class Theme {
         isDarkMode ? .lightGray : .lightGray
     }()
     
-    static var rootBackground: UIColor = {
-        isDarkMode ? UIColor(hexString: "#202020") : UIColor(hexString: "#FAFAFA")
-    }()
-    
     static var background: UIColor = {
         isDarkMode ? UIColor(hexString: "#202020") : UIColor(hexString: "#FAFAFA")
     }()
