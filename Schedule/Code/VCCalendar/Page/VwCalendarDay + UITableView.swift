@@ -22,7 +22,7 @@ extension VwCalendarDay: UITableViewDelegate, UITableViewDataSource {
     ) -> UITableViewCell {
         
         if indexPath.row > self.count - 1
-            && !self.isUp {
+            && tableView.rowHeight == maxHeight {
             let cell = tableView.dequeueReusableCell(withIdentifier: CellCalendarDayCount.identifier, for: indexPath) as! CellCalendarDayCount
             if indexPath.row == self.count {
                 cell.setTitle(title: "+\((list?.count ?? 0) - count)")
@@ -42,7 +42,7 @@ extension VwCalendarDay: UITableViewDelegate, UITableViewDataSource {
             }
             cell.selectionStyle = .none
             
-            cell.setColor(isUp: self.isUp)
+            cell.setColor(isUp: tableView.rowHeight == minHeight)
             return cell
         }
     }

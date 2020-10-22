@@ -48,7 +48,7 @@ class CellCalendarDay: UITableViewCell {
     
     func displayUI() {
         let topMargin: CGFloat = 1.0
-        let leftMargin: CGFloat = 3.0
+        let leftMargin: CGFloat = 2.5
         let edge: CGFloat = 2.0
         
         addSubview(vwRoot)

@@ -10,7 +10,8 @@ import UIKit
 
 class VwCalendarDay: UIView {
     let label = UILabel()
-    var tableView: UITableView? = nil
+    var minTableView: UITableView? = nil
+    var maxTableView: UITableView? = nil
     var todayView: UIView? = nil
     
     var todayFlag: Bool = false
@@ -20,8 +21,6 @@ class VwCalendarDay: UIView {
             label.setCalendarDayColor(weekday: date.weekday % 7)
         }
     }
-    
-    var tableViewAlpha: CGFloat = 1.0
     
     var list: [Item]? = nil
     
@@ -88,51 +87,80 @@ class VwCalendarDay: UIView {
                 || holidayList.count > 0
         else { return }
         
-        tableView = UITableView(frame: .zero, style: .plain)
-        guard let tableView = tableView else { return }
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.sectionFooterHeight = CGFloat.leastNormalMagnitude
+        minTableView = UITableView(frame: .zero, style: .plain)
+        guard let minTableView = minTableView else { return }
+        minTableView.translatesAutoresizingMaskIntoConstraints = false
+        minTableView.sectionFooterHeight = CGFloat.leastNormalMagnitude
         
-        tableView.separatorStyle = .none
-        tableView.isScrollEnabled = false
-        tableView.showsVerticalScrollIndicator = false
-        tableView.bounces = false
+        minTableView.separatorStyle = .none
+        minTableView.isScrollEnabled = false
+        minTableView.showsVerticalScrollIndicator = false
+        minTableView.bounces = false
         
-        tableView.delegate = self
-        tableView.dataSource = self
-        tableView.backgroundColor = .clear
-        tableView.isUserInteractionEnabled = false
+        minTableView.delegate = self
+        minTableView.dataSource = self
+        minTableView.backgroundColor = .clear
+        minTableView.isUserInteractionEnabled = false
 
-        if isUp {
-            tableView.rowHeight = minHeight
-        } else {
-            tableView.rowHeight = maxHeight
-        }
+        minTableView.rowHeight = minHeight
         
+        maxTableView = UITableView(frame: .zero, style: .plain)
+        guard let maxTableView = maxTableView else { return }
+        maxTableView.translatesAutoresizingMaskIntoConstraints = false
+        maxTableView.sectionFooterHeight = CGFloat.leastNormalMagnitude
+        
+        maxTableView.separatorStyle = .none
+        maxTableView.isScrollEnabled = false
+        maxTableView.showsVerticalScrollIndicator = false
+        maxTableView.bounces = false
+        
+        maxTableView.delegate = self
+        maxTableView.dataSource = self
+        maxTableView.backgroundColor = .clear
+        maxTableView.isUserInteractionEnabled = false
+
+        maxTableView.rowHeight = maxHeight
+        
+        changeAlpha(isUp: self.isUp)
         addRegister()
         
-        addSubview(tableView)
+        addSubview(minTableView)
+        addSubview(maxTableView)
         NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: topAnchor, constant: Global.calendarleftMargin + Global.weekdayFontSize + 2),
-            tableView.leadingAnchor.constraint(equalTo: leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: bottomAnchor)
+            minTableView.topAnchor.constraint(equalTo: topAnchor, constant: Global.calendarleftMargin + Global.weekdayFontSize + 2),
+            minTableView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            minTableView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            minTableView.bottomAnchor.constraint(equalTo: bottomAnchor),
+            
+            maxTableView.topAnchor.constraint(equalTo: topAnchor, constant: Global.calendarleftMargin + Global.weekdayFontSize + 2),
+            maxTableView.leadingAnchor.constraint(equalTo: leadingAnchor),
+            maxTableView.trailingAnchor.constraint(equalTo: trailingAnchor),
+            maxTableView.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
         
-        tableView.reloadData()
+        minTableView.reloadData()
+        maxTableView.reloadData()
     }
     
     private func removeTableView() {
-        guard let tableView = tableView else { return }
-        tableView.removeFromSuperview()
-        self.tableView = nil
+        guard
+            let minTableView = minTableView,
+            let maxTableView = maxTableView
+        else { return }
+        minTableView.removeFromSuperview()
+        maxTableView.removeFromSuperview()
+        self.minTableView = nil
+        self.maxTableView = nil
     }
     
     // MARK: - Functions
     
     private func addRegister() {
-        tableView?.register(CellCalendarDay.self, forCellReuseIdentifier: CellCalendarDay.identifier)
-        tableView?.register(CellCalendarDayCount.self, forCellReuseIdentifier: CellCalendarDayCount.identifier)
+        minTableView?.register(CellCalendarDay.self, forCellReuseIdentifier: CellCalendarDay.identifier)
+        minTableView?.register(CellCalendarDayCount.self, forCellReuseIdentifier: CellCalendarDayCount.identifier)
+        
+        maxTableView?.register(CellCalendarDay.self, forCellReuseIdentifier: CellCalendarDay.identifier)
+        maxTableView?.register(CellCalendarDayCount.self, forCellReuseIdentifier: CellCalendarDayCount.identifier)
     }
     
     func setAlpha(alpha: CGFloat = 1.0) {
@@ -194,74 +222,27 @@ class VwCalendarDay: UIView {
         label.text = text
     }
     
-    func changeHeight(isUp: Bool) {
-        guard let tableView = tableView else { return }
+    func changeAlpha(isUp: Bool) {
+        guard
+            let minTableView = minTableView,
+            let maxTableView = maxTableView
+        else { return }
         if isUp {
-            tableView.rowHeight = minHeight
-            tableView.beginUpdates()
-            tableView.endUpdates()
+            minTableView.alpha = 1.0
+            maxTableView.alpha = 0.0
         } else {
-            tableView.rowHeight = maxHeight
-            tableView.beginUpdates()
-            tableView.endUpdates()
+            minTableView.alpha = 0.0
+            maxTableView.alpha = 1.0
         }
     }
     
-    func changeHeight(isUp: Bool, rate: CGFloat) {
-        guard let tableView = tableView else { return }
+    func changeAlpha(rate: CGFloat) {
+        guard
+            let minTableView = minTableView,
+            let maxTableView = maxTableView
+        else { return }
         
-        if isUp {
-            tableView.rowHeight = minHeight + ((maxHeight - minHeight) * rate)
-        } else {
-            tableView.rowHeight = minHeight + ((maxHeight - minHeight) * rate)
-            if self.isUp != isUp {
-                self.isUp = isUp
-                tableView.reloadData()
-                tableView.layoutIfNeeded()
-            }
-        }
-        
-        tableView.beginUpdates()
-        tableView.endUpdates()
-    }
-    
-    func touchEndChangeHeight(isUp: Bool, rate: CGFloat, last: Bool = false) {
-        guard let tableView = tableView else { return }
-        
-        if isUp {
-            if tableView.rowHeight <= minHeight {
-                tableView.rowHeight = minHeight
-            } else {
-                tableView.rowHeight -= ((maxHeight - minHeight) - (maxHeight - rowHeight)) * rate
-            }
-        } else {
-            if tableView.rowHeight >= maxHeight {
-                tableView.rowHeight = maxHeight
-            } else {
-                tableView.rowHeight += ((maxHeight - minHeight) - (rowHeight - minHeight)) * rate
-                if self.isUp != isUp {
-                    self.isUp = isUp
-                    tableView.reloadData()
-                    tableView.layoutIfNeeded()
-                }
-            }
-        }
-        
-        if last {
-            tableView.rowHeight = isUp ? minHeight : maxHeight
-        }
-        
-        tableView.beginUpdates()
-        tableView.endUpdates()
-    }
-    
-    func saveRowHeight() {
-        guard let tableView = self.tableView else { return }
-        self.rowHeight = tableView.rowHeight
-    }
-    
-    func changeCellStatus(isUp: Bool) {
-        self.isUp = isUp
-        tableView?.reloadData()
+        minTableView.alpha = 1 - rate
+        maxTableView.alpha = rate
     }
 }

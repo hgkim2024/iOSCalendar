@@ -127,14 +127,7 @@ class VwCalendar: UIView {
         guard let vc = (self.VCpage.viewControllers?[safe: 0] as? VCCalendarMonth) else { return }
         
         for view in vc.dayViews {
-            view.changeHeight(isUp: isUp)
-        }
-    }
-    
-    private func changeDayCellStatus(isUp: Bool) {
-        guard let vc = (self.VCpage.viewControllers?[safe: 0] as? VCCalendarMonth) else { return }
-        for view in vc.dayViews {
-            view.changeCellStatus(isUp: isUp)
+            view.changeAlpha(isUp: isUp)
         }
     }
     
@@ -159,7 +152,6 @@ class VwCalendar: UIView {
         }
     }
     
-    // TODO: - 아이폰 X 이전 폰에서 현재 swipeAnimated 함수 사용 시 버벅거린다면 아래 함수 사용 할 것
     private func touchEndAnimated(isUp: Bool) {
         VCpage.isUp = isUp
         
@@ -173,79 +165,17 @@ class VwCalendar: UIView {
             self.changeDayCalendarHeight(isUp: isUp)
             self.layoutIfNeeded()
         }, completion: { _ in
-            if isUp {
-                self.changeDayCellStatus(isUp: isUp)
-            }
             self.addGestureRecognizer(self.swipeUp!)
             self.addGestureRecognizer(self.swipeDown!)
             self.VCDayPage.view.isHidden = !isUp
         })
     }
     
-    private func swipeAnimated(isUp: Bool) {
-        VCpage.isUp = isUp
-        let count: Int = self.animationFrame
-        
-        VCpage.setDataSource(isOn: false)
-        if let vc = (self.VCpage.viewControllers?[safe: 0] as? VCCalendarMonth) {
-            for view in vc.dayViews {
-                view.saveRowHeight()
-            }
-        }
-        recursiveSwipeAnimations(count: count, isUp: isUp, totalCount: count, height: self.calendarHeight.constant)
-    }
-    
-    private func recursiveSwipeAnimations(count: Int, isUp: Bool, totalCount: Int, height: CGFloat) {
-        if count < 0 {
-            if isUp {
-                self.changeDayCellStatus(isUp: isUp)
-            }
-            VCpage.setDataSource(isOn: true)
-            self.addGestureRecognizer(self.swipeUp!)
-            self.addGestureRecognizer(self.swipeDown!)
-            VCDayPage.view.isHidden = !isUp
-            return
-        } else {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.003) {
-                let rate = 1.0 / CGFloat(totalCount)
-                
-                if isUp {
-                    let diff = (((self.maxHeight - self.minHeight) - (self.maxHeight - height)) * rate)
-                    if self.calendarHeight.constant - diff <= self.minHeight {
-                        self.calendarHeight.constant = self.minHeight
-                    } else {
-                        self.calendarHeight.constant -= diff
-                    }
-                } else {
-                    let diff = (((self.maxHeight - self.minHeight) - (height - self.minHeight)) * rate)
-                    if self.calendarHeight.constant + diff >= self.maxHeight {
-                        self.calendarHeight.constant = self.maxHeight
-                    } else {
-                        self.calendarHeight.constant += diff
-                    }
-                }
-                
-                if let vc = (self.VCpage.viewControllers?[safe: 0] as? VCCalendarMonth) {
-                    for view in vc.dayViews {
-                        view.touchEndChangeHeight(isUp: isUp, rate: rate, last: count == 0)
-                    }
-                }
-                
-                self.layoutIfNeeded()
-                self.recursiveSwipeAnimations(count: count - 1, isUp: isUp, totalCount: totalCount, height: height)
-            }
-        }
-    }
-    
     @objc private func swipeAction(sender: UISwipeGestureRecognizer) {
         if sender.direction == .up {
-            swipeAnimated(isUp: true)
-//            touchEndAnimated(isUp: true)
+            touchEndAnimated(isUp: true)
         } else if sender.direction == .down {
-            self.changeDayCellStatus(isUp: false)
-            self.layoutIfNeeded()
-//            touchEndAnimated(isUp: false)
-            swipeAnimated(isUp: false)
+            touchEndAnimated(isUp: false)
         }
     }
     
@@ -308,6 +238,8 @@ extension VwCalendar: CalendarTouchEventDelegate {
     }
     
     func touchMove(diff: CGFloat) {
+        guard Int(abs(diff)) > 1 else { return }
+        
         if diff > 0.0 {
             if calendarHeight.constant - diff > minHeight {
                 // up
@@ -316,7 +248,7 @@ extension VwCalendar: CalendarTouchEventDelegate {
                     let rate = ((calendarHeight.constant - minHeight) / (maxHeight - minHeight))
                     
                     for view in vc.dayViews {
-                        view.changeHeight(isUp: true, rate: rate)
+                        view.changeAlpha(rate: rate)
                     }
                 }
             } else {
@@ -331,7 +263,7 @@ extension VwCalendar: CalendarTouchEventDelegate {
                     let rate = ((calendarHeight.constant - minHeight) / (maxHeight - minHeight))
                     
                     for view in vc.dayViews {
-                        view.changeHeight(isUp: false, rate: rate)
+                        view.changeAlpha(rate: rate)
                     }
                 }
             } else {
@@ -342,12 +274,6 @@ extension VwCalendar: CalendarTouchEventDelegate {
     
     func touchEnd(diff: CGFloat) {
         let isUp: Bool = self.getUpDownStatus(diff: diff)
-        if !isUp {
-            self.changeDayCellStatus(isUp: isUp)
-            self.layoutIfNeeded()
-        }
-        
-//        self.touchEndAnimated(isUp: isUp)
-        self.swipeAnimated(isUp: isUp)
+        self.touchEndAnimated(isUp: isUp)
     }
 }

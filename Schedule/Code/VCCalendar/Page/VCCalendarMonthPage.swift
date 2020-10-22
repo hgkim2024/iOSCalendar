@@ -75,12 +75,17 @@ class VCCalendarMonthPage: UIPageViewController {
             guard
                 curDate.month != moveDate.month
                 || curDate.year != moveDate.year
-            else { return }
+            else {
+                self.touchDelegate?.touchBegin()
+                self.touchDelegate?.touchEnd(diff: 30.0)
+                vc.moveDay(moveDate: moveDate)
+                return
+            }
             
             let date = moveDate.startOfMonth
             let firstPage = VCCalendarMonth(date: date)
             firstPage.delegate = self
-            firstPage.isUp = self.isUp
+            firstPage.isUp = true
             firstPage.initSelectedDate = moveDate.startOfDay
             
             self.postTitleNotification(date.dateToString())
@@ -128,13 +133,7 @@ class VCCalendarMonthPage: UIPageViewController {
         else {
                 return
         }
-        guard let vc = viewControllers?[safe: 0] as? VCCalendarMonth else { return }
-        if vc.getDate().month != date.month
-            {
-            moveDay(moveDate: date)
-        } else {
-            vc.moveDay(moveDate: date)
-        }
+        moveDay(moveDate: date)
     }
     
     func setDataSource(isOn: Bool) {

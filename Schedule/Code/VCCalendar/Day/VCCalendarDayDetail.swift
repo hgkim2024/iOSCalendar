@@ -231,10 +231,6 @@ class VCCalendarDayDetail: UIViewController {
         delegate?.touchMove(diff: y)
     }
     
-    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
-        touchEnd()
-    }
-    
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         touchEnd()
     }

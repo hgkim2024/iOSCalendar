@@ -40,6 +40,7 @@ extension Date {
         return Calendar.current.date(byAdding: components, to: startOfDay)!
     }
     
+    // 0: 토요일, 1: 일요일 ... 6: 금요일
     var weekday: Int {
         let cal = Calendar(identifier: .gregorian)
         let comps = cal.dateComponents([.weekday], from: self)
@@ -98,9 +99,13 @@ extension Date {
             to: self.startOfMonth)!
     }
     
+//    func getNextCountDay(count: Int) -> Date {
+//        let dateComponents = DateComponents(day: count - 1)
+//        return Calendar.current.date(byAdding: dateComponents, to: self)!
+//    }
+    
     func getNextCountDay(count: Int) -> Date {
-        let dateComponents = DateComponents(day: count - 1)
-        return Calendar.current.date(byAdding: dateComponents, to: self)!
+        return Calendar.current.date(byAdding: .day, value: count, to: self.startOfDay)!
     }
     
     func dateToString() -> String {

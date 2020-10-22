@@ -31,11 +31,7 @@ class VCAddItem: UIViewController {
     var date: Date = Date()
     var item: Item? = nil
     
-    var eventTitle: String = "" {
-        didSet {
-            print("didSet eventTitle: \(eventTitle)")
-        }
-    }
+    var eventTitle: String = ""
     
     convenience init(date: Date, item: Item? = nil) {
         self.init(nibName:nil, bundle:nil)

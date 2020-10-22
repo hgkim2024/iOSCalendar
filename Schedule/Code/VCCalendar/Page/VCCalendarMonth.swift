@@ -49,6 +49,7 @@ class VCCalendarMonth: UIViewController {
         setUpData()
         setToday()
         setHoliday()
+        setAlternativeHoliday()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -81,6 +82,8 @@ class VCCalendarMonth: UIViewController {
         } else {
             preSelecedDay?.selectedDay()
         }
+        
+        setGestrue()
     }
     
     private func setUpUI() {
@@ -121,7 +124,7 @@ class VCCalendarMonth: UIViewController {
                     if today == day
                         && month == lastDayMonth
                         && curDate.year == self.date.year {
-                        let date = self.date.getNextCountDay(count: day)
+                        let date = self.date.getNextCountDay(count: day - 1)
                         dayView.date = date
                         dayView.selectedDay()
                         dayView.setTodayView()
@@ -169,39 +172,17 @@ class VCCalendarMonth: UIViewController {
         return date
     }
     
-    @objc func tapDay2(sender: UITapGestureRecognizer) {
-        guard let view = sender.view as? VwCalendarDay else { return }
-        guard let date = view.date else { return }
+    @objc func tapDay(sender: UITapGestureRecognizer) {
+        guard
+            let view = sender.view as? VwCalendarDay,
+            let date = view.date
+            else { return }
         
         NotificationCenter.default.post(
             name: NSNotification.Name(rawValue: NamesOfNotification.moveCalendarMonth),
             object: nil,
             userInfo: ["date": date]
         )
-        
-        delegate?.touchBegin()
-        delegate?.touchEnd(diff: 30.0)
-    }
-    
-    @objc func tapDay(sender: UITapGestureRecognizer) {
-        guard let view = sender.view as? VwCalendarDay else { return }
-        if let selectMonth = view.date?.month,
-           date.month != selectMonth {
-            guard let date = view.date else { return }
-            NotificationCenter.default.post(
-                name: NSNotification.Name(rawValue: NamesOfNotification.moveCalendarMonth),
-                object: nil,
-                userInfo: ["date": date]
-            )
-            return
-        }
-        
-        preSelecedDay?.deselectedDay()
-        view.selectedDay()
-        preSelecedDay = view
-
-        delegate?.touchBegin()
-        delegate?.touchEnd(diff: 30.0)
     }
     
     func moveDay(moveDate: Date) {
@@ -231,27 +212,25 @@ class VCCalendarMonth: UIViewController {
             if i + 1 >= weekday {
                 // 다음달
                 if i+1-weekday >= lastDay {
-                    let day = i + 2 - weekday - lastDay
+                    let day = i + 1 - weekday - lastDay
                     let nextDate = date.nextMonth.getNextCountDay(count: day)
                     list = Item.getDayList(date: nextDate)
                     dayViews[safe: i]?.date = nextDate
                 } else {
                     // 현재달
-                    let day = i + 2 - weekday
+                    let day = i + 1 - weekday
                     let date = self.date.getNextCountDay(count: day)
                     list = Item.getDayList(date: date)
                     dayViews[safe: i]?.date = date
                 }
             } else {
                 // 이전달
-                let day = prevLastDay - weekday + i + 2
+                let day = prevLastDay - weekday + i + 1
                 let count = day - prevLastDay
                 let preDate = date.getNextCountDay(count: count)
                 list = Item.getDayList(date: preDate)
                 dayViews[safe: i]?.date = preDate
             }
-            let tap = UITapGestureRecognizer(target: self, action: #selector(tapDay(sender:)))
-            dayViews[safe: i]?.addGestureRecognizer(tap)
             dayViews[safe: i]?.list = list
         }
     }
@@ -299,6 +278,35 @@ class VCCalendarMonth: UIViewController {
         }
     }
     
+    func setAlternativeHoliday() {
+        guard
+            let minDate = dayViews[safe: 0]?.date,
+            let maxDate = dayViews[safe: dayViews.count - 1]?.date
+        else { return }
+        
+        guard let date = Holiday.getAlternativeHolidays(minDate: minDate, maxDate: maxDate) else { return }
+        
+        let month = date.month
+        let day = date.day
+        
+        for view in dayViews {
+            let viewMonth = view.date?.month
+            let viewDay = view.date?.day
+            
+            if month == viewMonth
+                && day == viewDay {
+                view.holidayList = ["\(Holiday.alternativeHolidays)"]
+            }
+        }
+    }
+    
+    func setGestrue() {
+        for view in dayViews {
+            let tap = UITapGestureRecognizer(target: self, action: #selector(tapDay(sender:)))
+            view.addGestureRecognizer(tap)
+        }
+    }
+    
     // MARK: - Touch Event
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first else { return }
@@ -314,10 +322,6 @@ class VCCalendarMonth: UIViewController {
         lastPoint = touch.location(in: touch.view)
         let y = beginPoint.y - lastPoint!.y
         delegate?.touchMove(diff: y)
-    }
-    
-    override func touchesCancelled(_ touches: Set<UITouch>, with event: UIEvent?) {
-        touchEnd()
     }
     
     override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {

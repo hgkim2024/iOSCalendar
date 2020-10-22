@@ -35,6 +35,20 @@ class Holiday {
         "0816":"추석 연휴"
     ]
     
+    static let alternativeHolidays = "대체공휴일"
+    
+    static let alternativeSolarDictionary: [String : String] = [
+        "어린이날":"0505"
+    ]
+    
+    static let alternativeLunarDictionary: [String : String] = [
+        // 설날
+        "설날":"0101",
+        
+        //추석
+        "추석":"0815",
+    ]
+    
     static func isHoliday(
         minDay: String,
         maxDay: String,
@@ -89,5 +103,115 @@ class Holiday {
         }
         
         return filterDictionary
+    }
+    
+    static func getAlternativeHolidays(
+        minDate: Date,
+        maxDate: Date
+    ) -> Date? {
+        // 양력 대체공휴일 계산
+        let minDay = minDate.dateToMonthDayString()
+        let maxDay = maxDate.dateToMonthDayString()
+        let alternativeHoliday = alternativeSolarDictionary["어린이날"]!
+        if minDay < maxDay {
+            if minDay <= alternativeHoliday
+                && alternativeHoliday <= maxDay {
+                var count: Int = -1
+                if minDate.month == 5 {
+                    count = Int(alternativeHoliday)! - Int(minDay)!
+                } else if minDate.month == 4 {
+                    count = (minDate.endOfMonth.day - minDate.day) + 5
+                }
+                
+                let date = minDate.getNextCountDay(count: count)
+                if date.weekday == 1 && count != -1 {
+                    return date.nextDay
+                }
+            }
+        } else {
+            // empty
+        }
+        
+        // 음력 대체공휴일 계산
+        let lunarMinDay = minDate.dateToLunarString()
+        let lunarMaxDay = maxDate.dateToLunarString()
+        
+        guard
+            let minMonth = Int(lunarMinDay.dropLast().dropLast()),
+            let maxMonth = Int(lunarMaxDay.dropLast().dropLast())
+        else { return nil }
+        
+        let 추석 = alternativeLunarDictionary["추석"]!
+        if minMonth <= 8 && 8 <= maxMonth {
+            // 추석 존재
+            var date: Date? = nil
+            if lunarMinDay > 추석 {
+                for count in 0...50 {
+                    let countDate = minDate.getNextCountDay(count: -count)
+                    let lunarDay = countDate.dateToLunarString()
+                    
+                    if lunarDay == 추석 {
+                        date = countDate
+                        break
+                    }
+                }
+            } else {
+                for count in 0...50 {
+                    let countDate = minDate.getNextCountDay(count: count)
+                    let lunarDay = countDate.dateToLunarString()
+                    
+                    if lunarDay == 추석 {
+                        date = countDate
+                        break
+                    }
+                }
+            }
+            
+            if let holiday = date {
+                if holiday.prevDay.weekday == 1
+                    || holiday.weekday == 1
+                    || holiday.nextDay.weekday == 1 {
+                    return holiday.getNextCountDay(count: 2)
+                }
+            }
+        }
+        
+        let 설날 = alternativeLunarDictionary["설날"]!
+        if minMonth <= 12 && maxMonth <= 1
+            || minMonth <= 1 && maxMonth <= 2 {
+            var date: Date? = nil
+            if 설날 < minDate.dateToLunarString()
+                && minDate.dateToLunarString() < "0301" {
+                for count in 0...50 {
+                    let countDate = minDate.getNextCountDay(count: -count)
+                    let lunarDay = countDate.dateToLunarString()
+                    
+                    if lunarDay == 설날 {
+                        date = countDate
+                        break
+                    }
+                }
+            } else {
+                for count in 0...50 {
+                    let countDate = minDate.getNextCountDay(count: count)
+                    let lunarDay = countDate.dateToLunarString()
+                    
+                    if lunarDay == 설날 {
+                        date = countDate
+                        break
+                    }
+                }
+            }
+            
+            if let holiday = date {
+                if holiday.prevDay.weekday == 1
+                    || holiday.weekday == 1
+                    || holiday.nextDay.weekday == 1 {
+                    return holiday.getNextCountDay(count: 2)
+                }
+            }
+        }
+        
+        return nil
     }
 }
