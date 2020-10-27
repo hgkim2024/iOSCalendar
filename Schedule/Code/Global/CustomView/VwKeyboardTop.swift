@@ -24,7 +24,10 @@ class VwKeyboardTop: UIView {
     }
     
     private func setUpUI() {
-        backgroundColor = UIColor(hexString: "#e0e0eb")
+        backgroundColor = Theme.hideViewColor
+        let _ = addTopSeparator()
+        let _ = addBottomSeparator()
+        
         vwDown.translatesAutoresizingMaskIntoConstraints = false
         vwDown.image = UIImage(systemName: "keyboard.chevron.compact.down")?.withRenderingMode(.alwaysTemplate)
         vwDown.tintColor = Theme.item

@@ -10,6 +10,7 @@
 		0A223B9BA4AA5416B1F95BF0 /* Pods_Schedule_ScheduleUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EFE1C430605223B057751F3 /* Pods_Schedule_ScheduleUITests.framework */; };
 		126A1067254831D0004FF217 /* UITableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 126A1066254831D0004FF217 /* UITableViewCell.swift */; };
 		126A106D25483481004FF217 /* VwKeyboardTop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 126A106C25483481004FF217 /* VwKeyboardTop.swift */; };
+		126A107525483F5F004FF217 /* VwDatePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 126A107425483F5F004FF217 /* VwDatePicker.swift */; };
 		126B05F72536F29C002A1DC0 /* CellAddItemDelete.swift in Sources */ = {isa = PBXBuildFile; fileRef = 126B05F62536F29C002A1DC0 /* CellAddItemDelete.swift */; };
 		126B05FC2536F9C0002A1DC0 /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 126B05FB2536F9C0002A1DC0 /* UIView.swift */; };
 		126B0A252503502A00355D00 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 126B0A242503502A00355D00 /* Theme.swift */; };
@@ -78,6 +79,7 @@
 /* Begin PBXFileReference section */
 		126A1066254831D0004FF217 /* UITableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITableViewCell.swift; sourceTree = "<group>"; };
 		126A106C25483481004FF217 /* VwKeyboardTop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VwKeyboardTop.swift; sourceTree = "<group>"; };
+		126A107425483F5F004FF217 /* VwDatePicker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VwDatePicker.swift; sourceTree = "<group>"; };
 		126B05F62536F29C002A1DC0 /* CellAddItemDelete.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellAddItemDelete.swift; sourceTree = "<group>"; };
 		126B05FB2536F9C0002A1DC0 /* UIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
 		126B0A242503502A00355D00 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
@@ -199,6 +201,7 @@
 			isa = PBXGroup;
 			children = (
 				126A106C25483481004FF217 /* VwKeyboardTop.swift */,
+				126A107425483F5F004FF217 /* VwDatePicker.swift */,
 			);
 			path = CustomView;
 			sourceTree = "<group>";
@@ -678,6 +681,7 @@
 				126B2DC3250BA2F600C69BC6 /* VCAddItem + UITableView.swift in Sources */,
 				12813B6C2500008F005C8383 /* AppDelegate.swift in Sources */,
 				126A1067254831D0004FF217 /* UITableViewCell.swift in Sources */,
+				126A107525483F5F004FF217 /* VwDatePicker.swift in Sources */,
 				12806B51253294AF000C0F8A /* UILabel.swift in Sources */,
 				126A106D25483481004FF217 /* VwKeyboardTop.swift in Sources */,
 				12A2E1822519C29E0023B221 /* CellCalendarDay.swift in Sources */,

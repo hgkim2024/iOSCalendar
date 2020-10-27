@@ -23,6 +23,11 @@ class VwCalendar: UIView {
     // 하단에 오늘로 이동하는 버튼
     let vwToday = VwMoveToday()
     
+    // 헤더 클릭 시 나타나는 데이터 피커
+    let vwDatePicker = VwDatePicker()
+    var datePcikerTopConstraint: NSLayoutConstraint?
+    let datePickerSize: CGFloat = 300.0
+    
     // 이벤트 추가 버튼
     let addEventButton = VwAddEventButton()
     let addButtonSize: CGFloat = 50.0
@@ -71,6 +76,14 @@ class VwCalendar: UIView {
         let tap = UITapGestureRecognizer(target: self, action: #selector(clickToday))
         vwToday.addGestureRecognizer(tap)
         
+        vwDatePicker.translatesAutoresizingMaskIntoConstraints = false
+        vwDatePicker.isHidden = true
+        let cancelTap = UITapGestureRecognizer(target: self, action: #selector(hideDatePicker))
+        vwDatePicker.cancelLabel.addGestureRecognizer(cancelTap)
+        
+        let confirmTap = UITapGestureRecognizer(target: self, action: #selector(confirmDatePicker))
+        vwDatePicker.confirmLabel.addGestureRecognizer(confirmTap)
+        
         addEventButton.translatesAutoresizingMaskIntoConstraints = false
         addEventButton.button.layer.cornerRadius = addButtonSize / 2.0
         
@@ -91,9 +104,11 @@ class VwCalendar: UIView {
         addSubview(VCpage.view)
         addSubview(VCDayPage.view)
         addSubview(vwToday)
+        addSubview(vwDatePicker)
         addSubview(addEventButton)
         
         calendarHeight = VCpage.view.heightAnchor.constraint(equalToConstant: maxHeight)
+        datePcikerTopConstraint = vwDatePicker.topAnchor.constraint(equalTo: bottomAnchor)
         
         NSLayoutConstraint.activate([
             VCWeekday.topAnchor.constraint(equalTo: topAnchor),
@@ -116,6 +131,11 @@ class VwCalendar: UIView {
             vwToday.widthAnchor.constraint(equalToConstant: 55.0),
             vwToday.heightAnchor.constraint(equalToConstant: 35.0),
             
+            datePcikerTopConstraint!,
+            vwDatePicker.leadingAnchor.constraint(equalTo: leadingAnchor),
+            vwDatePicker.trailingAnchor.constraint(equalTo: trailingAnchor),
+            vwDatePicker.heightAnchor.constraint(equalToConstant: datePickerSize),
+            
             addEventButton.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -20.0),
             addEventButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20.0),
             addEventButton.widthAnchor.constraint(equalToConstant: addButtonSize),
@@ -134,6 +154,38 @@ class VwCalendar: UIView {
         let bottomSafeArea = window?.safeAreaInsets.bottom ?? 0.0
         
         return totalHeihgt - topSafeArea - bottomSafeArea
+    }
+    
+    func showDatePicker() {
+        vwDatePicker.isHidden = false
+        UIView.animate(withDuration: 0.2, animations: {
+            self.datePcikerTopConstraint?.constant = -self.datePickerSize
+            self.layoutIfNeeded()
+        })
+    }
+    
+    @objc func confirmDatePicker() {
+        let date = vwDatePicker.datePicker.date
+        
+        NotificationCenter.default.post(
+            name: NSNotification.Name(rawValue: NamesOfNotification.moveCalendarMonth),
+            object: nil,
+            userInfo: [
+                "date": date,
+                "isToday": true
+            ]
+        )
+        
+        hideDatePicker()
+    }
+    
+    @objc func hideDatePicker() {
+        UIView.animate(withDuration: 0.2, animations: {
+            self.datePcikerTopConstraint?.constant = 0.0
+            self.layoutIfNeeded()
+        }, completion: { _ in
+            self.vwDatePicker.isHidden = true
+        })
     }
     
     private func changeDayCalendarHeight(isUp: Bool) {

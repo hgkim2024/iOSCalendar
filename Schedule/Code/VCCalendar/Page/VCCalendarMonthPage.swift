@@ -55,7 +55,7 @@ class VCCalendarMonthPage: UIPageViewController {
         
         setViewControllers([firstPage], direction: .forward, animated: false, completion: nil)
         
-        postTitleNotification(date.dateToString())
+        postTitleNotification(date.LocaledateToString())
     }
     
     // MARK: - Functions
@@ -92,7 +92,7 @@ class VCCalendarMonthPage: UIPageViewController {
                 firstPage.isUp = false
             }
             
-            self.postTitleNotification(date.dateToString())
+            self.postTitleNotification(date.LocaledateToString())
             var direction: NavigationDirection
             var animated: Bool = true
             if self.view.bounds.size.height >= VwCalendar.getMaxCalendarHeight() && !isToday {
@@ -137,7 +137,8 @@ class VCCalendarMonthPage: UIPageViewController {
         else {
                 return
         }
-        moveDay(moveDate: date)
+        let isToday = notification.userInfo?["isToday"] as? Bool
+        moveDay(moveDate: date, isToday: isToday ?? false)
     }
     
     func setDataSource(isOn: Bool) {
@@ -192,7 +193,7 @@ extension VCCalendarMonthPage: UIPageViewControllerDelegate, UIPageViewControlle
         else {
                 return
         }
-        postTitleNotification(vc.getDate().dateToString())
+        postTitleNotification(vc.getDate().LocaledateToString())
     }
 }
 

@@ -13,6 +13,8 @@ class VCRoot: UIViewController {
     var calendar: VwCalendar!
     var selectedDate: Date?
     
+    let btnTitle = UIButton()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -32,6 +34,12 @@ class VCRoot: UIViewController {
         bar.isTranslucent = true
         bar.setBackgroundImage(UIImage(), for: .default)
         bar.shadowImage = UIImage()
+        
+        btnTitle.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20.0)
+        btnTitle.setTitleColor(Theme.font, for: .normal)
+        navigationItem.titleView = btnTitle
+        
+        btnTitle.addTarget(self, action: #selector(tapTitle), for: .touchUpInside)
     }
     
     func displayUI() {
@@ -74,8 +82,7 @@ class VCRoot: UIViewController {
         else {
                 return
         }
-        
-        self.title = title
+        self.btnTitle.setTitle(title, for: .normal)
     }
     
     @objc func didReceivedDayDateNotification(_ notification: Notification) {
@@ -94,6 +101,12 @@ class VCRoot: UIViewController {
         }
         
         presentVCAddItem(date: Date(), item: item)
+    }
+    
+    @objc func tapTitle() {
+        if calendar.vwDatePicker.isHidden {
+            calendar.showDatePicker()
+        }
     }
     
     @objc func addTapped(_ sender: Any) {
