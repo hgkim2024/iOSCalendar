@@ -27,7 +27,7 @@ protocol AddItemDateDelegate: class {
     func setEndDate(date: Date)
 }
 
-// TODO: - 스크롤 시 키보드 내리는 기능, 키보드 올라온 만큼 테이블뷰 줄이는 기능 추가 할 것
+
 class VCAddItem: UIViewController {
     
     var itemList: [[AddItemList]] = [
@@ -41,6 +41,8 @@ class VCAddItem: UIViewController {
     ]
     
     var tableView: UITableView!
+    let vwkeyboardTop = VwKeyboardTop()
+    var keyboardTopConstraint: NSLayoutConstraint?
     
     var add: UIBarButtonItem!
     
@@ -79,6 +81,7 @@ class VCAddItem: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        addObserver()
         setUpUI()
         displayUI()
     }
@@ -108,21 +111,72 @@ class VCAddItem: UIViewController {
         tableView.dataSource = self
         
         addTableViewRegister()
+        
+        vwkeyboardTop.translatesAutoresizingMaskIntoConstraints = false
+        vwkeyboardTop.isHidden = true
+        
+        let tap = UITapGestureRecognizer(target: self, action: #selector(clickHideKeyboard))
+        vwkeyboardTop.addGestureRecognizer(tap)
     }
     
     func displayUI() {
         view.addSubview(tableView)
-        
+        view.addSubview(vwkeyboardTop)
+        keyboardTopConstraint = vwkeyboardTop.topAnchor.constraint(equalTo: view.bottomAnchor)
         let safe = view.safeAreaLayoutGuide
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: safe.topAnchor),
-            tableView.bottomAnchor.constraint(equalTo: safe.bottomAnchor),
+            tableView.bottomAnchor.constraint(equalTo: vwkeyboardTop.topAnchor),
             tableView.leadingAnchor.constraint(equalTo: safe.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: safe.trailingAnchor),
+            
+            keyboardTopConstraint!,
+            vwkeyboardTop.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            vwkeyboardTop.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            vwkeyboardTop.heightAnchor.constraint(equalToConstant: vwkeyboardTop.height)
         ])
     }
     
     // MARK: - Functions
+    func addObserver() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(showKeyboard(notification:)),
+            name: UIResponder.keyboardWillShowNotification,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(hideKeboard(notification:)),
+            name: UIResponder.keyboardWillHideNotification,
+            object: nil
+        )
+    }
+    
+    @objc func showKeyboard(notification: Notification) {
+        if let userInfo = notification.userInfo,
+            // 3
+            let keyboardRectangle = userInfo[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect {
+            vwkeyboardTop.isHidden = false
+            UIView.animate(withDuration: 0.2, animations: {
+                self.keyboardTopConstraint?.constant = -(keyboardRectangle.height + self.vwkeyboardTop.height)
+                self.view.layoutIfNeeded()
+            })
+        }
+    }
+    
+    @objc func hideKeboard(notification: Notification) {
+        UIView.animate(withDuration: 0.2, animations: {
+            self.keyboardTopConstraint?.constant = 0.0
+            self.view.layoutIfNeeded()
+        }, completion: { _ in
+            self.vwkeyboardTop.isHidden = true
+        })
+    }
+    
+    @objc func clickHideKeyboard() {
+        view.endEditing(true)
+    }
     
     func addTableViewRegister() {
         tableView.register(CellAddItemTitle.self, forCellReuseIdentifier: CellAddItemTitle.identifier)

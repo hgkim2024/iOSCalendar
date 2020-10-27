@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		0A223B9BA4AA5416B1F95BF0 /* Pods_Schedule_ScheduleUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EFE1C430605223B057751F3 /* Pods_Schedule_ScheduleUITests.framework */; };
+		126A1067254831D0004FF217 /* UITableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 126A1066254831D0004FF217 /* UITableViewCell.swift */; };
+		126A106D25483481004FF217 /* VwKeyboardTop.swift in Sources */ = {isa = PBXBuildFile; fileRef = 126A106C25483481004FF217 /* VwKeyboardTop.swift */; };
 		126B05F72536F29C002A1DC0 /* CellAddItemDelete.swift in Sources */ = {isa = PBXBuildFile; fileRef = 126B05F62536F29C002A1DC0 /* CellAddItemDelete.swift */; };
 		126B05FC2536F9C0002A1DC0 /* UIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 126B05FB2536F9C0002A1DC0 /* UIView.swift */; };
 		126B0A252503502A00355D00 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 126B0A242503502A00355D00 /* Theme.swift */; };
@@ -74,6 +76,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		126A1066254831D0004FF217 /* UITableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITableViewCell.swift; sourceTree = "<group>"; };
+		126A106C25483481004FF217 /* VwKeyboardTop.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VwKeyboardTop.swift; sourceTree = "<group>"; };
 		126B05F62536F29C002A1DC0 /* CellAddItemDelete.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CellAddItemDelete.swift; sourceTree = "<group>"; };
 		126B05FB2536F9C0002A1DC0 /* UIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIView.swift; sourceTree = "<group>"; };
 		126B0A242503502A00355D00 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
@@ -191,9 +195,18 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
+		126A106B2548346F004FF217 /* CustomView */ = {
+			isa = PBXGroup;
+			children = (
+				126A106C25483481004FF217 /* VwKeyboardTop.swift */,
+			);
+			path = CustomView;
+			sourceTree = "<group>";
+		};
 		126B0A232503502200355D00 /* Global */ = {
 			isa = PBXGroup;
 			children = (
+				126A106B2548346F004FF217 /* CustomView */,
 				126B0A242503502A00355D00 /* Theme.swift */,
 				126B0A262503506600355D00 /* Global.swift */,
 				127110582506590600F797E8 /* NamesOfNotification.swift */,
@@ -210,6 +223,7 @@
 				12760B8C250BCD2500CF0A6B /* String.swift */,
 				12806B50253294AF000C0F8A /* UILabel.swift */,
 				126B05FB2536F9C0002A1DC0 /* UIView.swift */,
+				126A1066254831D0004FF217 /* UITableViewCell.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -663,7 +677,9 @@
 				126B0A2A250350AE00355D00 /* UIColor.swift in Sources */,
 				126B2DC3250BA2F600C69BC6 /* VCAddItem + UITableView.swift in Sources */,
 				12813B6C2500008F005C8383 /* AppDelegate.swift in Sources */,
+				126A1067254831D0004FF217 /* UITableViewCell.swift in Sources */,
 				12806B51253294AF000C0F8A /* UILabel.swift in Sources */,
+				126A106D25483481004FF217 /* VwKeyboardTop.swift in Sources */,
 				12A2E1822519C29E0023B221 /* CellCalendarDay.swift in Sources */,
 				126D8260253172AF000BFC32 /* CellCalendarDayCount.swift in Sources */,
 				127110592506590600F797E8 /* NamesOfNotification.swift in Sources */,

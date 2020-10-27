@@ -33,7 +33,6 @@ class CellCalendarDay: UITableViewCell {
     func setUpUI() {
         backgroundColor = .clear
         vwRoot.translatesAutoresizingMaskIntoConstraints = false
-        vwRoot.backgroundColor = Theme.item.withAlphaComponent(0.1)
         
         vwEdge.translatesAutoresizingMaskIntoConstraints = false
         vwEdge.backgroundColor = Theme.item.withAlphaComponent(0.8)

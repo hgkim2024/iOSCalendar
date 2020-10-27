@@ -92,6 +92,7 @@ extension VCAddItem: UITableViewDelegate, UITableViewDataSource {
                 let cell = tableView.cellForRow(at: indexPath) as? CellAddItemTime,
                 let list = self.itemList[safe: 1]
             else { return }
+            cell.clickAnimations()
             if list.contains(.dateSelect) {
                 for (idx, item) in list.enumerated() {
                     if item == .dateSelect {
@@ -116,6 +117,7 @@ extension VCAddItem: UITableViewDelegate, UITableViewDataSource {
                 let cell = tableView.cellForRow(at: indexPath) as? CellAddItemTime,
                 let list = self.itemList[safe: 1]
             else { return }
+            cell.clickAnimations()
             if list.contains(.dateSelect) {
                 for (idx, item) in list.enumerated() {
                     if item == .dateSelect {

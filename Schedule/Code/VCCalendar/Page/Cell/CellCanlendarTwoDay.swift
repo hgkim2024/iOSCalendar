@@ -43,7 +43,7 @@ class CellCanlendarTwoDay: UITableViewCell {
         contentView.clipsToBounds = false
         backgroundColor = .clear
         vwRoot.translatesAutoresizingMaskIntoConstraints = false
-        vwRoot.backgroundColor = Theme.item.withAlphaComponent(0.8)
+        vwRoot.backgroundColor = Theme.item.withAlphaComponent(0.9)
         
         title.translatesAutoresizingMaskIntoConstraints = false
         title.textColor = UIColor(hexString: "#FAFAFA")
