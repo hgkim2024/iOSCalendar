@@ -91,6 +91,7 @@ class VCCalendarMonth: UIViewController {
         let today = curDate.startOfDay.day
         let month = curDate.month
         let lastDayMonth = date.startOfMonth.month
+        let curstartOfDay = curDate.startOfDay
         
         let weekday = date.startOfMonth.weekday
         let lastDay = date.startOfMonth.endOfMonth.day
@@ -106,6 +107,7 @@ class VCCalendarMonth: UIViewController {
         for i in 0..<(row * Global.calendarColumn) {
             let dayView = VwCalendarDay(row: row)
             dayView.translatesAutoresizingMaskIntoConstraints = false
+            dayView.vcMonthCalendar = self
             dayViews.append(dayView)
             
             let alpha: CGFloat = 0.5
@@ -359,13 +361,15 @@ class VCCalendarMonth: UIViewController {
     
     func setToday() {
         let today = Date()
+        let month = today.month
         let todayFlag = (today.startOfMonth == self.date.startOfMonth)
         let todayCount = today.day
         
         guard todayFlag else { return }
         
         for view in dayViews {
-            if todayCount == Int(view.label.text ?? "0") {
+            if todayCount == Int(view.label.text ?? "0")
+                && month == view.date?.month {
                 preToday?.removeTodayView()
                 view.setTodayView()
                 preToday = view

@@ -102,7 +102,13 @@ class VCRoot: UIViewController {
     }
     
     func presentVCAddItem(date: Date, item: Item? = nil) {
-        let vc = VCAddItem(date: date, item: item)
+        let vc: VCAddItem
+        if item == nil {
+            vc = VCAddItem(item: item, startDate: date, endDate: date)
+        } else {
+            vc = VCAddItem(item: item, startDate: Date(timeIntervalSince1970: item!.startDate), endDate: Date(timeIntervalSince1970: item!.endDate))
+        }
+        
         let nvc = UINavigationController(rootViewController: vc)
         nvc.isModalInPresentation = true
         nvc.presentationController?.delegate = vc

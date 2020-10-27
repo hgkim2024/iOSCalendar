@@ -9,7 +9,7 @@
 import UIKit
 
 extension UIView {
-    func addTopSeparator() {
+    func addTopSeparator() -> UIView {
         let topSeparator = UIView()
         topSeparator.translatesAutoresizingMaskIntoConstraints = false
         topSeparator.backgroundColor = Theme.separator
@@ -22,20 +22,24 @@ extension UIView {
             topSeparator.trailingAnchor.constraint(equalTo: trailingAnchor),
             topSeparator.heightAnchor.constraint(equalToConstant: Global.separatorSize)
         ])
+        
+        return topSeparator
     }
     
-    func addBottomSeparator() {
-        let BottomSeparator = UIView()
-        BottomSeparator.translatesAutoresizingMaskIntoConstraints = false
-        BottomSeparator.backgroundColor = Theme.separator
+    func addBottomSeparator() -> UIView {
+        let bottomSeparator = UIView()
+        bottomSeparator.translatesAutoresizingMaskIntoConstraints = false
+        bottomSeparator.backgroundColor = Theme.separator
         
-        addSubview(BottomSeparator)
+        addSubview(bottomSeparator)
         
         NSLayoutConstraint.activate([
-            BottomSeparator.bottomAnchor.constraint(equalTo: bottomAnchor),
-            BottomSeparator.leadingAnchor.constraint(equalTo: leadingAnchor),
-            BottomSeparator.trailingAnchor.constraint(equalTo: trailingAnchor),
-            BottomSeparator.heightAnchor.constraint(equalToConstant: Global.separatorSize)
+            bottomSeparator.bottomAnchor.constraint(equalTo: bottomAnchor),
+            bottomSeparator.leadingAnchor.constraint(equalTo: leadingAnchor),
+            bottomSeparator.trailingAnchor.constraint(equalTo: trailingAnchor),
+            bottomSeparator.heightAnchor.constraint(equalToConstant: Global.separatorSize)
         ])
+        
+        return bottomSeparator
     }
 }

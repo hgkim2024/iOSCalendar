@@ -46,31 +46,31 @@ extension Date {
         let comps = cal.dateComponents([.weekday], from: self)
 
         if let weekday = comps.weekday {
-            return weekday
+            return (weekday % 7)
         } else {
             return -1
         }
     }
     
-//    var startOfWeek: Date? {
-//        let gregorian = Calendar(identifier: .gregorian)
-//        guard let sunday = gregorian.date(
-//            from: gregorian.dateComponents(
-//                [.yearForWeekOfYear, .weekOfYear],
-//                from: self)
-//            ) else { return nil }
-//        return gregorian.date(byAdding: .day, value: 1, to: sunday)
-//    }
-//
-//    var endOfWeek: Date? {
-//        let gregorian = Calendar(identifier: .gregorian)
-//        guard let sunday = gregorian.date(
-//            from: gregorian.dateComponents(
-//                [.yearForWeekOfYear, .weekOfYear],
-//                from: self)
-//            ) else { return nil }
-//        return gregorian.date(byAdding: .day, value: 7, to: sunday)
-//    }
+    var startOfWeek: Date? {
+        let cal = Calendar(identifier: .gregorian)
+        guard let sunday = cal.date(
+            from: cal.dateComponents(
+                [.yearForWeekOfYear, .weekOfYear],
+                from: self)
+            ) else { return nil }
+        return cal.date(byAdding: .day, value: 1, to: sunday)
+    }
+    
+    var endOfWeek: Date? {
+        let cal = Calendar(identifier: .gregorian)
+        guard let sunday = cal.date(
+            from: cal.dateComponents(
+                [.yearForWeekOfYear, .weekOfYear],
+                from: self)
+            ) else { return nil }
+        return cal.date(byAdding: .day, value: 7, to: sunday)
+    }
     
     var startOfMonth: Date {
         let from = Calendar.current.startOfDay(for: self)
@@ -99,11 +99,6 @@ extension Date {
             to: self.startOfMonth)!
     }
     
-//    func getNextCountDay(count: Int) -> Date {
-//        let dateComponents = DateComponents(day: count - 1)
-//        return Calendar.current.date(byAdding: dateComponents, to: self)!
-//    }
-    
     func getNextCountDay(count: Int) -> Date {
         return Calendar.current.date(byAdding: .day, value: count, to: self.startOfDay)!
     }
@@ -125,6 +120,42 @@ extension Date {
 
         dateFormatter.calendar = Calendar(identifier: .chinese)
         dateFormatter.dateFormat = "MMdd"
+        return dateFormatter.string(from: self)
+    }
+    
+    func LocaledateToString() -> String {
+        let dateFormatter = DateFormatter()
+        let locale = Locale.current.languageCode ?? "ko"
+        
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.locale = Locale(identifier: locale)
+
+        let month = calendar.monthSymbols[self.month - 1]
+        if locale == "ko" {
+            dateFormatter.dateFormat = "yyyy년 \(month)"
+        } else {
+            dateFormatter.dateFormat = "\(month) yyyy"
+        }
+        return dateFormatter.string(from: self)
+    }
+    
+    func LocaleYYYYMMDDToString() -> String {
+        let dateFormatter = DateFormatter()
+        let locale = Locale.current.languageCode ?? "ko"
+        
+        var calendar = Calendar(identifier: .gregorian)
+        calendar.locale = Locale(identifier: locale)
+
+        let month = calendar.monthSymbols[self.month - 1]
+        // TODO: - 아래 코드 위치에서 페탈 에러가 뜨는 경우가 있음
+        let weekday = calendar.shortWeekdaySymbols[self.weekday % 7]
+
+        if locale == "ko" {
+            dateFormatter.dateFormat = "yyyy년 \(month) \(self.day)일 (\(weekday))"
+        } else {
+            dateFormatter.dateStyle = .medium
+            dateFormatter.timeStyle = .none
+        }
         return dateFormatter.string(from: self)
     }
 }

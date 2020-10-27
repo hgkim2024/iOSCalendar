@@ -181,6 +181,7 @@ class VwCalendar: UIView {
             self.addGestureRecognizer(self.swipeUp!)
             self.addGestureRecognizer(self.swipeDown!)
             self.VCDayPage.view.isHidden = !isUp
+            self.VCpage.setDataSource(isOn: true)
         })
     }
     

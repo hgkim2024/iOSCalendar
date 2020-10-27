@@ -14,13 +14,29 @@ import RxSwift
 enum AddItemList {
     case title
     case delete
+    case startTime
+    case endTime
+    case dateSelect
 }
+
+protocol AddItemDateDelegate: class {
+    func getStratDate() -> Date
+    func setStartDate(date: Date)
+    
+    func getEndDate() -> Date
+    func setEndDate(date: Date)
+}
+
 // TODO: - 스크롤 시 키보드 내리는 기능, 키보드 올라온 만큼 테이블뷰 줄이는 기능 추가 할 것
 class VCAddItem: UIViewController {
     
     var itemList: [[AddItemList]] = [
         [
             .title
+        ],
+        [
+            .startTime,
+            .endTime,
         ]
     ]
     
@@ -32,23 +48,36 @@ class VCAddItem: UIViewController {
     var item: Item? = nil
     
     var eventTitle: String = ""
+    var selectDate: Date? = nil
     
-    convenience init(date: Date, item: Item? = nil) {
+    var startDate: Date? = nil
+    var endDate: Date? = nil
+    
+    var initStartDate: Date? = nil
+    var initEndDate: Date? = nil
+    var isStart: Bool = false
+    
+    convenience init(
+        item: Item? = nil,
+        startDate: Date,
+        endDate: Date
+    ) {
         self.init(nibName:nil, bundle:nil)
-        self.date = date
-        // TODO: - item 존재 시 - 휴지통 아이콘 추가 및 기존 데이터 입력 된 상태로 보여주기
+        
+        self.initStartDate = startDate
+        self.initEndDate = endDate
+        self.startDate = startDate
+        self.endDate = endDate
+        
         self.item = item
         if item != nil {
             itemList.append([.delete])
+            eventTitle = item!.title 
         }
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        if self.item != nil {
-//            itemList.append(.delete)
-        }
         
         setUpUI()
         displayUI()
@@ -73,7 +102,6 @@ class VCAddItem: UIViewController {
         
         tableView.tableHeaderView = UIView(frame: CGRect(x: 0, y: 0, width: 150, height: 18.0))
         tableView.tableFooterView = UIView()
-//        tableView.separatorInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         tableView.separatorColor = Theme.separator
         
         tableView.delegate = self
@@ -99,6 +127,8 @@ class VCAddItem: UIViewController {
     func addTableViewRegister() {
         tableView.register(CellAddItemTitle.self, forCellReuseIdentifier: CellAddItemTitle.identifier)
         tableView.register(CellAddItemDelete.self, forCellReuseIdentifier: CellAddItemDelete.identifier)
+        tableView.register(CellAddItemTime.self, forCellReuseIdentifier: CellAddItemTime.identifier)
+        tableView.register(CellAddItemSelectTime.self, forCellReuseIdentifier: CellAddItemSelectTime.identifier)
     }
     
     func dismissNotification() {
@@ -117,8 +147,9 @@ class VCAddItem: UIViewController {
                 return false
             }
         } else {
-            if eventTitle.count > 0
-                && self.item!.title != eventTitle {
+            if (eventTitle.count > 0 && self.item!.title != eventTitle)
+            || (eventTitle.count > 0 && initStartDate != startDate)
+            || (eventTitle.count > 0 && initEndDate != endDate) {
                 return true
             } else {
                 return false
@@ -175,10 +206,11 @@ class VCAddItem: UIViewController {
         
         Item.add(
             item: item,
-            title: eventTitle,
-            date: self.date
+            title: self.eventTitle,
+            startDate: self.startDate!.startOfDay,
+            endDate: self.endDate!.startOfDay
         ).subscribe(
-            onNext: { [weak self] item in
+            onNext: { [weak self] items in
                 guard let `self` = self else { return }
                 self.dismiss(animated: true) {
                     self.dismissNotification()

@@ -24,9 +24,45 @@ extension VCAddItem: UITableViewDelegate, UITableViewDataSource {
         case .title:
             let cell = tableView.dequeueReusableCell(withIdentifier: CellAddItemTitle.identifier, for: indexPath) as! CellAddItemTitle
             cell.setTitle(title: self.item?.title ?? "")
-            cell.setTvPlaceHolder()
             cell.selectionStyle = .none
             cell.delegate = self
+            return cell
+        case .startTime:
+            let cell = tableView.dequeueReusableCell(withIdentifier: CellAddItemTime.identifier, for: indexPath) as! CellAddItemTime
+            cell.selectionStyle = .none
+            cell.date = self.startDate
+            cell.setTitle(title: "시작".localized)
+            cell.delegate = self
+            cell.topSeparator?.isHidden = false
+            cell.bottomSeparator?.isHidden = true
+            return cell
+        case .endTime:
+            let cell = tableView.dequeueReusableCell(withIdentifier: CellAddItemTime.identifier, for: indexPath) as! CellAddItemTime
+            cell.selectionStyle = .none
+            cell.date = self.endDate
+            cell.setTitle(title: "종료".localized)
+            cell.delegate = self
+            if isStart {
+                cell.topSeparator?.isHidden = true
+                cell.bottomSeparator?.isHidden = false
+            } else {
+                cell.topSeparator?.isHidden = true
+                cell.bottomSeparator?.isHidden = true
+            }
+            return cell
+        case .dateSelect:
+            let cell = tableView.dequeueReusableCell(withIdentifier: CellAddItemSelectTime.identifier, for: indexPath) as! CellAddItemSelectTime
+            cell.selectionStyle = .none
+            cell.isStart = self.isStart
+            cell.date = self.selectDate
+            if let date = self.selectDate {
+                cell.vwSelect.datePicker.date = date
+            }
+            if self.isStart {
+                cell.bottomSeparator?.isHidden = true
+            } else {
+                cell.bottomSeparator?.isHidden = false
+            }
             return cell
         case .delete:
             let cell = tableView.dequeueReusableCell(withIdentifier: CellAddItemDelete.identifier, for: indexPath) as! CellAddItemDelete
@@ -50,22 +86,72 @@ extension VCAddItem: UITableViewDelegate, UITableViewDataSource {
             if let cell = tableView.cellForRow(at: indexPath) as? CellAddItemTitle {
                 cell.tvBecomeFirstResponder()
             }
+        case .startTime:
+            view.endEditing(true)
+            guard
+                let cell = tableView.cellForRow(at: indexPath) as? CellAddItemTime,
+                let list = self.itemList[safe: 1]
+            else { return }
+            if list.contains(.dateSelect) {
+                for (idx, item) in list.enumerated() {
+                    if item == .dateSelect {
+                        itemList[1].remove(at: idx)
+                        break
+                    }
+                }
+            }
+            
+            for (idx, item) in list.enumerated() {
+                if item == .startTime {
+                    itemList[1].insert(.dateSelect, at: idx + 1)
+                    self.selectDate = cell.date
+                    break
+                }
+            }
+            self.isStart = true
+            tableView.reloadSections([1], with: .automatic)
+        case .endTime:
+            view.endEditing(true)
+            guard
+                let cell = tableView.cellForRow(at: indexPath) as? CellAddItemTime,
+                let list = self.itemList[safe: 1]
+            else { return }
+            if list.contains(.dateSelect) {
+                for (idx, item) in list.enumerated() {
+                    if item == .dateSelect {
+                        itemList[1].remove(at: idx)
+                        break
+                    }
+                }
+            }
+            
+            for (idx, item) in list.enumerated() {
+                if item == .endTime {
+                    itemList[1].insert(.dateSelect, at: idx)
+                    self.selectDate = cell.date
+                    break
+                }
+            }
+            self.isStart = false
+            tableView.reloadSections([1], with: .automatic)
+        case .dateSelect:
+            view.endEditing(true)
+            break
         case .delete:
             if let _ = tableView.cellForRow(at: indexPath) as? CellAddItemDelete {
                 self.deleteAlert()
             }
         }
     }
+    
+    func scrollViewWillBeginDragging(_ scrollView: UIScrollView) {
+        view.endEditing(true)
+    }
 }
 
 // MARK: - CellAddItemTitleDelegate
 
 extension VCAddItem: CellAddItemTitleDelegate {
-    func updateCellHeight() {
-        self.tableView.beginUpdates()
-        self.tableView.endUpdates()
-    }
-    
     func textViewDidChange(title: String) {
         if title == "제목".localized {
             eventTitle = ""
@@ -77,3 +163,22 @@ extension VCAddItem: CellAddItemTitleDelegate {
     }
 }
 
+extension VCAddItem: AddItemDateDelegate {
+    func getStratDate() -> Date {
+        return self.startDate!
+    }
+    
+    func setStartDate(date: Date) {
+        self.startDate = date
+        add.isEnabled = isEdit()
+    }
+    
+    func getEndDate() -> Date {
+        return self.endDate!
+    }
+    
+    func setEndDate(date: Date) {
+        self.endDate = date
+        add.isEnabled = isEdit()
+    }
+}

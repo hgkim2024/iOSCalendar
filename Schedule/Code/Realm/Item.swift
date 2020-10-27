@@ -18,8 +18,13 @@ import RxSwift
     // 제목
     dynamic var title: String = ""
     
-    // 지정한 날짜
-    dynamic var date: TimeInterval = 0.0
+    // 시작 날짜
+    dynamic var startDate: TimeInterval = 0.0
+    
+    // 종료 날짜
+    dynamic var endDate: TimeInterval = 0.0
+    
+    // TODO: - 시작 시간, 종료 시간 지정 시 startTime, endTime 인자 추가 할 것
     
     override static func primaryKey() -> String? {
         return "key"
@@ -29,7 +34,8 @@ import RxSwift
     static func add(
         item: Item,
         title: String,
-        date: Date = Date()
+        startDate: Date,
+        endDate: Date
     ) -> Observable<Item> {
         // TODO: - 여러 인자 추가 시, 추가 반영
         return Observable.create { observer in
@@ -37,11 +43,12 @@ import RxSwift
                 let realm = try Realm()
                 if item.key == -1 {
                     item.key = Int64(Date().timeIntervalSince1970 * 1000)
-                    item.date = date.startOfDay.timeIntervalSince1970
                 }
                 
                 try realm.write {
                     item.title = title
+                    item.startDate = startDate.startOfDay.timeIntervalSince1970
+                    item.endDate = endDate.endOfDay.timeIntervalSince1970
                     realm.add(item, update: .all)
                     try realm.commitWrite()
                     observer.on(.next(item))
@@ -56,26 +63,57 @@ import RxSwift
         }
     }
     
+//    static func getDayList(
+//        date: Date
+//    ) -> [Item]? {
+//        do {
+//            let startOfDay = date.startOfDay.timeIntervalSince1970
+//            let endOfDay = date.endOfDay.timeIntervalSince1970
+//
+//            let realm = try Realm()
+//            let startIncludeList = realm.objects(Item.self).filter(
+//                "%@ <= startDate AND startDate <= %@",
+//                startOfDay,
+//                endOfDay
+//            )
+//
+//            let endIncludeList = realm.objects(Item.self).filter(
+//                "%@ <= endDate AND endDate <= %@",
+//                startOfDay,
+//                endOfDay
+//            )
+//
+//            if startIncludeList.count == 0
+//                && endIncludeList.count == 0 {
+//                return nil
+//            }
+//
+//            var itemList: [Item] = []
+//            itemList.append(contentsOf: startIncludeList)
+//            itemList.append(contentsOf: endIncludeList)
+//            return Array(Set(itemList)).sorted(by: {($0.endDate - $0.startDate) > ($1.endDate - $1.startDate)})
+//        } catch {
+//            return nil
+//        }
+//    }
+
     static func getDayList(
         date: Date
     ) -> [Item]? {
         do {
             let startOfDay = date.startOfDay.timeIntervalSince1970
-            let endOfDay = date.endOfDay.timeIntervalSince1970
             let realm = try Realm()
             let list = realm.objects(Item.self).filter(
-                "%@ <= date AND date <= %@",
+                "startDate <= %@ AND %@ <= endDate",
                 startOfDay,
-                endOfDay
+                startOfDay
             )
             
             if list.count == 0 {
                 return nil
             }
-            
-            var itemList: [Item] = []
-            itemList.append(contentsOf: list)
-            return itemList
+
+            return list.sorted(by: {($0.endDate - $0.startDate) > ($1.endDate - $1.startDate)})
         } catch {
             return nil
         }

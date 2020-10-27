@@ -9,6 +9,8 @@
 import Foundation
 
 class NamesOfNotification {
+    
+    // 메인 캘린더 Notification
     static let setCalendarTitle = "setCalendarTitle"
     static let refreshCalendar = "refreshCalendar"
     static let setToday = "setToday"
@@ -17,4 +19,11 @@ class NamesOfNotification {
     static let selectedDayDetailNotification = "selectedDayDetailNotification"
     static let dayCalendarDidSelectCell = "dayCalendarDidSelectCell"
     static let moveCalendarMonth = "moveCalendarMonth"
+    
+    // 이벤트 추가 Notification
+    static let setAddEventDateTitle = "setAddEventDateTitle"
+    static let AddEventMoveCalendarMonth = "AddEventMoveCalendarMonth"
+    static let setAddEventDate = "setAddEventDate"
+    static let setAddEventStartDate = "setAddEventStartDate"
+    static let setAddEventEndDate = "setAddEventEndDate"
 }

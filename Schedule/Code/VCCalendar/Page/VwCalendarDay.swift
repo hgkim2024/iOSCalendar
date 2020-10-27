@@ -9,6 +9,8 @@
 import UIKit
 
 class VwCalendarDay: UIView {
+    weak var vcMonthCalendar: VCCalendarMonth? = nil
+    
     let label = UILabel()
     var minTableView: UITableView? = nil
     var maxTableView: UITableView? = nil
@@ -21,6 +23,8 @@ class VwCalendarDay: UIView {
             label.setCalendarDayColor(weekday: date.weekday % 7)
         }
     }
+    
+    var twoDayTitleList: [UILabel] = []
     
     var list: [Item]? = nil
     
@@ -158,9 +162,11 @@ class VwCalendarDay: UIView {
     private func addRegister() {
         minTableView?.register(CellCalendarDay.self, forCellReuseIdentifier: CellCalendarDay.identifier)
         minTableView?.register(CellCalendarDayCount.self, forCellReuseIdentifier: CellCalendarDayCount.identifier)
+        minTableView?.register(CellCanlendarTwoDay.self, forCellReuseIdentifier: CellCanlendarTwoDay.identifier)
         
         maxTableView?.register(CellCalendarDay.self, forCellReuseIdentifier: CellCalendarDay.identifier)
         maxTableView?.register(CellCalendarDayCount.self, forCellReuseIdentifier: CellCalendarDayCount.identifier)
+        maxTableView?.register(CellCanlendarTwoDay.self, forCellReuseIdentifier: CellCanlendarTwoDay.identifier)
     }
     
     func setAlpha(alpha: CGFloat = 1.0) {
@@ -230,9 +236,15 @@ class VwCalendarDay: UIView {
         if isUp {
             minTableView.alpha = 1.0
             maxTableView.alpha = 0.0
+            for label in twoDayTitleList {
+                label.alpha = 0.0
+            }
         } else {
             minTableView.alpha = 0.0
             maxTableView.alpha = 1.0
+            for label in twoDayTitleList {
+                label.alpha = 1.0
+            }
         }
     }
     
@@ -244,5 +256,8 @@ class VwCalendarDay: UIView {
         
         minTableView.alpha = 1 - rate
         maxTableView.alpha = rate
+        for label in twoDayTitleList {
+            label.alpha = rate
+        }
     }
 }

@@ -73,7 +73,7 @@ class VCCalendarDayDetail: UIViewController {
     
     private func setUpLabel() {
         view.isUserInteractionEnabled = true
-        view.backgroundColor = UIColor.lightGray.withAlphaComponent(0.05)
+        view.backgroundColor = .clear
         
         weekdayLabel.translatesAutoresizingMaskIntoConstraints = false
         weekdayLabel.font = UIFont.boldSystemFont(ofSize: Global.weekdayBigFontSize)
@@ -96,6 +96,7 @@ class VCCalendarDayDetail: UIViewController {
         downArrow.image = UIImage(systemName: "chevron.compact.down")?.withRenderingMode(.alwaysTemplate)
         downArrow.tintColor = UIColor.lightGray.withAlphaComponent(0.4)
         downArrow.isUserInteractionEnabled = true
+        downArrow.isHidden = true
         
         vwdownArrowDummy.translatesAutoresizingMaskIntoConstraints = false
         vwdownArrowDummy.backgroundColor = .clear

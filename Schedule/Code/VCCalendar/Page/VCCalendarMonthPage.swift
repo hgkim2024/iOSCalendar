@@ -88,6 +88,10 @@ class VCCalendarMonthPage: UIPageViewController {
             firstPage.isUp = true
             firstPage.initSelectedDate = moveDate.startOfDay
             
+            if isToday && !self.isUp {
+                firstPage.isUp = false
+            }
+            
             self.postTitleNotification(date.dateToString())
             var direction: NavigationDirection
             var animated: Bool = true

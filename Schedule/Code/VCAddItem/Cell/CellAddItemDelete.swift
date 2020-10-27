@@ -18,8 +18,8 @@ class CellAddItemDelete: UITableViewCell {
         
         setUpUI()
         displayUI()
-        contentView.addTopSeparator()
-        contentView.addBottomSeparator()
+        let _ = contentView.addTopSeparator()
+        let _ = contentView.addBottomSeparator()
     }
     
     required init?(coder: NSCoder) {
@@ -29,7 +29,7 @@ class CellAddItemDelete: UITableViewCell {
     private func setUpUI() {
         label.translatesAutoresizingMaskIntoConstraints = false
         label.text = "이벤트 삭제".localized
-        label.font = UIFont.systemFont(ofSize: Global.fontSize)
+        label.font = UIFont.systemFont(ofSize: Global.fontSize + 2)
         label.textAlignment = .center
         label.textColor = Theme.item
     }
