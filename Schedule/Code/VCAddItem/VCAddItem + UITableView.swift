@@ -35,6 +35,7 @@ extension VCAddItem: UITableViewDelegate, UITableViewDataSource {
             cell.delegate = self
             cell.topSeparator?.isHidden = false
             cell.bottomSeparator?.isHidden = true
+            self.startTimeCell = cell
             return cell
         case .endTime:
             let cell = tableView.dequeueReusableCell(withIdentifier: CellAddItemTime.identifier, for: indexPath) as! CellAddItemTime
@@ -49,6 +50,7 @@ extension VCAddItem: UITableViewDelegate, UITableViewDataSource {
                 cell.topSeparator?.isHidden = true
                 cell.bottomSeparator?.isHidden = true
             }
+            self.endTimeCell = cell
             return cell
         case .dateSelect:
             let cell = tableView.dequeueReusableCell(withIdentifier: CellAddItemSelectTime.identifier, for: indexPath) as! CellAddItemSelectTime
@@ -62,6 +64,7 @@ extension VCAddItem: UITableViewDelegate, UITableViewDataSource {
             } else {
                 cell.bottomSeparator?.isHidden = false
             }
+            cell.vwSelect.delegate = self
             return cell
         case .delete:
             let cell = tableView.dequeueReusableCell(withIdentifier: CellAddItemDelete.identifier, for: indexPath) as! CellAddItemDelete
@@ -172,6 +175,12 @@ extension VCAddItem: AddItemDateDelegate {
     func setStartDate(date: Date) {
         self.startDate = date
         add.isEnabled = isEdit()
+        
+        startTimeCell?.date = date
+        guard let endDate = endTimeCell?.date else { return }
+        if date > endDate {
+            setEndDate(date: date)
+        }
     }
     
     func getEndDate() -> Date {
@@ -181,5 +190,12 @@ extension VCAddItem: AddItemDateDelegate {
     func setEndDate(date: Date) {
         self.endDate = date
         add.isEnabled = isEdit()
+        
+        endTimeCell?.date = date
+        
+        guard let startDate = startTimeCell?.date else { return }
+        if date < startDate {
+            setStartDate(date: date)
+        }
     }
 }

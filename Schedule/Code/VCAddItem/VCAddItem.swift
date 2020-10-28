@@ -59,6 +59,9 @@ class VCAddItem: UIViewController {
     var initEndDate: Date? = nil
     var isStart: Bool = false
     
+    var startTimeCell: CellAddItemTime? = nil
+    var endTimeCell: CellAddItemTime? = nil
+    
     convenience init(
         item: Item? = nil,
         startDate: Date,

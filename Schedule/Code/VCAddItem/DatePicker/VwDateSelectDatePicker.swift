@@ -7,7 +7,6 @@
 //
 
 
-// TODO: - 날짜 설정 시 2000년 00월 헤더와 셀에 각 날짜 notification으로 던지기
 import UIKit
 
 class VwDateSelectDatePicker: UIView {
@@ -48,16 +47,11 @@ class VwDateSelectDatePicker: UIView {
     
     // MARK: - Functions
     @objc func datePickerValueChanged(_ sender: UIDatePicker) {
-
-        var rawValue = NamesOfNotification.setAddEventEndDate
         if isStart {
-            rawValue = NamesOfNotification.setAddEventStartDate
+            delegate?.setStartDate(date: sender.date)
+        } else {
+            delegate?.setEndDate(date: sender.date)
         }
-        NotificationCenter.default.post(
-            name: NSNotification.Name(rawValue: rawValue),
-            object: nil,
-            userInfo: ["date": sender.date]
-        )
     }
 }
 
