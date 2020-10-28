@@ -39,7 +39,7 @@ class VwCalendar: UIView {
     var maxHeight: CGFloat = VwCalendar.getMaxCalendarHeight()
     
     // 캘린더 터치 후 스와이프 시 가중치
-    let weight: CGFloat = 5.0
+    let weight: CGFloat = 2.0
     
     // 스와이프 제스쳐
     var swipeUp: UISwipeGestureRecognizer?
@@ -201,7 +201,7 @@ class VwCalendar: UIView {
         
         if self.upDownStatus {
             if diff > weight
-                || ((self.calendarHeight.constant - self.minHeight) < (self.maxHeight - self.minHeight) * (2.0/3.0))  {
+                || ((self.calendarHeight.constant - self.minHeight) < (self.maxHeight - self.minHeight) * (3.0/4.0))  {
                 return true
                 
             } else {
@@ -209,7 +209,7 @@ class VwCalendar: UIView {
             }
         } else {
             if diff < -weight
-                || ((self.calendarHeight.constant - self.minHeight) > (self.maxHeight - self.minHeight) * (1.0/3.0)) {
+                || ((self.calendarHeight.constant - self.minHeight) > (self.maxHeight - self.minHeight) * (1.0/4.0)) {
                 return false
             } else {
                 return true

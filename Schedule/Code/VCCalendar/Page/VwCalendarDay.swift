@@ -142,8 +142,12 @@ class VwCalendarDay: UIView {
             maxTableView.bottomAnchor.constraint(equalTo: bottomAnchor)
         ])
         
-        minTableView.reloadData()
-        maxTableView.reloadData()
+        UIView.animate(withDuration: 0.0, animations: {
+            minTableView.reloadData()
+            maxTableView.reloadData()
+        }, completion: { _ in
+            self.setTwoDayAlpha(isUp: self.isUp)
+        })
     }
     
     private func removeTableView() {
@@ -171,6 +175,16 @@ class VwCalendarDay: UIView {
     
     func setAlpha(alpha: CGFloat = 1.0) {
         self.alpha = alpha
+    }
+    
+    func setTwoDayAlpha(isUp: Bool) {
+        for title in twoDayTitleList {
+            if isUp {
+                title.alpha = 0.0
+            } else {
+                title.alpha = 1.0
+            }
+        }
     }
     
     func selectedDay() {

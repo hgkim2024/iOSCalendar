@@ -20,7 +20,6 @@ class CellCanlendarTwoDay: UITableViewCell {
     
     weak var vcMonthCalendar: VCCalendarMonth? = nil
     weak var vwDay: VwCalendarDay? = nil
-    var indexPath: IndexPath? = nil
     var isUp: Bool = false
     
     deinit {
@@ -97,7 +96,6 @@ class CellCanlendarTwoDay: UITableViewCell {
             guard
                 let superView = vcMonthCalendar?.view,
                 let vwDay = self.vwDay,
-                let indexPath = self.indexPath,
                 let item = self.item,
                 let date = vwDay.date
             else { return }
@@ -109,11 +107,6 @@ class CellCanlendarTwoDay: UITableViewCell {
             superView.addSubview(title)
             titleFlag = false
             var widthCount: CGFloat = 1.0
-            
-            let topMargin: CGFloat = Global.calendarleftMargin + Global.weekdayFontSize + 3
-            let topWeight: CGFloat = 16.0
-            let topTotalMargin: CGFloat = topMargin + (topWeight * CGFloat(indexPath.row))
-            
             let endDate = Date(timeIntervalSince1970: item.endDate)
             let weekday = date.weekday == 0 ? 7 : date.weekday
             let endWeekday = endDate.weekday == 0 ? 7 : endDate.weekday
@@ -130,10 +123,8 @@ class CellCanlendarTwoDay: UITableViewCell {
             let widthSize = (widthWeight * widthCount) - leftMargin
             vwDay.twoDayTitleList.append(title)
             
-            vwDay.changeAlpha(isUp: vwDay.isUp)
-            
             NSLayoutConstraint.activate([
-                title.topAnchor.constraint(equalTo: vwDay.topAnchor, constant: topTotalMargin),
+                title.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 1.0),
                 title.leadingAnchor.constraint(equalTo: vwDay.leadingAnchor, constant: leftMargin),
                 title.heightAnchor.constraint(equalToConstant: 14.0),
                 title.widthAnchor.constraint(equalToConstant: widthSize)

@@ -13,7 +13,6 @@ extension VwCalendarDay: UITableViewDelegate, UITableViewDataSource {
         _ tableView: UITableView,
         numberOfRowsInSection section: Int
     ) -> Int {
-        
         return ((list?.count ?? 0) + holidayList.count)
     }
     
@@ -29,7 +28,7 @@ extension VwCalendarDay: UITableViewDelegate, UITableViewDataSource {
             let cell = tableView.dequeueReusableCell(withIdentifier: CellCalendarDayCount.identifier, for: indexPath) as! CellCalendarDayCount
             if indexPath.row == self.count
                 && list?[safe: indexPath.row - holidayList.count]?.key != -1{
-                cell.setTitle(title: "+\((list?.count ?? 0) - count)")
+                cell.setTitle(title: "+\((list?.count ?? 0) - count + holidayList.count)")
             } else {
                 cell.setTitle(title: "")
             }
@@ -47,7 +46,6 @@ extension VwCalendarDay: UITableViewDelegate, UITableViewDataSource {
                 cell.item = item
                 cell.vcMonthCalendar = vcMonthCalendar
                 cell.vwDay = self
-                cell.indexPath = indexPath
             }
             cell.selectionStyle = .none
             cell.setColor(isUp: tableView.rowHeight == minHeight)
@@ -74,6 +72,7 @@ extension VwCalendarDay: UITableViewDelegate, UITableViewDataSource {
         guard let twoDaycell = cell as? CellCanlendarTwoDay else { return }
         if tableView.rowHeight == maxHeight {
             twoDaycell.setUpTitle()
+            twoDaycell.layoutIfNeeded()
         }
     }
 }
