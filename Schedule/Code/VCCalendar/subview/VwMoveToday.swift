@@ -31,13 +31,13 @@ class VwMoveToday: UIView {
     
     func setUpUI() {
         vwRoot.translatesAutoresizingMaskIntoConstraints = false
-        vwRoot.backgroundColor = Theme.background
+        vwRoot.backgroundColor = Theme.background.withAlphaComponent(0.8)
         vwRoot.layer.cornerRadius = height / 2.0
         
         vwRoot.layer.shadowColor = UIColor.black.cgColor
         vwRoot.layer.shadowRadius = 5.0
         vwRoot.layer.shadowOffset = CGSize(width: 2.0, height: 2.0)
-        vwRoot.layer.shadowOpacity = 0.15
+        vwRoot.layer.shadowOpacity = 0.2
         
         title.translatesAutoresizingMaskIntoConstraints = false
         title.text = "오늘".localized
