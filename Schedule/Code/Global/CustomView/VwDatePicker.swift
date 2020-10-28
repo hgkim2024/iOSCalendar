@@ -28,23 +28,29 @@ class VwDatePicker: UIView {
     private func setUpUI() {
         backgroundColor = Theme.background
         vwTop.translatesAutoresizingMaskIntoConstraints = false
-        vwTop.backgroundColor = Theme.hideViewColor
+        vwTop.backgroundColor = Theme.background
+        _ = vwTop.addTopSeparator()
+        _ = vwTop.addBottomSeparator()
         
         confirmLabel.translatesAutoresizingMaskIntoConstraints = false
         confirmLabel.text = "완료".localized
-        confirmLabel.textColor = .black
+        confirmLabel.textColor = Theme.item
         confirmLabel.textAlignment = .right
         confirmLabel.isUserInteractionEnabled = true
+        confirmLabel.font = UIFont.boldSystemFont(ofSize: 18.0)
+        
         
         cancelLabel.translatesAutoresizingMaskIntoConstraints = false
         cancelLabel.text = "취소".localized
-        cancelLabel.textColor = .black
+        cancelLabel.textColor = Theme.sunday
         cancelLabel.textAlignment = .left
         cancelLabel.isUserInteractionEnabled = true
+        cancelLabel.font = UIFont.boldSystemFont(ofSize: 18.0)
         
         datePicker.translatesAutoresizingMaskIntoConstraints = false
         datePicker.datePickerMode = .date
         datePicker.preferredDatePickerStyle = .wheels
+        datePicker.backgroundColor = Theme.hideViewColor
     }
     
     private func displayUI() {

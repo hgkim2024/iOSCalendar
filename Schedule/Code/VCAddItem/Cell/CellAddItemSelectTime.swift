@@ -15,7 +15,7 @@ class CellAddItemSelectTime: UITableViewCell {
     private let vwDummy = UIView()
     var bottomSeparator: UIView? = nil
     
-    var isStart: Bool = false {
+    var isStart: Bool = true {
         didSet {
             vwSelect.isStart = self.isStart
         }

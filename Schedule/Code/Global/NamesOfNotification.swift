@@ -19,10 +19,4 @@ class NamesOfNotification {
     static let selectedDayDetailNotification = "selectedDayDetailNotification"
     static let dayCalendarDidSelectCell = "dayCalendarDidSelectCell"
     static let moveCalendarMonth = "moveCalendarMonth"
-    
-    // 이벤트 추가 Notification
-    static let setAddEventDateTitle = "setAddEventDateTitle"
-    static let AddEventMoveCalendarMonth = "AddEventMoveCalendarMonth"
-    static let setAddEventStartDate = "setAddEventStartDateTest"
-    static let setAddEventEndDate = "setAddEventEndDateTest"
 }

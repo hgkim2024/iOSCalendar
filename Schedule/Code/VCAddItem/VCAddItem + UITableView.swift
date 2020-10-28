@@ -55,10 +55,10 @@ extension VCAddItem: UITableViewDelegate, UITableViewDataSource {
         case .dateSelect:
             let cell = tableView.dequeueReusableCell(withIdentifier: CellAddItemSelectTime.identifier, for: indexPath) as! CellAddItemSelectTime
             cell.selectionStyle = .none
-            cell.isStart = self.isStart
             if let date = self.selectDate {
                 cell.vwSelect.datePicker.date = date
             }
+            cell.isStart = self.isStart
             if self.isStart {
                 cell.bottomSeparator?.isHidden = true
             } else {
@@ -115,6 +115,7 @@ extension VCAddItem: UITableViewDelegate, UITableViewDataSource {
             tableView.reloadSections([1], with: .automatic)
         case .endTime:
             view.endEditing(true)
+            var isRemove = false
             guard
                 let cell = tableView.cellForRow(at: indexPath) as? CellAddItemTime,
                 let list = self.itemList[safe: 1]
@@ -124,6 +125,7 @@ extension VCAddItem: UITableViewDelegate, UITableViewDataSource {
                 for (idx, item) in list.enumerated() {
                     if item == .dateSelect {
                         itemList[1].remove(at: idx)
+                        isRemove = true
                         break
                     }
                 }
@@ -131,7 +133,15 @@ extension VCAddItem: UITableViewDelegate, UITableViewDataSource {
             
             for (idx, item) in list.enumerated() {
                 if item == .endTime {
-                    itemList[1].insert(.dateSelect, at: idx)
+                    if isRemove {
+                        if self.isStart {
+                            itemList[1].insert(.dateSelect, at: idx)
+                        } else {
+                            itemList[1].insert(.dateSelect, at: idx + 1)
+                        }
+                    } else {
+                        itemList[1].insert(.dateSelect, at: idx + 1)
+                    }
                     self.selectDate = cell.date
                     break
                 }

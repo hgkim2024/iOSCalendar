@@ -14,7 +14,7 @@ extension UITableViewCell {
         contentView.addSubview(vwClick)
         contentView.sendSubviewToBack(vwClick)
         vwClick.translatesAutoresizingMaskIntoConstraints = false
-        vwClick.backgroundColor = .lightGray
+        vwClick.backgroundColor = UIColor.lightGray.withAlphaComponent(0.5)
         
         NSLayoutConstraint.activate([
             vwClick.topAnchor.constraint(equalTo: contentView.topAnchor),

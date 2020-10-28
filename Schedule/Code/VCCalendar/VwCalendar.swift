@@ -158,7 +158,7 @@ class VwCalendar: UIView {
     
     func showDatePicker() {
         vwDatePicker.isHidden = false
-        UIView.animate(withDuration: 0.2, animations: {
+        UIView.animate(withDuration: 0.3, animations: {
             self.datePcikerTopConstraint?.constant = -self.datePickerSize
             self.layoutIfNeeded()
         })
@@ -180,7 +180,7 @@ class VwCalendar: UIView {
     }
     
     @objc func hideDatePicker() {
-        UIView.animate(withDuration: 0.2, animations: {
+        UIView.animate(withDuration: 0.3, animations: {
             self.datePcikerTopConstraint?.constant = 0.0
             self.layoutIfNeeded()
         }, completion: { _ in
