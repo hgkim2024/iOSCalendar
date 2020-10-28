@@ -21,17 +21,6 @@ class CellAddItemSelectTime: UITableViewCell {
         }
     }
     
-    var date: Date? = nil {
-        didSet {
-            guard let date = self.date else { return }
-            NotificationCenter.default.post(
-                name: NSNotification.Name(rawValue: NamesOfNotification.setAddEventDate),
-                object: nil,
-                userInfo: ["date": date]
-            )
-        }
-    }
-    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         

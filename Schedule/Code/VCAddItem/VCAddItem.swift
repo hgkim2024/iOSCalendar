@@ -70,7 +70,6 @@ class VCAddItem: UIViewController {
         self.initEndDate = endDate
         self.startDate = startDate
         self.endDate = endDate
-        
         self.item = item
         if item != nil {
             itemList.append([.delete])
@@ -235,6 +234,7 @@ class VCAddItem: UIViewController {
                     guard let `self` = self else { return }
                     if flag {
                         self.dismiss(animated: true) {
+                            self.item = nil
                             self.dismissNotification()
                         }
                     } else {

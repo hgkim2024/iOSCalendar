@@ -22,6 +22,9 @@ class VCCalendarMonth: UIViewController {
     private var date = Date()
     private var row: Int = 0
     
+    private var dateList: [[Item]?] = []
+    private var holidayList: [TimeInterval] = []
+    
     private var beginPoint: CGPoint? = nil
     private var lastPoint: CGPoint? = nil
     
@@ -50,6 +53,7 @@ class VCCalendarMonth: UIViewController {
         setToday()
         setHoliday()
         setAlternativeHoliday()
+        sentToDataList()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -91,7 +95,6 @@ class VCCalendarMonth: UIViewController {
         let today = curDate.startOfDay.day
         let month = curDate.month
         let lastDayMonth = date.startOfMonth.month
-        let curstartOfDay = curDate.startOfDay
         
         let weekday = date.startOfMonth.weekday
         let lastDay = date.startOfMonth.endOfMonth.day
@@ -202,6 +205,7 @@ class VCCalendarMonth: UIViewController {
     }
     
     func setUpData() {
+        dateList.removeAll()
         for view in dayViews {
             view.isUp = self.isUp
         }
@@ -233,7 +237,8 @@ class VCCalendarMonth: UIViewController {
                 list = Item.getDayList(date: preDate)
                 dayViews[safe: i]?.date = preDate
             }
-            dayViews[safe: i]?.list = list
+//            dayViews[safe: i]?.list = list
+            dateList.append(list)
         }
     }
     
@@ -242,7 +247,7 @@ class VCCalendarMonth: UIViewController {
             let minDate = dayViews[safe: 0]?.date,
             let maxDate = dayViews[safe: dayViews.count - 1]?.date
         else { return }
-        
+        self.holidayList.removeAll()
         let minDay = minDate.dateToMonthDayString()
         let maxDay = maxDate.dateToMonthDayString()
         let holidayKeyList = Holiday.isHoliday(minDay: minDay, maxDay: maxDay)
@@ -256,9 +261,10 @@ class VCCalendarMonth: UIViewController {
         for view in dayViews {
             var holidayList: [String] = []
             if let date = view.date {
-                let dayString = "\(String(format: "%02d", date.month))\(String(format: "%02d", date.day))"
+                let dayString = date.dateToMonthDayString()
                 if let value = dictionary[dayString] {
                     holidayList.append(value)
+                    self.holidayList.append(date.startOfDay.timeIntervalSince1970)
                 }
             }
             view.holidayList = holidayList
@@ -271,6 +277,7 @@ class VCCalendarMonth: UIViewController {
                 let dayString = date.dateToLunarString()
                 if let value = lunarDictionary[dayString] {
                     holidayList.append(value)
+                    self.holidayList.append(date.startOfDay.timeIntervalSince1970)
                     view.holidayList = holidayList
                     if value == "설날" {
                         dayViews[safe: idx - 1]?.holidayList = ["설날 연휴"]
@@ -297,7 +304,85 @@ class VCCalendarMonth: UIViewController {
             
             if month == viewMonth
                 && day == viewDay {
+                self.holidayList.append(date.startOfDay.timeIntervalSince1970)
                 view.holidayList = ["\(Holiday.alternativeHolidays)"]
+            }
+        }
+    }
+    
+    // 공휴일과 이틀이상 이벤트가 겹치는 경우
+    // 이틀이상 이벤트를 한칸 밑으로 옮기는 함수
+    // + 각 일간 뷰에 list를 넣어줌
+    func sentToDataList() {
+        let column = Global.calendarColumn
+        for i in 0 ..< row {
+            guard
+                let startDate = dayViews[i * column].date,
+                let endDate = dayViews[i * column + (column - 1)].date
+            else { return }
+            
+            var proirityList: [Item] = []
+            let startTime = startDate.timeIntervalSince1970
+            let endTime = endDate.timeIntervalSince1970
+            
+            let holidayList = self.holidayList.filter { (time) -> Bool in
+                startTime <= time && time <= endTime
+            }
+
+            if holidayList.count > 0 {
+                var dateList: [Item] = []
+                
+                for j in 0 ..< column {
+                    if let list = self.dateList[(i * column) + j] {
+                        dateList.append(contentsOf: list)
+                    }
+                }
+                dateList = Array(Set(dateList))
+                proirityList = dateList.filter { (item) -> Bool in
+                    for time in holidayList {
+                        if item.startDate <= time && time <= item.endDate {
+                            return true
+                        }
+                    }
+                    
+                    return false
+                }
+            }
+            
+            for j in 0 ..< column {
+                guard proirityList.count > 0,
+                      var list = self.dateList[(i * column) + j],
+                      let time = dayViews[(i * column) + j].date?.startOfDay.timeIntervalSince1970,
+                      !holidayList.contains(time)
+                      else {
+                    dayViews[(i * column) + j].list = self.dateList[(i * column) + j]
+                    continue
+                }
+                var removeIdxList: [Int] = []
+                var removeItemList: [Item] = []
+                
+                for (idx, item) in list.enumerated() {
+                    for proirityItem in proirityList {
+                        if item.key == proirityItem.key {
+                            removeIdxList.append(idx)
+                        }
+                    }
+                }
+                
+                removeIdxList = removeIdxList.sorted(by: {$0 > $1})
+                for idx in removeIdxList {
+                    removeItemList.append(list.remove(at: idx))
+                }
+                
+                if list.count == 0 {
+                    list.append(Item())
+                }
+                
+                for removeItem in removeItemList {
+                    list.insert(removeItem, at: 1)
+                }
+                
+                dayViews[(i * column) + j].list = list
             }
         }
     }

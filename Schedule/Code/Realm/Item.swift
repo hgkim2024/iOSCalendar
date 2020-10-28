@@ -125,8 +125,12 @@ import RxSwift
                 let realm = try Realm()
                 
                 try realm.write {
-                    realm.delete(self)
-                    observer.on(.next(true))
+                    if self.isInvalidated == false {
+                        realm.delete(self)
+                        observer.on(.next(true))
+                    } else {
+                        observer.on(.next(false))
+                    }
                     observer.on(.completed)
                 }
                 

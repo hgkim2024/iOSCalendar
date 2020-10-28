@@ -188,7 +188,7 @@ class VwCalendar: UIView {
         })
     }
     
-    private func changeDayCalendarHeight(isUp: Bool) {
+    private func changeDayCalendarAlpha(isUp: Bool) {
         guard let vc = (self.VCpage.viewControllers?[safe: 0] as? VCCalendarMonth) else { return }
         
         for view in vc.dayViews {
@@ -220,14 +220,14 @@ class VwCalendar: UIView {
     private func touchEndAnimated(isUp: Bool) {
         VCpage.isUp = isUp
         
-        UIView.animate(withDuration: 0.25, animations: {
+        UIView.animate(withDuration: 0.3, animations: {
             if isUp {
                 self.calendarHeight.constant = self.minHeight
             } else {
                 self.calendarHeight.constant = self.maxHeight
             }
             
-            self.changeDayCalendarHeight(isUp: isUp)
+            self.changeDayCalendarAlpha(isUp: isUp)
             self.layoutIfNeeded()
         }, completion: { _ in
             self.addGestureRecognizer(self.swipeUp!)
@@ -275,20 +275,7 @@ class VwCalendar: UIView {
         let curDate = Date().startOfDay
         
         guard vcDate != curDate else { return }
-        
-        if vcDate.year == curDate.year
-            && vcDate.month == curDate.month {
-            for view in vc.dayViews {
-                if view.date?.day == curDate.day {
-                    vc.preSelecedDay?.deselectedDay()
-                    view.selectedDay()
-                    vc.preSelecedDay = view
-                    break
-                }
-            }
-        } else {
-            self.VCpage.moveDay(moveDate: Date(), isToday: true)
-        }
+        self.VCpage.moveDay(moveDate: Date(), isToday: true)
     }
 }
 

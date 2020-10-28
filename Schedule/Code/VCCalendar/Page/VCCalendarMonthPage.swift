@@ -76,8 +76,10 @@ class VCCalendarMonthPage: UIPageViewController {
                 curDate.month != moveDate.month
                 || curDate.year != moveDate.year
             else {
-                self.touchDelegate?.touchBegin()
-                self.touchDelegate?.touchEnd(diff: 30.0)
+                if !isToday {
+                    self.touchDelegate?.touchBegin()
+                    self.touchDelegate?.touchEnd(diff: 30.0)
+                }
                 vc.moveDay(moveDate: moveDate)
                 return
             }

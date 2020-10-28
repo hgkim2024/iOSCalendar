@@ -35,8 +35,13 @@ class VCRoot: UIViewController {
         bar.setBackgroundImage(UIImage(), for: .default)
         bar.shadowImage = UIImage()
         
-        btnTitle.titleLabel?.font = UIFont.boldSystemFont(ofSize: 20.0)
+        btnTitle.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18.0)
         btnTitle.setTitleColor(Theme.font, for: .normal)
+//        let image = UIImage(systemName: "chevron.down")
+//        btnTitle.setImage(image?.withRenderingMode(.alwaysTemplate), for: .normal)
+//        btnTitle.imageView?.layer.transform = CATransform3DMakeScale(0.7, 0.7, 0.7)
+        btnTitle.tintColor = Theme.font
+//        btnTitle.semanticContentAttribute = .forceRightToLeft
         navigationItem.titleView = btnTitle
         
         btnTitle.addTarget(self, action: #selector(tapTitle), for: .touchUpInside)
@@ -104,6 +109,17 @@ class VCRoot: UIViewController {
     }
     
     @objc func tapTitle() {
+        
+//        if var transform = self.btnTitle.imageView?.transform {
+//            UIView.animate(withDuration:0.3, animations: { () -> Void in
+//                if  transform == .identity {
+//                    transform = CGAffineTransform(rotationAngle: CGFloat(Double.pi * 0.999))
+//                } else {
+//                    transform = .identity
+//                }
+//            })
+//            view.layoutIfNeeded()
+//        }
         if calendar.vwDatePicker.isHidden {
             calendar.showDatePicker()
         }

@@ -15,6 +15,8 @@ class VwDateSelectDatePicker: UIView {
     var datePicker = UIDatePicker()
     var isStart: Bool = false
     
+    weak var delegate: AddItemDateDelegate?
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
         setUpUI()

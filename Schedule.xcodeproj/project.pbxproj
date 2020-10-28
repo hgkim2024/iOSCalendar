@@ -31,6 +31,7 @@
 		12705CD12546C315002B53EA /* VwDateSelectDatePicker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12705CD02546C315002B53EA /* VwDateSelectDatePicker.swift */; };
 		127110592506590600F797E8 /* NamesOfNotification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 127110582506590600F797E8 /* NamesOfNotification.swift */; };
 		1271105C2506679E00F797E8 /* HomeKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1271105B2506679E00F797E8 /* HomeKit.framework */; };
+		1273D0C02548F2C60002B73C /* UIImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1273D0BF2548F2C60002B73C /* UIImage.swift */; };
 		12760B88250BCBC700CF0A6B /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 12760B8A250BCBC700CF0A6B /* Localizable.strings */; };
 		12760B8D250BCD2500CF0A6B /* String.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12760B8C250BCD2500CF0A6B /* String.swift */; };
 		1276ADA7253D816600F8D559 /* VCCalendarDayDetailPage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1276ADA6253D816600F8D559 /* VCCalendarDayDetailPage.swift */; };
@@ -101,6 +102,7 @@
 		127110582506590600F797E8 /* NamesOfNotification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NamesOfNotification.swift; sourceTree = "<group>"; };
 		1271105A2506679E00F797E8 /* Schedule.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Schedule.entitlements; sourceTree = "<group>"; };
 		1271105B2506679E00F797E8 /* HomeKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HomeKit.framework; path = System/Library/Frameworks/HomeKit.framework; sourceTree = SDKROOT; };
+		1273D0BF2548F2C60002B73C /* UIImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIImage.swift; sourceTree = "<group>"; };
 		12760B82250BCA4800CF0A6B /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/LaunchScreen.strings; sourceTree = "<group>"; };
 		12760B89250BCBC700CF0A6B /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/Localizable.strings; sourceTree = "<group>"; };
 		12760B8B250BCBC900CF0A6B /* ko */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = ko; path = ko.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -227,6 +229,7 @@
 				12806B50253294AF000C0F8A /* UILabel.swift */,
 				126B05FB2536F9C0002A1DC0 /* UIView.swift */,
 				126A1066254831D0004FF217 /* UITableViewCell.swift */,
+				1273D0BF2548F2C60002B73C /* UIImage.swift */,
 			);
 			path = Extension;
 			sourceTree = "<group>";
@@ -701,6 +704,7 @@
 				128D2173253E79CE000C3124 /* Holiday.swift in Sources */,
 				1270434C2504DB530045375E /* VCCalendarMonth.swift in Sources */,
 				12705CD12546C315002B53EA /* VwDateSelectDatePicker.swift in Sources */,
+				1273D0C02548F2C60002B73C /* UIImage.swift in Sources */,
 				126B0A2E2503526400355D00 /* VwCalendar.swift in Sources */,
 				12A2E17F2519BCE30023B221 /* VwCalendarDay + UITableView.swift in Sources */,
 				126B2DC6250BA75800C69BC6 /* CellAddItemTitle.swift in Sources */,

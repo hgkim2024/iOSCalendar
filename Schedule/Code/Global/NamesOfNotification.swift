@@ -23,7 +23,6 @@ class NamesOfNotification {
     // 이벤트 추가 Notification
     static let setAddEventDateTitle = "setAddEventDateTitle"
     static let AddEventMoveCalendarMonth = "AddEventMoveCalendarMonth"
-    static let setAddEventDate = "setAddEventDate"
-    static let setAddEventStartDate = "setAddEventStartDate"
-    static let setAddEventEndDate = "setAddEventEndDate"
+    static let setAddEventStartDate = "setAddEventStartDateTest"
+    static let setAddEventEndDate = "setAddEventEndDateTest"
 }

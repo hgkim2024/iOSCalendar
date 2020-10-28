@@ -30,7 +30,7 @@ extension VCCalendarDayDetail: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        guard let item = list?[safe: indexPath.row] else { return }
+        guard let item = list?[safe: indexPath.row - holidayList.count] else { return }
         
         NotificationCenter.default.post(
             name: NSNotification.Name(rawValue: NamesOfNotification.dayCalendarDidSelectCell),

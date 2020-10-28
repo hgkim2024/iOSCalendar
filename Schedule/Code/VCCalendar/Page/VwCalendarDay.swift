@@ -26,9 +26,7 @@ class VwCalendarDay: UIView {
     
     var twoDayTitleList: [UILabel] = []
     
-    var list: [Item]? = nil
-    
-    var holidayList: [String] = [] {
+    var list: [Item]? = nil {
         didSet {
             setUpTableView()
             
@@ -41,6 +39,8 @@ class VwCalendarDay: UIView {
             }
         }
     }
+    
+    var holidayList: [String] = []
     
     let minHeight: CGFloat = 4
     let maxHeight: CGFloat = 16

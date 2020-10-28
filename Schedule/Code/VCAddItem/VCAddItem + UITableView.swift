@@ -54,7 +54,6 @@ extension VCAddItem: UITableViewDelegate, UITableViewDataSource {
             let cell = tableView.dequeueReusableCell(withIdentifier: CellAddItemSelectTime.identifier, for: indexPath) as! CellAddItemSelectTime
             cell.selectionStyle = .none
             cell.isStart = self.isStart
-            cell.date = self.selectDate
             if let date = self.selectDate {
                 cell.vwSelect.datePicker.date = date
             }

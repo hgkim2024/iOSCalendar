@@ -22,11 +22,13 @@ extension VwCalendarDay: UITableViewDelegate, UITableViewDataSource {
         cellForRowAt indexPath: IndexPath
     ) -> UITableViewCell {
         
-        if indexPath.row > self.count - 1
-            && tableView.rowHeight == maxHeight {
+        if (indexPath.row > self.count - 1
+            && tableView.rowHeight == maxHeight)
+            || (list?[safe: indexPath.row - holidayList.count]?.key == -1) {
             // 하단 숫자 표기 셀
             let cell = tableView.dequeueReusableCell(withIdentifier: CellCalendarDayCount.identifier, for: indexPath) as! CellCalendarDayCount
-            if indexPath.row == self.count {
+            if indexPath.row == self.count
+                && list?[safe: indexPath.row - holidayList.count]?.key != -1{
                 cell.setTitle(title: "+\((list?.count ?? 0) - count)")
             } else {
                 cell.setTitle(title: "")
