@@ -53,7 +53,7 @@ class VCCalendarDayDetailPage: UIPageViewController {
     
     func setPageUI(vc: VCCalendarDayDetail, date: Date) {
         vc.weekdayLabel.setCalendarDayColor(weekday: date.weekday)
-        vc.weekdayLabel.text = "\(date.day).\(vc.dayString[date.weekday % 7])"
+        vc.weekdayLabel.text = "\(date.day).\(vc.dayString[date.weekday])"
         
         vc.list = Item.getDayList(date: date)
     }

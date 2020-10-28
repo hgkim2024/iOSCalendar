@@ -8,6 +8,10 @@
 
 import UIKit
 
+protocol CalendarDelegate: class {
+    func setDatePickerDate(date: Date)
+}
+
 // 캘린더 Root VC
 class VwCalendar: UIView {
     
@@ -67,6 +71,7 @@ class VwCalendar: UIView {
         VCWeekday.translatesAutoresizingMaskIntoConstraints = false
         VCpage.view.translatesAutoresizingMaskIntoConstraints = false
         VCpage.touchDelegate = self
+        VCpage.calendarDelegate = self
         
         VCDayPage.view.translatesAutoresizingMaskIntoConstraints = false
         VCDayPage.touchDelegate = self
@@ -328,5 +333,12 @@ extension VwCalendar: CalendarTouchEventDelegate {
     func touchEnd(diff: CGFloat) {
         let isUp: Bool = self.getUpDownStatus(diff: diff)
         self.touchEndAnimated(isUp: isUp)
+    }
+}
+
+// MARK: - CalendarDelegate
+extension VwCalendar: CalendarDelegate {
+    func setDatePickerDate(date: Date) {
+        self.vwDatePicker.datePicker.date = date
     }
 }

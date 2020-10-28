@@ -11,6 +11,7 @@ import UIKit
 class VCCalendarMonthPage: UIPageViewController {
     
     weak var touchDelegate: CalendarTouchEventDelegate? = nil
+    weak var calendarDelegate: CalendarDelegate? = nil
     
     var isUp: Bool = false {
         didSet {
@@ -81,6 +82,7 @@ class VCCalendarMonthPage: UIPageViewController {
                     self.touchDelegate?.touchEnd(diff: 30.0)
                 }
                 vc.moveDay(moveDate: moveDate)
+                self.calendarDelegate?.setDatePickerDate(date: moveDate)
                 return
             }
             
@@ -108,7 +110,7 @@ class VCCalendarMonthPage: UIPageViewController {
             } else {
                 direction = .reverse
             }
-            
+            self.calendarDelegate?.setDatePickerDate(date: moveDate)
             self.setViewControllers([firstPage], direction: direction, animated: animated, completion: nil)
         }
     }

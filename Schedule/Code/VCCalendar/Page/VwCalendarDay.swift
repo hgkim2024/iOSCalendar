@@ -20,7 +20,7 @@ class VwCalendarDay: UIView {
     var date: Date? = nil {
         didSet {
             guard let date = self.date else { return }
-            label.setCalendarDayColor(weekday: date.weekday % 7)
+            label.setCalendarDayColor(weekday: date.weekday)
         }
     }
     

@@ -96,7 +96,8 @@ class VCCalendarMonth: UIViewController {
         let month = curDate.month
         let lastDayMonth = date.startOfMonth.month
         
-        let weekday = date.startOfMonth.weekday
+        let weekday = date.startOfMonth.weekday == 0 ? 7 : date.startOfMonth.weekday
+        
         let lastDay = date.startOfMonth.endOfMonth.day
         let prevLastDay = date.prevMonth.endOfMonth.day
         
@@ -210,7 +211,8 @@ class VCCalendarMonth: UIViewController {
             view.isUp = self.isUp
         }
         
-        let weekday = date.startOfMonth.weekday
+        let weekday = date.startOfMonth.weekday == 0 ? 7 : date.startOfMonth.weekday
+        
         let lastDay = date.startOfMonth.endOfMonth.day
         let prevLastDay = date.prevMonth.endOfMonth.day
         var list: [Item]? = nil
@@ -228,6 +230,9 @@ class VCCalendarMonth: UIViewController {
                     let date = self.date.getNextCountDay(count: day)
                     list = Item.getDayList(date: date)
                     dayViews[safe: i]?.date = date
+                    if date.month == 8 && date.day == 15 {
+                        print("idx: \(day), date: \(date)")
+                    }
                 }
             } else {
                 // 이전달
@@ -265,6 +270,7 @@ class VCCalendarMonth: UIViewController {
                 if let value = dictionary[dayString] {
                     holidayList.append(value)
                     self.holidayList.append(date.startOfDay.timeIntervalSince1970)
+                    print("\(value), date: \(date)")
                 }
             }
             view.holidayList = holidayList
@@ -279,6 +285,7 @@ class VCCalendarMonth: UIViewController {
                     holidayList.append(value)
                     self.holidayList.append(date.startOfDay.timeIntervalSince1970)
                     view.holidayList = holidayList
+                    print("\(value), date: \(date)")
                     if value == "설날" {
                         dayViews[safe: idx - 1]?.holidayList = ["설날 연휴"]
                     }
@@ -306,6 +313,7 @@ class VCCalendarMonth: UIViewController {
                 && day == viewDay {
                 self.holidayList.append(date.startOfDay.timeIntervalSince1970)
                 view.holidayList = ["\(Holiday.alternativeHolidays)"]
+                print("\(Holiday.alternativeHolidays), date: \(date)")
             }
         }
     }

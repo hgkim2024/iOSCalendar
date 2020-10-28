@@ -65,7 +65,7 @@ class VCCalendarDayDetail: UIViewController {
         super.viewWillAppear(animated)
         
         weekdayLabel.setCalendarDayColor(weekday: date.weekday)
-        weekdayLabel.text = "\(date.day).\(dayString[date.weekday % 7])"
+        weekdayLabel.text = "\(date.day).\(dayString[date.weekday])"
         
         setHoliday()
         list = Item.getDayList(date: date)
