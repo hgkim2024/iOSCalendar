@@ -373,6 +373,11 @@ class VCCalendarDayDetail: UIViewController {
                         }
                     }
                 }
+                
+                for item in dayList {
+                    list.append(item)
+                }
+                
                 self.list = list
             } else {
                 for twoDayProiority in proiorityArray[weekday] {

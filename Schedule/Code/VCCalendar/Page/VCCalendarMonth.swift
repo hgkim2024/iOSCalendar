@@ -425,6 +425,10 @@ class VCCalendarMonth: UIViewController {
                                 }
                             }
                             
+                            for item in dayList {
+                                list.append(item)
+                            }
+                            
                             dayViews[(i * column) + j].list = list
                         } else {
                             for twoDayProiority in proiorityArray[weekday] {
