@@ -43,5 +43,6 @@ class Theme {
     static var item: UIColor = UIColor.init(hexString: "#4169E1")
     static var today: UIColor = UIColor.init(hexString: "#3CB371")
     
-    static var hideViewColor = UIColor(hexString: "#e0e0eb")
+    static var subViewBackground = UIColor(hexString: "#E8EAF6")
+    static var hideViewColor = UIColor(hexString: "#ECEFF1")
 }

@@ -50,7 +50,7 @@ class VwDatePicker: UIView {
         datePicker.translatesAutoresizingMaskIntoConstraints = false
         datePicker.datePickerMode = .date
         datePicker.preferredDatePickerStyle = .wheels
-        datePicker.backgroundColor = Theme.hideViewColor
+        datePicker.backgroundColor = Theme.subViewBackground
     }
     
     private func displayUI() {
