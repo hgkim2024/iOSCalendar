@@ -147,8 +147,9 @@ extension Date {
         calendar.locale = Locale(identifier: locale)
 
         let month = calendar.monthSymbols[self.month - 1]
-        // TODO: - 아래 코드 위치에서 페탈 에러가 뜨는 경우가 있음
-        let weekday = calendar.shortWeekdaySymbols[self.weekday]
+        
+        let idx = self.weekday > 0 ? self.weekday - 1 : 6
+        let weekday = calendar.shortWeekdaySymbols[idx]
 
         if locale == "ko" {
             dateFormatter.dateFormat = "yyyy년 \(month) \(self.day)일 (\(weekday))"
