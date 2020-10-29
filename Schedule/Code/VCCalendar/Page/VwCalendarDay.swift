@@ -88,7 +88,8 @@ class VwCalendarDay: UIView {
         removeTableView()
         guard
             self.list != nil
-                || holidayList.count > 0
+                || holidayList.count > 0,
+            self.list?.count ?? 0 > 0
         else { return }
         
         minTableView = UITableView(frame: .zero, style: .plain)

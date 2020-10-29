@@ -11,6 +11,11 @@ import RealmSwift
 import RxCocoa
 import RxSwift
 
+struct TwoDayProiority {
+    var assignFlag: Bool
+    var item: Item?
+}
+
 protocol CalendarTouchEventDelegate: class {
     func touchBegin()
     func touchMove(diff: CGFloat)
@@ -22,7 +27,6 @@ class VCCalendarMonth: UIViewController {
     private var date = Date()
     private var row: Int = 0
     
-    private var dateList: [[Item]?] = []
     private var holidayList: [TimeInterval] = []
     
     private var beginPoint: CGPoint? = nil
@@ -206,7 +210,6 @@ class VCCalendarMonth: UIViewController {
     }
     
     func setUpData() {
-        dateList.removeAll()
         for view in dayViews {
             view.isUp = self.isUp
         }
@@ -215,35 +218,26 @@ class VCCalendarMonth: UIViewController {
         
         let lastDay = date.startOfMonth.endOfMonth.day
         let prevLastDay = date.prevMonth.endOfMonth.day
-        var list: [Item]? = nil
         for i in 0..<(row * Global.calendarColumn) {
             if i + 1 >= weekday {
                 // 다음달
                 if i+1-weekday >= lastDay {
                     let day = i + 1 - weekday - lastDay
                     let nextDate = date.nextMonth.getNextCountDay(count: day)
-                    list = Item.getDayList(date: nextDate)
                     dayViews[safe: i]?.date = nextDate
                 } else {
                     // 현재달
                     let day = i + 1 - weekday
                     let date = self.date.getNextCountDay(count: day)
-                    list = Item.getDayList(date: date)
                     dayViews[safe: i]?.date = date
-                    if date.month == 8 && date.day == 15 {
-                        print("idx: \(day), date: \(date)")
-                    }
                 }
             } else {
                 // 이전달
                 let day = prevLastDay - weekday + i + 1
                 let count = day - prevLastDay
                 let preDate = date.getNextCountDay(count: count)
-                list = Item.getDayList(date: preDate)
                 dayViews[safe: i]?.date = preDate
             }
-//            dayViews[safe: i]?.list = list
-            dateList.append(list)
         }
     }
     
@@ -270,7 +264,6 @@ class VCCalendarMonth: UIViewController {
                 if let value = dictionary[dayString] {
                     holidayList.append(value)
                     self.holidayList.append(date.startOfDay.timeIntervalSince1970)
-                    print("\(value), date: \(date)")
                 }
             }
             view.holidayList = holidayList
@@ -285,9 +278,9 @@ class VCCalendarMonth: UIViewController {
                     holidayList.append(value)
                     self.holidayList.append(date.startOfDay.timeIntervalSince1970)
                     view.holidayList = holidayList
-                    print("\(value), date: \(date)")
                     if value == "설날" {
                         dayViews[safe: idx - 1]?.holidayList = ["설날 연휴"]
+                        self.holidayList.append(date.startOfDay.getNextCountDay(count: -1).timeIntervalSince1970)
                     }
                 }
             }
@@ -313,84 +306,147 @@ class VCCalendarMonth: UIViewController {
                 && day == viewDay {
                 self.holidayList.append(date.startOfDay.timeIntervalSince1970)
                 view.holidayList = ["\(Holiday.alternativeHolidays)"]
-                print("\(Holiday.alternativeHolidays), date: \(date)")
             }
         }
     }
     
-    // 공휴일과 이틀이상 이벤트가 겹치는 경우
-    // 이틀이상 이벤트를 한칸 밑으로 옮기는 함수
-    // + 각 일간 뷰에 list를 넣어줌
+    /*
+     1. (완료) item list 얻는 방식 2가지로 변경
+        a. 일주일간의 이틀 이상 이벤트 리스트 반환 함수
+        b. 해당 날만 있는 이벤트 반환 함수
+     
+     2. (완료) 해당 주에 공휴일리스트, 이틀 이상 리스트를 뽑아옮
+     3. (완료) 이틀이상 리스트 수 + 공휴일 리스트 수 만큼의 배열을 만듬
+     - 배열 타입은 (bool, Item) 으로 지정
+     4. (완료) 3번의 배열을 각 요일별로 만듬
+     5. 해당 배열에 공휴일 우선순위를 먼저 넣음
+     - 공휴일은 Item() 로 생성하여 넣음
+     6. 이틀 이상의 뷰를 0, 1 ... n 인덱스 까지 for 문으로
+        들어갈 수 있는 자리를 찾고, 찾았으면 (true, item) 으로 할당
+     7. 할당된 배열을 각 요일별로 list.append 하고, 오늘 이벤트를 받아와 append 하여
+        각 요일에 배분한다.
+     */
     func sentToDataList() {
         let column = Global.calendarColumn
         for i in 0 ..< row {
             guard
-                let startDate = dayViews[i * column].date,
-                let endDate = dayViews[i * column + (column - 1)].date
+                let startDate = dayViews[i * column].date?.startOfDay,
+                let endDate = dayViews[i * column + (column - 1)].date?.endOfDay
             else { return }
-            
-            var proirityList: [Item] = []
             let startTime = startDate.timeIntervalSince1970
             let endTime = endDate.timeIntervalSince1970
             
+            // 해당 주의 공휴일 리스트
             let holidayList = self.holidayList.filter { (time) -> Bool in
                 startTime <= time && time <= endTime
             }
-
-            if holidayList.count > 0 {
-                var dateList: [Item] = []
+            
+            if let twoDayList = Item.getTwoDayList(date: startDate) {
+                // 우선순위를 체크할 배열
+                var proiorityArray: [[TwoDayProiority]] = []
                 
-                for j in 0 ..< column {
-                    if let list = self.dateList[(i * column) + j] {
-                        dateList.append(contentsOf: list)
+                for _ in 0 ..< column {
+                    var list: [TwoDayProiority] = []
+                    for _ in 0 ..< holidayList.count + twoDayList.count {
+                        list.append(TwoDayProiority(assignFlag: false, item: nil))
                     }
+                    proiorityArray.append(list)
                 }
-                dateList = Array(Set(dateList))
-                proirityList = dateList.filter { (item) -> Bool in
-                    for time in holidayList {
-                        if item.startDate <= time && time <= item.endDate {
-                            return true
+                
+                // 공휴일 체크
+                for timeInterval in holidayList {
+                    let date = Date(timeIntervalSince1970: timeInterval)
+                    let weekday = date.weekday > 0 ? date.weekday - 1 : 6
+                    
+                    proiorityArray[weekday][0].assignFlag = true
+                }
+                
+                for item in twoDayList {
+                    let start: Date
+                    if item.startDate < startDate.timeIntervalSince1970 {
+                        start = startDate
+                    } else {
+                        start = Date(timeIntervalSince1970: item.startDate)
+                    }
+                    
+                    let end: Date
+                    if item.endDate > endDate.timeIntervalSince1970 {
+                        end = endDate
+                    } else {
+                        end = Date(timeIntervalSince1970: item.endDate)
+                    }
+                    
+                    let startWeekday = start.weekday > 0 ? start.weekday - 1 : 6
+                    let endWeekday = end.weekday > 0 ? end.weekday - 1 : 6
+                    
+                    var idx: Int = -1
+                    
+                    for count in 0 ..< holidayList.count + twoDayList.count {
+                        for weekday in startWeekday ... endWeekday {
+                            if proiorityArray[weekday][count].assignFlag {
+                                break
+                            }
+                            
+                            if weekday == endWeekday
+                                && proiorityArray[weekday][count].assignFlag == false {
+                                idx = count
+                                break
+                            }
+                        }
+                        if idx != -1 {
+                            break
                         }
                     }
                     
-                    return false
-                }
-            }
-            
-            for j in 0 ..< column {
-                guard proirityList.count > 0,
-                      var list = self.dateList[(i * column) + j],
-                      let time = dayViews[(i * column) + j].date?.startOfDay.timeIntervalSince1970,
-                      !holidayList.contains(time)
-                      else {
-                    dayViews[(i * column) + j].list = self.dateList[(i * column) + j]
-                    continue
-                }
-                var removeIdxList: [Int] = []
-                var removeItemList: [Item] = []
-                
-                for (idx, item) in list.enumerated() {
-                    for proirityItem in proirityList {
-                        if item.key == proirityItem.key {
-                            removeIdxList.append(idx)
-                        }
+                    for weekday in startWeekday ... endWeekday {
+                        proiorityArray[weekday][idx].assignFlag = true
+                        proiorityArray[weekday][idx].item = item
                     }
                 }
                 
-                removeIdxList = removeIdxList.sorted(by: {$0 > $1})
-                for idx in removeIdxList {
-                    removeItemList.append(list.remove(at: idx))
+                for j in 0 ..< column {
+                    if let date = dayViews[(i * column) + j].date {
+                        var list: [Item] = []
+                        let weekday = date.weekday > 0 ? date.weekday - 1 : 6
+                        
+                        if var dayList = Item.getDayList(date: date) {
+                            for twoDayProiority in proiorityArray[weekday] {
+                                if twoDayProiority.assignFlag {
+                                    if let item = twoDayProiority.item {
+                                        list.append(item)
+                                    }
+                                } else {
+                                    if dayList.count > 0 {
+                                        let item = dayList.remove(at: 0)
+                                        list.append(item)
+                                    } else {
+                                        list.append(Item())
+                                    }
+                                }
+                            }
+                            
+                            dayViews[(i * column) + j].list = list
+                        } else {
+                            for twoDayProiority in proiorityArray[weekday] {
+                                if twoDayProiority.assignFlag {
+                                    if let item = twoDayProiority.item {
+                                        list.append(item)
+                                    }
+                                } else {
+                                    list.append(Item())
+                                }
+                            }
+                            
+                            dayViews[(i * column) + j].list = list
+                        }
+                    }
                 }
-                
-                if list.count == 0 {
-                    list.append(Item())
+            } else {
+                for j in 0 ..< column {
+                    if let date = dayViews[(i * column) + j].date {
+                        dayViews[(i * column) + j].list = Item.getDayList(date: date)
+                    }
                 }
-                
-                for removeItem in removeItemList {
-                    list.insert(removeItem, at: 1)
-                }
-                
-                dayViews[(i * column) + j].list = list
             }
         }
     }

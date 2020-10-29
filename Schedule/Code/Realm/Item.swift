@@ -62,63 +62,92 @@ import RxSwift
             return Disposables.create()
         }
     }
-    
-//    static func getDayList(
-//        date: Date
-//    ) -> [Item]? {
-//        do {
-//            let startOfDay = date.startOfDay.timeIntervalSince1970
-//            let endOfDay = date.endOfDay.timeIntervalSince1970
-//
-//            let realm = try Realm()
-//            let startIncludeList = realm.objects(Item.self).filter(
-//                "%@ <= startDate AND startDate <= %@",
-//                startOfDay,
-//                endOfDay
-//            )
-//
-//            let endIncludeList = realm.objects(Item.self).filter(
-//                "%@ <= endDate AND endDate <= %@",
-//                startOfDay,
-//                endOfDay
-//            )
-//
-//            if startIncludeList.count == 0
-//                && endIncludeList.count == 0 {
-//                return nil
-//            }
-//
-//            var itemList: [Item] = []
-//            itemList.append(contentsOf: startIncludeList)
-//            itemList.append(contentsOf: endIncludeList)
-//            return Array(Set(itemList)).sorted(by: {($0.endDate - $0.startDate) > ($1.endDate - $1.startDate)})
-//        } catch {
-//            return nil
-//        }
-//    }
 
+    static func getDayItemList(
+        date: Date
+    ) -> [Item]? {
+        do {
+            let startOfDay = date.startOfDay.timeIntervalSince1970
+            let realm = try Realm()
+            let list = Array(realm.objects(Item.self).filter(
+                "startDate <= %@ AND %@ <= endDate",
+                startOfDay,
+                startOfDay
+            ))
+            
+            if list.count == 0 {
+                return nil
+            }
+
+            return list
+        } catch {
+            return nil
+        }
+    }
+    
     static func getDayList(
         date: Date
     ) -> [Item]? {
         do {
             let startOfDay = date.startOfDay.timeIntervalSince1970
             let realm = try Realm()
-            let list = realm.objects(Item.self).filter(
+            var list = Array(realm.objects(Item.self).filter(
                 "startDate <= %@ AND %@ <= endDate",
                 startOfDay,
                 startOfDay
-            )
+            ))
+            
+            list = list.filter({ (item) -> Bool in
+                return (item.endDate - item.startDate) < 86400
+            })
             
             if list.count == 0 {
                 return nil
             }
 
-            return list.sorted(by: {($0.endDate - $0.startDate) > ($1.endDate - $1.startDate)})
+            return list.sorted(by: {$0.key < $1.key})
         } catch {
             return nil
         }
     }
     
+    static func getTwoDayList(
+        date: Date
+    ) -> [Item]? {
+        do {
+            let startOfWeek = date.startOfDay.startOfWeek.timeIntervalSince1970
+            let endOfWeek = date.endOfDay.endOfWeek.timeIntervalSince1970
+            let realm = try Realm()
+            let startList = Array(realm.objects(Item.self).filter(
+                "%@ <= startDate AND startDate <= %@",
+                startOfWeek,
+                endOfWeek
+            ))
+            
+            let endList = Array(realm.objects(Item.self).filter(
+                "%@ <= endDate AND endDate <= %@",
+                startOfWeek,
+                endOfWeek
+            ))
+            
+            var list = startList
+            list.append(contentsOf: endList)
+            list = Array(Set(list))
+            list = list.filter({ (item) -> Bool in
+                return (item.endDate - item.startDate) >= 86400
+            })
+            
+            if list.count == 0 {
+                return nil
+            }
+            
+            return list.sorted(by: {$0.key < $1.key})
+            
+        } catch {
+            return nil
+        }
+    }
+ 
     func remove() -> Observable<Bool> {
         return Observable.create { observer in
             do {

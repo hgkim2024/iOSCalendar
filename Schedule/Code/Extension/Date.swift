@@ -52,25 +52,15 @@ extension Date {
         }
     }
     
-    var startOfWeek: Date? {
-        let cal = Calendar(identifier: .gregorian)
-        guard let sunday = cal.date(
-            from: cal.dateComponents(
-                [.yearForWeekOfYear, .weekOfYear],
-                from: self)
-            ) else { return nil }
-        return cal.date(byAdding: .day, value: 1, to: sunday)
-    }
-    
-    var endOfWeek: Date? {
-        let cal = Calendar(identifier: .gregorian)
-        guard let sunday = cal.date(
-            from: cal.dateComponents(
-                [.yearForWeekOfYear, .weekOfYear],
-                from: self)
-            ) else { return nil }
-        return cal.date(byAdding: .day, value: 7, to: sunday)
-    }
+    var startOfWeek: Date {
+            let date = Calendar.current.date(from: Calendar.current.dateComponents([.yearForWeekOfYear, .weekOfYear], from: self))!
+            let dslTimeOffset = NSTimeZone.local.daylightSavingTimeOffset(for: date)
+            return date.addingTimeInterval(dslTimeOffset)
+        }
+
+        var endOfWeek: Date {
+            return Calendar.current.date(byAdding: .second, value: 604799, to: self.startOfWeek)!
+        }
     
     var startOfMonth: Date {
         let from = Calendar.current.startOfDay(for: self)

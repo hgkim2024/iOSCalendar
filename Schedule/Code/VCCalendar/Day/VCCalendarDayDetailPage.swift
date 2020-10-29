@@ -51,13 +51,6 @@ class VCCalendarDayDetailPage: UIPageViewController {
         setViewControllers([firstPage], direction: .forward, animated: false, completion: nil)
     }
     
-    func setPageUI(vc: VCCalendarDayDetail, date: Date) {
-        vc.weekdayLabel.setCalendarDayColor(weekday: date.weekday)
-        vc.weekdayLabel.text = "\(date.day).\(vc.dayString[date.weekday])"
-        
-        vc.list = Item.getDayList(date: date)
-    }
-    
     // MARK: - Observer
     func addObserver() {
         NotificationCenter.default.addObserver(

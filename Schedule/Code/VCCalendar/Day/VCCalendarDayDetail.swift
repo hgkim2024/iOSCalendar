@@ -47,6 +47,7 @@ class VCCalendarDayDetail: UIViewController {
     }
     
     var holidayList: [String] = []
+    var holidayTimeIntervalList: [TimeInterval] = []
     
     convenience init(date: Date) {
         self.init(nibName:nil, bundle:nil)
@@ -68,7 +69,7 @@ class VCCalendarDayDetail: UIViewController {
         weekdayLabel.text = "\(date.day).\(dayString[date.weekday])"
         
         setHoliday()
-        list = Item.getDayList(date: date)
+        sentToDataList(date: self.date)
     }
     
     private func setUpLabel() {
@@ -141,7 +142,8 @@ class VCCalendarDayDetail: UIViewController {
         removeTableView()
         guard
             self.list != nil
-                || holidayList.count > 0
+                || holidayList.count > 0,
+            self.list?.count ?? 0 > 0
         else {
             emptyLabel.isHidden = false
             return
@@ -204,14 +206,189 @@ class VCCalendarDayDetail: UIViewController {
             }
         }
         
+        if let date = Holiday.getAlternativeHolidays(minDate: date.startOfDay, maxDate: date.endOfDay) {
+            if self.date.startOfDay == date.startOfDay {
+                holidayList.append(Holiday.alternativeHolidays)
+            }
+        }
+        
         if holidayList.count > 0 {
             weekdayLabel.textColor = Theme.sunday
+        }
+        
+        setHolidayTimeInterval()
+        setAlternativeHolidayTimeInterval()
+    }
+    
+    func setHolidayTimeInterval() {
+        let minDate = self.date.startOfDay.startOfWeek
+        let maxDate = self.date.endOfDay.endOfWeek
+        let minDay = minDate.dateToMonthDayString()
+        let maxDay = maxDate.dateToMonthDayString()
+        let holidayKeyList = Holiday.isHoliday(minDay: minDay, maxDay: maxDay)
+        let dictionary = Holiday.getHolidayList(stringArray: holidayKeyList)
+        
+        let lunarMinDay = minDate.dateToLunarString()
+        let lunarMaxDay = maxDate.dateToLunarString()
+        let lunarHolidayKeyList = Holiday.isHoliday(minDay: lunarMinDay, maxDay: lunarMaxDay, isLunar: true)
+        let lunarDictionary = Holiday.getHolidayList(stringArray: lunarHolidayKeyList, isLunar: true)
+        
+        for idx in 0 ..< 7 {
+            let date = self.date.startOfDay.getNextCountDay(count: idx)
+            let dayString = date.dateToMonthDayString()
+            if let _ = dictionary[dayString] {
+                self.holidayTimeIntervalList.append(date.timeIntervalSince1970)
+            }
+        }
+        
+        guard lunarDictionary.count > 0 else { return }
+        for idx in 0 ..< 7 {
+            var holidayList: [String] = []
+            let date = self.date.startOfDay.getNextCountDay(count: idx)
+            let dayString = date.dateToLunarString()
+            if let value = lunarDictionary[dayString] {
+                holidayList.append(value)
+                self.holidayTimeIntervalList.append(date.timeIntervalSince1970)
+                if value == "설날" {
+                    self.holidayTimeIntervalList.append(date.startOfDay.getNextCountDay(count: -1).timeIntervalSince1970)
+                }
+            }
+        }
+    }
+    
+    func setAlternativeHolidayTimeInterval() {
+        let minDate = self.date.startOfDay.startOfWeek
+        let maxDate = self.date.endOfDay.endOfWeek
+        guard let date = Holiday.getAlternativeHolidays(minDate: minDate, maxDate: maxDate) else { return }
+        
+        let month = date.month
+        let day = date.day
+        
+        for idx in 0 ..< 7 {
+            let date = self.date.startOfDay.getNextCountDay(count: idx)
+            let viewMonth = date.month
+            let viewDay = date.day
+            
+            if month == viewMonth
+                && day == viewDay {
+                self.holidayTimeIntervalList.append(date.startOfDay.timeIntervalSince1970)
+            }
         }
     }
     
     @objc private func touchDownArrow(_ sender: UITapGestureRecognizer) {
         delegate?.touchBegin()
         delegate?.touchEnd(diff: -30.0)
+    }
+    
+    func sentToDataList(date: Date) {
+        let column = Global.calendarColumn
+        let startDate = date.startOfDay.startOfWeek
+        let endDate = date.endOfDay.endOfWeek
+        let startTime = startDate.timeIntervalSince1970
+        let endTime = endDate.timeIntervalSince1970
+        
+        // 해당 주의 공휴일 리스트
+        let holidayList = self.holidayTimeIntervalList.filter { (time) -> Bool in
+            startTime <= time && time <= endTime
+        }
+        
+        if let twoDayList = Item.getTwoDayList(date: startDate) {
+            // 우선순위를 체크할 배열
+            var proiorityArray: [[TwoDayProiority]] = []
+            
+            for _ in 0 ..< column {
+                var list: [TwoDayProiority] = []
+                for _ in 0 ..< holidayList.count + twoDayList.count {
+                    list.append(TwoDayProiority(assignFlag: false, item: nil))
+                }
+                proiorityArray.append(list)
+            }
+            
+            // 공휴일 체크
+            for timeInterval in holidayList {
+                let date = Date(timeIntervalSince1970: timeInterval)
+                let weekday = date.weekday > 0 ? date.weekday - 1 : 6
+                
+                proiorityArray[weekday][0].assignFlag = true
+            }
+            
+            for item in twoDayList {
+                let start: Date
+                if item.startDate < startDate.timeIntervalSince1970 {
+                    start = startDate
+                } else {
+                    start = Date(timeIntervalSince1970: item.startDate)
+                }
+                
+                let end: Date
+                if item.endDate > endDate.timeIntervalSince1970 {
+                    end = endDate
+                } else {
+                    end = Date(timeIntervalSince1970: item.endDate)
+                }
+                
+                let startWeekday = start.weekday > 0 ? start.weekday - 1 : 6
+                let endWeekday = end.weekday > 0 ? end.weekday - 1 : 6
+                
+                var idx: Int = -1
+                
+                for count in 0 ..< holidayList.count + twoDayList.count {
+                    for weekday in startWeekday ... endWeekday {
+                        if proiorityArray[weekday][count].assignFlag {
+                            break
+                        }
+                        
+                        if weekday == endWeekday
+                            && proiorityArray[weekday][count].assignFlag == false {
+                            idx = count
+                            break
+                        }
+                    }
+                    if idx != -1 {
+                        break
+                    }
+                }
+                
+                for weekday in startWeekday ... endWeekday {
+                    proiorityArray[weekday][idx].assignFlag = true
+                    proiorityArray[weekday][idx].item = item
+                }
+            }
+            
+            var list: [Item] = []
+            let weekday = date.weekday > 0 ? date.weekday - 1 : 6
+            let date = startDate.getNextCountDay(count: weekday)
+            
+            if var dayList = Item.getDayList(date: date) {
+                for twoDayProiority in proiorityArray[weekday] {
+                    if twoDayProiority.assignFlag {
+                        if let item = twoDayProiority.item {
+                            list.append(item)
+                        }
+                    } else {
+                        if dayList.count > 0 {
+                            let item = dayList.remove(at: 0)
+                            list.append(item)
+                        }
+                    }
+                }
+                self.list = list
+            } else {
+                for twoDayProiority in proiorityArray[weekday] {
+                    if twoDayProiority.assignFlag {
+                        if let item = twoDayProiority.item {
+                            list.append(item)
+                        }
+                    }
+                }
+                self.list = list
+            }
+        } else {
+            let weekday = date.weekday > 0 ? date.weekday - 1 : 6
+            let date = startDate.getNextCountDay(count: weekday)
+            self.list = Item.getDayList(date: date)
+        }
     }
     
     // MARK: - Touch Event
@@ -257,6 +434,6 @@ class VCCalendarDayDetail: UIViewController {
     
     @objc func didReceivedAddNotification(_ notification: Notification) {
         setHoliday()
-        list = Item.getDayList(date: date)
+        sentToDataList(date: self.date)
     }
 }
