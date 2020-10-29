@@ -46,7 +46,15 @@ extension VwCalendarDay: UITableViewDelegate, UITableViewDataSource {
                 cell.item = item
                 cell.vcMonthCalendar = vcMonthCalendar
                 cell.vwDay = self
+                cell.rootLeadingConstraint?.constant = cell.leftMargin
             }
+            
+            let endDate = Date(timeIntervalSince1970: item.endDate)
+            if endDate.startOfDay == self.date?.startOfDay
+                || self.date?.weekday == 0 {
+                cell.rootTailingConstraint?.constant = -cell.leftMargin
+            }
+            
             cell.selectionStyle = .none
             cell.setColor(isUp: tableView.rowHeight == minHeight)
             return cell
