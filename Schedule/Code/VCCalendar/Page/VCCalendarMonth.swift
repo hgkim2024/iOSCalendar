@@ -118,7 +118,7 @@ class VCCalendarMonth: UIViewController {
             dayView.vcMonthCalendar = self
             dayViews.append(dayView)
             
-            let alpha: CGFloat = 0.5
+            let alpha: CGFloat = 0.3
             // 날짜 setText
             if i + 1 >= weekday {
                 // 다음달
