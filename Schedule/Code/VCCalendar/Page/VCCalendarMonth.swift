@@ -23,6 +23,7 @@ protocol CalendarTouchEventDelegate: class {
 }
 
 class VCCalendarMonth: UIViewController {
+    var vwRoot = UIView()
     var dayViews: [VwCalendarDay] = []
     private var date = Date()
     private var row: Int = 0
@@ -95,6 +96,10 @@ class VCCalendarMonth: UIViewController {
     }
     
     private func setUpUI() {
+        vwRoot.translatesAutoresizingMaskIntoConstraints = false
+        vwRoot.isUserInteractionEnabled = true
+        vwRoot.backgroundColor = .clear
+        
         let curDate = Date()
         let today = curDate.startOfDay.day
         let month = curDate.month
@@ -153,25 +158,36 @@ class VCCalendarMonth: UIViewController {
     
     private func displayUI() {
         let dayCount = Global.dayCount
+        let margin = Global.calendarMargin
+        
+        view.addSubview(vwRoot)
+        
+        NSLayoutConstraint.activate([
+            vwRoot.topAnchor.constraint(equalTo: view.topAnchor),
+            vwRoot.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            vwRoot.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: margin),
+            vwRoot.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -margin),
+        ])
+        
         for row in 0..<row {
             for column in 0..<Global.calendarColumn {
                 let dayView = dayViews[(row * dayCount) + column]
-                view.addSubview(dayView)
+                vwRoot.addSubview(dayView)
                 
                 if row == 0 {
-                    dayView.topAnchor.constraint(equalTo: view.topAnchor).isActive = true
+                    dayView.topAnchor.constraint(equalTo: vwRoot.topAnchor).isActive = true
                 } else {
                     dayView.topAnchor.constraint(equalTo: dayViews[((row - 1) * dayCount) + column].bottomAnchor).isActive = true
                 }
                 
                 if column == 0 {
-                    dayView.leadingAnchor.constraint(equalTo: view.leadingAnchor).isActive = true
+                    dayView.leadingAnchor.constraint(equalTo: vwRoot.leadingAnchor).isActive = true
                 } else {
                     dayView.leadingAnchor.constraint(equalTo: dayViews[(row * dayCount) + column - 1].trailingAnchor).isActive = true
                 }
                 
-                dayView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 1.0/CGFloat(dayCount)).isActive = true
-                dayView.heightAnchor.constraint(equalTo: view.heightAnchor, multiplier: 1.0/CGFloat(self.row)).isActive = true
+                dayView.widthAnchor.constraint(equalTo: vwRoot.widthAnchor, multiplier: 1.0/CGFloat(dayCount)).isActive = true
+                dayView.heightAnchor.constraint(equalTo: vwRoot.heightAnchor, multiplier: 1.0/CGFloat(self.row)).isActive = true
             }
         }
     }

@@ -46,6 +46,7 @@ class VCRoot: UIViewController {
         navigationItem.titleView = btnTitle
         self.btnTitle.titleLabel?.lineBreakMode = .byCharWrapping
         self.btnTitle.titleLabel?.numberOfLines = 1
+        self.btnTitle.titleLabel?.textAlignment = .center
         btnTitle.addTarget(self, action: #selector(tapTitle), for: .touchUpInside)
     }
     

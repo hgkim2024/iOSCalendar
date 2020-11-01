@@ -122,8 +122,8 @@ class VwCalendar: UIView {
             VCWeekday.heightAnchor.constraint(equalToConstant: Global.weekdayHeight),
             
             VCpage.view.topAnchor.constraint(equalTo: VCWeekday.bottomAnchor, constant: -5),
-            VCpage.view.leadingAnchor.constraint(equalTo: leadingAnchor, constant: margin),
-            VCpage.view.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -margin),
+            VCpage.view.leadingAnchor.constraint(equalTo: leadingAnchor),
+            VCpage.view.trailingAnchor.constraint(equalTo: trailingAnchor),
             calendarHeight,
             
             VCDayPage.view.topAnchor.constraint(equalTo: VCpage.view.bottomAnchor),
