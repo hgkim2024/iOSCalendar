@@ -144,6 +144,7 @@ class VCCalendarDayDetail: UIViewController {
             self.list != nil
                 || holidayList.count > 0,
             self.list?.count ?? 0 > 0
+                || holidayList.count > 0
         else {
             emptyLabel.isHidden = false
             return
