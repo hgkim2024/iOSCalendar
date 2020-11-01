@@ -224,6 +224,9 @@ class VwCalendar: UIView {
     
     private func touchEndAnimated(isUp: Bool) {
         VCpage.isUp = isUp
+        if isUp {
+            self.VCDayPage.view.isHidden = false
+        }
         
         UIView.animate(withDuration: 0.3, animations: {
             if isUp {
@@ -237,7 +240,9 @@ class VwCalendar: UIView {
         }, completion: { _ in
             self.addGestureRecognizer(self.swipeUp!)
             self.addGestureRecognizer(self.swipeDown!)
-            self.VCDayPage.view.isHidden = !isUp
+            if !isUp {
+                self.VCDayPage.view.isHidden = true
+            }
             self.VCpage.setDataSource(isOn: true)
         })
     }

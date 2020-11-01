@@ -100,11 +100,6 @@ class VCCalendarMonth: UIViewController {
         vwRoot.isUserInteractionEnabled = true
         vwRoot.backgroundColor = .clear
         
-        let curDate = Date()
-        let today = curDate.startOfDay.day
-        let month = curDate.month
-        let lastDayMonth = date.startOfMonth.month
-        
         let weekday = date.startOfMonth.weekday == 0 ? 7 : date.startOfMonth.weekday
         
         let lastDay = date.startOfMonth.endOfMonth.day
@@ -135,17 +130,6 @@ class VCCalendarMonth: UIViewController {
                     // 현재달
                     let day = i + 2 - weekday
                     dayView.setText(text: "\(day)")
-                    
-                    if today == day
-                        && month == lastDayMonth
-                        && curDate.year == self.date.year {
-                        let date = self.date.getNextCountDay(count: day - 1)
-                        dayView.date = date
-                        dayView.selectedDay()
-                        dayView.setTodayView()
-                        preToday = dayView
-                        preSelecedDay = dayView
-                    }
                 }
             } else {
                 // 이전달
@@ -226,6 +210,8 @@ class VCCalendarMonth: UIViewController {
     }
     
     func setUpData() {
+        let today = Date().startOfDay
+        
         for view in dayViews {
             view.isUp = self.isUp
         }
@@ -246,6 +232,12 @@ class VCCalendarMonth: UIViewController {
                     let day = i + 1 - weekday
                     let date = self.date.getNextCountDay(count: day)
                     dayViews[safe: i]?.date = date
+                    
+                    if today == date.startOfDay {
+                        preSelecedDay?.deselectedDay()
+                        dayViews[safe: i]?.selectedDay()
+                        preSelecedDay = dayViews[safe: i]
+                    }
                 }
             } else {
                 // 이전달

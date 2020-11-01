@@ -121,6 +121,7 @@ extension VCCalendarDayDetailPage: UIPageViewControllerDelegate, UIPageViewContr
                 return
         }
         
+        self.date = vc.date
         NotificationCenter.default.post(
             name: NSNotification.Name(rawValue: NamesOfNotification.moveCalendarMonth),
             object: nil,

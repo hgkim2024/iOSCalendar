@@ -42,9 +42,32 @@ class VCCalendarDayDetail: UIViewController {
     
     var list: [Item]? = nil {
         didSet {
-            setUpTableView()
+            guard
+                let list = self.list,
+                let preList = self.preList
+            else {
+                setUpTableView()
+                self.preList = self.list
+                return
+            }
+            if list.count == preList.count {
+                for item in list {
+                    if preList.contains(item) {
+                        continue
+                    } else {
+                        setUpTableView()
+                        break
+                    }
+                }
+            } else {
+                setUpTableView()
+            }
+            
+            self.preList = self.list
         }
     }
+    
+    var preList: [Item]? = nil
     
     var holidayList: [String] = []
     var holidayTimeIntervalList: [TimeInterval] = []
@@ -59,17 +82,16 @@ class VCCalendarDayDetail: UIViewController {
         
         addObserver()
         setUpLabel()
-        setHoliday()
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
         
         weekdayLabel.setCalendarDayColor(weekday: date.weekday)
         weekdayLabel.text = "\(date.day).\(dayString[date.weekday])"
         
         setHoliday()
         sentToDataList(date: self.date)
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
     }
     
     private func setUpLabel() {
