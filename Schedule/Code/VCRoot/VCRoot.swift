@@ -14,6 +14,7 @@ class VCRoot: UIViewController {
     var selectedDate: Date?
     
     let btnTitle = UIButton()
+    let titleTextSize: CGFloat = 18.0
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,7 +36,7 @@ class VCRoot: UIViewController {
         bar.setBackgroundImage(UIImage(), for: .default)
         bar.shadowImage = UIImage()
         
-        btnTitle.titleLabel?.font = UIFont.boldSystemFont(ofSize: 18.0)
+        btnTitle.titleLabel?.font = UIFont.boldSystemFont(ofSize: titleTextSize)
         btnTitle.setTitleColor(Theme.font, for: .normal)
 //        let image = UIImage(systemName: "chevron.down")
 //        btnTitle.setImage(image?.withRenderingMode(.alwaysTemplate), for: .normal)
@@ -43,7 +44,8 @@ class VCRoot: UIViewController {
         btnTitle.tintColor = Theme.font
 //        btnTitle.semanticContentAttribute = .forceRightToLeft
         navigationItem.titleView = btnTitle
-        
+        self.btnTitle.titleLabel?.lineBreakMode = .byCharWrapping
+        self.btnTitle.titleLabel?.numberOfLines = 1
         btnTitle.addTarget(self, action: #selector(tapTitle), for: .touchUpInside)
     }
     
@@ -87,6 +89,8 @@ class VCRoot: UIViewController {
         else {
                 return
         }
+        let width = (title as NSString).size(withAttributes: [NSAttributedString.Key.font: UIFont.systemFont(ofSize: titleTextSize)]).width + 10.0
+        self.btnTitle.frame.size.width = width
         self.btnTitle.setTitle(title, for: .normal)
     }
     
