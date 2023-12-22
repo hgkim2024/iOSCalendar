@@ -9,10 +9,10 @@ target 'Schedule' do
   inhibit_all_warnings!
   
   # Pods for Schedule
-#  pod 'Realm', '~> 5'
-#  pod 'RealmSwift', '~> 5'
-#  pod 'RxSwift', '~> 5'
-#  pod 'RxCocoa', '~> 5'
+  pod 'Realm', '~> 5'
+  pod 'RealmSwift', '~> 5'
+  pod 'RxSwift', '~> 5'
+  pod 'RxCocoa', '~> 5'
 
   target 'ScheduleTests' do
     inherit! :search_paths
