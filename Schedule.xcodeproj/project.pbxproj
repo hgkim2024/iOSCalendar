@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 51;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -914,7 +914,7 @@
 				CODE_SIGN_ENTITLEMENTS = Schedule/Schedule.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"Schedule/Preview Content\"";
-				DEVELOPMENT_TEAM = 2R2YYN4YZ8;
+				DEVELOPMENT_TEAM = 4RDNCVS7TT;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = Schedule/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -936,7 +936,7 @@
 				CODE_SIGN_ENTITLEMENTS = Schedule/Schedule.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_ASSET_PATHS = "\"Schedule/Preview Content\"";
-				DEVELOPMENT_TEAM = 2R2YYN4YZ8;
+				DEVELOPMENT_TEAM = 4RDNCVS7TT;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = Schedule/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -957,7 +957,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 2R2YYN4YZ8;
+				DEVELOPMENT_TEAM = 4RDNCVS7TT;
 				INFOPLIST_FILE = ScheduleTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -980,7 +980,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 2R2YYN4YZ8;
+				DEVELOPMENT_TEAM = 4RDNCVS7TT;
 				INFOPLIST_FILE = ScheduleTests/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 13.6;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1002,7 +1002,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 2R2YYN4YZ8;
+				DEVELOPMENT_TEAM = 4RDNCVS7TT;
 				INFOPLIST_FILE = ScheduleUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1023,7 +1023,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 2R2YYN4YZ8;
+				DEVELOPMENT_TEAM = 4RDNCVS7TT;
 				INFOPLIST_FILE = ScheduleUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
